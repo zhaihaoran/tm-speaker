@@ -30,8 +30,8 @@ export default {
 };
 </script>
 <style lang="scss">
-@import '../scss/variable/_school.scss';
-@import '../scss/lib/admin_common.scss';
+@import '../scss/_school.scss';
+@import '../scss/admin_common.scss';
 </style>
 
 
