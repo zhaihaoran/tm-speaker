@@ -3,16 +3,11 @@
         <el-tab-pane label="通用">
             <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="setting-form" >
                 <el-form-item label="头像">
-                    <div class="avatar">
-                        <img v-if="cropperConfig.url.length>0" :src="cropperConfig.url" class="img-fluid" alt="avatar">
-                        <span v-if="cropperConfig.url.length==0" >暂无头像</span>
-                    </div>
-                    <el-button type="primary" @click="cropperConfig.modal=true" >上传头像</el-button>
-                    <el-dialog :visible.sync="cropperConfig.modal" width="360px" title="头像" >
-                        <Cropper
-                            :config="cropperConfig"
-                        ></Cropper>
-                    </el-dialog>
+                    <Cropper
+                        boxClass="avatar"
+                        action='/admin/act=upload#!method=POST'
+                        aspectRatio.number=0.5
+                    ></Cropper>
                 </el-form-item>
                 <el-form-item label="学校名称" prop="schoolName" >
                     河北实验中学
@@ -36,12 +31,15 @@
         <el-tab-pane label="相册">
             <div class="upload-pic">
                 <el-upload
-                    action="https://jsonplaceholder.typicode.com/posts/"
-                    :on-preview="handlePreview"
+                    action="/admin/act=upload#!method=POST"
+                    :show-file-list="false"
+                    :limit="10"
+                    :on-exceed="handleExceed"
+                    :on-success="handleSuccess"
                     :on-remove="handleRemove"
-                    :file-list="filelist"
-                    list-type="picture">
-                    <el-button type="primary">点击上传</el-button>
+                    :file-list="photos"
+                    >
+                    <el-button size="small" type="primary">点击上传</el-button>
                     <div slot="tip" class="el-upload__tip upload-tip">只能上传jpg/png文件，且不超过500kb</div>
                 </el-upload>
             </div>
@@ -87,7 +85,8 @@
     </el-tabs>
 </template>
 <script>
-import jQuery from 'jquery';
+import $ from 'jquery';
+import axios from 'axios';
 import Cropper from '@layout/modal/cropper.vue';
 import '@comp/lib/velocity.min.js';
 import '@comp/lib/materialbox.js';
@@ -98,7 +97,9 @@ export default {
             console.log(value);
             console.log('hahaha');
         });
-        $(this.$refs.photo).materialbox();
+        axios.post('/admin/act=upload#!method=POST').then(res => {
+            console.log(res);
+        });
     },
     data() {
         return {
@@ -107,41 +108,7 @@ export default {
                 'card-hover': true,
                 hoverable: true
             },
-            cropperConfig: {
-                modal: false,
-                url: ''
-            },
-            avatar: {
-                dialog: true,
-                src: ''
-            },
-            example2: {
-                img: 'http://ofyaji162.bkt.clouddn.com/bg1.jpg',
-                info: true,
-                size: 1,
-                outputType: 'jpeg',
-                canScale: false,
-                autoCrop: true,
-                // 只有自动截图开启 宽度高度才生效
-                autoCropWidth: 300,
-                autoCropHeight: 250,
-                // 开启宽度和高度比例
-                fixed: true,
-                fixedNumber: [4, 3]
-            },
             current: 3,
-            filelist: [
-                {
-                    name: 'food.jpeg',
-                    url:
-                        'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-                },
-                {
-                    name: 'food2.jpeg',
-                    url:
-                        'https://fuss10.elemecdn.com/3/63/4e7f3a15429bfda99bce42a18cdd1jpeg.jpeg?imageMogr2/thumbnail/360x360/format/webp/quality/100'
-                }
-            ],
             form: {
                 schoolName: '',
                 schoolPos: '',
@@ -242,18 +209,6 @@ export default {
                 {
                     id: 7,
                     url: '/static/image/guests/guest3.png'
-                },
-                {
-                    id: 8,
-                    url: '/static/image/guests/guest4.png'
-                },
-                {
-                    id: 9,
-                    url: '/static/image/guests/guest1.png'
-                },
-                {
-                    id: 10,
-                    url: '/static/image/guests/guest2.png'
                 }
             ]
         };
@@ -261,10 +216,6 @@ export default {
     methods: {
         recommend(value) {
             value.personalPageRecommend = 1;
-            // if (+value.id < 2) {
-            //     return false;
-            // }
-            // this.videos = Util.moveToTop(value, array, 'id');
         },
         onSubmit(form) {
             this.$refs[form].validate(valid => {
@@ -276,27 +227,26 @@ export default {
                 }
             });
         },
-        // 实时预览函数
-        realTime(data) {
-            this.previews = data;
-        },
         resetForm(formName) {
             this.$refs[formName].resetFields();
         },
         handleRemove(file, fileList) {
             console.log(file, fileList);
         },
-        handlePreview(file) {
-            console.log(file);
+        handleExceed(files, fileList) {
+            this.$message.warning(
+                `当前限制选择 10 个文件，共选择了 ${files.length +
+                    fileList.length} 个文件`
+            );
         },
-        handlePictureCardPreview(file) {
-            this.avatar.src = file.url;
-            this.avatar.dialog = true;
-        },
-        beforeAvatarUpload(file, m) {
-            // 打开弹窗
-            this.avatar.dialog = true;
-            // 填充url
+        handleSuccess(res, fileList) {
+            // 成功的话
+            if (res.code === 123) {
+                this.photos.push({
+                    id: '11',
+                    url: res.data.fileUrl
+                });
+            }
         }
     },
     components: {
@@ -306,13 +256,11 @@ export default {
 </script>
 <style lang="scss" >
 .avatar {
-    width: 200px;
-    height: 200px;
-    display: flex;
-    margin: 10px 0;
-    align-items: center;
-    justify-content: center;
-    border: 1px solid rgb(220, 223, 230);
+    .el-upload--picture-card {
+        width: 200px;
+        height: 200px;
+        line-height: 200px;
+    }
 }
 .setting-form {
     max-width: 500px;

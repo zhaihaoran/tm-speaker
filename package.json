@@ -17,10 +17,11 @@
         "cropper": "^4.0.0-beta",
         "element-ui": "^2.2.1",
         "jquery": "^3.3.1",
+        "video.js": "^6.7.3",
         "vue": "^2.5.2",
         "vue-cropper": "^0.2.9",
         "vue-router": "^3.0.1",
-        "vuedraggable": "^2.16.0",
+        "vue-video-player": "^5.0.2",
         "vuex": "^3.0.1"
     },
     "devDependencies": {

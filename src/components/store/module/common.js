@@ -4,19 +4,20 @@ const state = {
     sidebar_toggle: false, // 侧边栏展开状态
     // sesson里取
     login_state: 0, // 登陆状态 0：未登录
-    check_state: 1 // 检验状态 0：未审核、1：已审核
+    check_state: 0 // 检验状态 0：未审核、1：已审核
 }
 
 // 模块的mutations 、 actions、getter 默认注册在全局命名空间的
 const mutations = {
     // state -- 初始化 从session里取
     initState(state) {
-        state.login_state = +sessionStorage.isLogin || 0
-        state.check_state = +sessionStorage.check_state || 0
+        state.login_state = +sessionStorage.isLogin || state.login_state
+        state.check_state = +sessionStorage.check_state || state.check_state
     },
-    toggle(state) {
+    toggleState(state) {
         //在这里改变state中的数据
-        state.sidebar_toggle = !state.sidebar_toggle
+
+        state.check_state = state.check_state ? 0 : 1
     },
     switchSidebarView(state, view) {
         if (view === "help") {

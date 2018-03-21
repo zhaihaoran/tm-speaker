@@ -1,18 +1,23 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 
-// components
-import Offer_Send from '@comp/view/offer_send.vue'
-import Offer_Over from '@comp/view/offer_over.vue'
+
+// 发起邀约
+import Invite_send from '@comp/view/invite_send.vue'
+/* 邀约信息 */
+// 已发起邀约
+import Invite_over from '@comp/view/invite_over.vue'
+// 收到的邀约
+import Invite_received from '@comp/view/invite_received.vue'
+// 进行中
+import Underway from '@comp/view/underway.vue'
 
 import Certification_checked from '@comp/view/certifi_checked.vue'
 import Certification_check from '@comp/view/certifi_check.vue'
-import Invite_speaker from '@comp/view/invite_speaker.vue'
 import Invite_all from '@comp/view/invite_all.vue'
 import Refused from '@comp/view/refused.vue'
 import Refuse from '@comp/view/refuse.vue'
 import Done from '@comp/view/done.vue'
-import Underway from '@comp/view/underway.vue' //进行中
 import Setting from '@comp/view/setting.vue'
 import Flow_school from '@comp/view/flow_school.vue'
 import Flow_speaker from '@comp/view/flow_speaker.vue'
@@ -58,16 +63,16 @@ const router = new Router({
             requireAuth: true,
         },
     }, {
-        path: '/offer_send',
-        name: 'offer_send',
-        component: Offer_Send,
+        path: '/invite/over',
+        name: 'invite_over',
+        component: Invite_over,
         meta: {
             requireAuth: true,
         },
     }, {
-        path: '/offer_over',
-        name: 'offer_over',
-        component: Offer_Over,
+        path: '/invite/received',
+        name: 'invite_received',
+        component: Invite_received,
         meta: {
             requireAuth: true,
         },
@@ -115,8 +120,8 @@ const router = new Router({
         },
     }, {
         path: '/invite/send',
-        name: 'invite_speaker',
-        component: Invite_speaker,
+        name: 'invite_send',
+        component: Invite_send,
         meta: {
             requireAuth: true,
         },

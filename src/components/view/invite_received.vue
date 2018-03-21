@@ -6,7 +6,7 @@
                 <el-table-column
                     align="center"
                     prop="teacherName"
-                    label="演讲者"
+                    label="学校"
                     >
                 </el-table-column>
                 <el-table-column

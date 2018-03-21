@@ -2,20 +2,20 @@
    <el-aside class="admin-aside" width="200px">
         <!-- 主视图 -->
         <el-menu v-show="main" :default-active.sync="path" :default-openeds="['/invite']" class="admin-sider-menu" :collapse="sidebarState" >
-            <router-link to="/invite/send" >
+            <router-link v-show="checkState === 1" to="/invite/send" >
                 <el-menu-item class="sider-menu-item" index="/invite/send">
                     <i class="el-icon-phone"></i>发起邀约
                 </el-menu-item>
             </router-link>
-            <el-submenu index="/invite">
+            <el-submenu v-show="checkState === 1" index="/invite">
                 <template slot="title"><i class="el-icon-menu"></i><span slot="title">邀约信息</span></template>
-                <router-link to="/offer_send" >
-                    <el-menu-item class="sider-menu-item" index="/offer_send">
+                <router-link to="/invite/over" >
+                    <el-menu-item class="sider-menu-item" index="/invite/over">
                         已发起邀约
                     </el-menu-item>
                 </router-link>
-                <router-link to="/offer_over" >
-                    <el-menu-item class="sider-menu-item" index="/offer_over">
+                <router-link to="/invite/received" >
+                    <el-menu-item class="sider-menu-item" index="/invite/received">
                         收到的邀约
                     </el-menu-item>
                 </router-link>
@@ -45,19 +45,19 @@
                     </el-menu-item>
                 </router-link>
             </el-submenu>
-            <router-link to="/setting" >
+            <router-link v-show="checkState === 1" to="/setting" >
                 <el-menu-item class="sider-menu-item" index="/setting">
                     <i class="el-icon-setting"></i>主页设置
                 </el-menu-item>
             </router-link>
             <router-link v-show="checkState === 1" to="/certification/checked" >
                 <el-menu-item class="sider-menu-item" index="/certification/checked">
-                    <i class="el-icon-message"></i>学校资料(已审核)
+                    <i class="el-icon-message"></i>演讲者资料 (已审核)
                 </el-menu-item>
             </router-link>
             <router-link v-show="checkState === 0" to="/certification/check" >
                 <el-menu-item class="sider-menu-item" index="/certification/check">
-                    <i class="el-icon-message"></i>学校资料(未审核)
+                    <i class="el-icon-message"></i>演讲者资料 (未审核)
                 </el-menu-item>
             </router-link>
         </el-menu>
@@ -65,7 +65,7 @@
         <!-- help -->
         <el-menu v-show="help" :default-active.sync="path" :default-openeds="['/help/flow','/help/download']" class="admin-sider-menu" :collapse="sidebarState" >
             <el-submenu index="/help/flow">
-                <template slot="title"><i class="el-icon-menu"></i><span slot="title">流程指南</span></template>
+                <template slot="title"><i class="el-icon-tickets"></i><span slot="title">流程指南</span></template>
                 <router-link to="/help/flow/school" >
                     <el-menu-item class="sider-menu-item" index="/help/flow/school">
                         学校上课流程
@@ -78,7 +78,7 @@
                 </router-link>
             </el-submenu>
             <el-submenu index="/help/download">
-                <template slot="title"><i class="el-icon-menu"></i><span slot="title">下载</span></template>
+                <template slot="title"><i class="el-icon-download"></i><span slot="title">下载</span></template>
                 <router-link to="/help/download/resources" >
                     <el-menu-item class="sider-menu-item" index="/help/download/resources">
                         演讲者上课流程

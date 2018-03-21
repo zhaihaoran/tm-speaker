@@ -14,9 +14,9 @@
                     label="邀约发起者">
                 </el-table-column>
                 <el-table-column
-                    prop="speakerName"
+                    prop="school"
                     align="center"
-                    label="演讲者">
+                    label="学校">
                 </el-table-column>
                 <el-table-column
                     prop="speakTitle"
@@ -51,7 +51,7 @@
                 <el-table-column
                     prop="reason"
                     align="center"
-                    label="拒絕原因">
+                    label="拒绝原因">
                 </el-table-column>
                 <el-table-column
                     align="center"

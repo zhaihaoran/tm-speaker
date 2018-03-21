@@ -54,9 +54,11 @@ export default {
     },
     methods: {
         submit() {
+            const mmm = this.$route.query.redirect || '/invite/send';
+            console.log(mmm);
             this.login();
             this.$router.push({
-                path: this.$route.query.redirect || '/invite/send'
+                path: mmm
             });
         },
         ...mapMutations(['login'])

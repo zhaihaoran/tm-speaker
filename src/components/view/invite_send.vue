@@ -1,7 +1,7 @@
 <template>
     <div>
         <Search :searchConfig="searchConfig" ></Search>
-        <div v-for="person in persons" :key="person.id" class="tm-card invite-send">
+        <div v-for="person in persons" :key="person.id" class="tm-card in-card">
             <a href="/home_lecturer.html" class="card-image">
                 <img :src="person.image" class="img-fluid" alt="">
             </a>
@@ -99,45 +99,47 @@ export default {
     }
 };
 </script>
-<style>
+<style lang="scss" scoped >
+.offer-pagination {
+    margin: 0;
+}
 .admin-step {
     height: 200px;
 }
-.invite-send.tm-card {
+.in-card.tm-card {
     display: flex;
     flex-direction: row;
-}
-.invite-send .card-image {
-    width: 160px;
-    overflow: hidden;
-}
-.invite-send .card-wrapper {
-    flex: 1;
-    color: #6e6e6e;
-    padding-left: 20px;
-    max-width: 740px;
-}
-.invite-send .card-wrapper p {
-    max-height: 66px;
-    line-height: 22px;
-}
+    .card-image {
+        width: 160px;
+        overflow: hidden;
+    }
+    .card-wrapper {
+        flex: 1;
+        color: #6e6e6e;
+        padding-left: 20px;
+        max-width: 740px;
+        p {
+            max-height: 66px;
+            line-height: 22px;
+            .num {
+                font-size: 20px;
+                font-weight: bold;
+                margin-right: 10px;
+            }
 
-.invite-send .card-wrapper p .num {
-    font-size: 20px;
-    font-weight: bold;
-    margin-right: 10px;
-}
-
-.invite-send .card-wrapper p .teacher-name {
-    font-size: 22px;
-    font-weight: bold;
-    color: #000;
-    margin-right: 20px;
-}
-.invite-btn {
-    position: absolute;
-    right: 20px;
-    top: 20px;
-    padding: 12px 26px;
+            .teacher-name {
+                font-size: 22px;
+                font-weight: bold;
+                color: #000;
+                margin-right: 20px;
+            }
+        }
+    }
+    .invite-btn {
+        position: absolute;
+        right: 20px;
+        top: 20px;
+        padding: 12px 26px;
+    }
 }
 </style>
