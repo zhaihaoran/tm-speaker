@@ -10,6 +10,29 @@ a {
     }
 }
 
+.el-table__empty-block {
+    min-height: 200px;
+    padding: 80px 0;
+}
+
+.search-input {
+    display: inline-block;
+    margin-left: 5px;
+}
+
+// bages
+.el-badge {
+    .el-badge__content.is-fixed.is-dot {
+        top: 25px;
+        right: 30px;
+    }
+}
+
+// label direction
+.el-form-item__label {
+    text-align: left;
+}
+
 // custom a
 .tm-a {
     color: $primary-color;
@@ -214,6 +237,11 @@ a {
     background: $context_bg;
 }
 
+.flex-end {
+    display: flex;
+    justify-content: flex-end;
+}
+
 //
 .tm-card {
     position: relative;
@@ -351,6 +379,9 @@ img {
     .el-dialog__body {
         padding: 20px 0 5px;
     }
+    .el-dialog__header {
+        padding: 15px;
+    }
 }
 
 .el-dialog__body {
@@ -416,4 +447,17 @@ img {
     height: 50px;
     z-index: 1000;
     -webkit-font-smoothing: antialiased;
+}
+
+.mb-20 {
+    margin-bottom: 20px;
+}
+
+.mt-10 {
+    margin-top: 10px;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
 }
