@@ -20,9 +20,9 @@
                     </p>
                 </div>
                 <div class="left mb-15">
-                    <p class="tumeng no-margin" ><span class="name">涂梦小助手</span><span class="time">2017-12-12 12:12</span></p>
+                    <p class="tumeng no-margin" ><span class="name">途梦小助手</span><span class="time">2017-12-12 12:12</span></p>
                     <p class="message">
-                        感谢您在涂梦的分享
+                        感谢您在途梦的分享
                     </p>
                 </div>
             </div>

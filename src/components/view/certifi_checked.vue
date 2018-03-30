@@ -36,7 +36,7 @@
                     v-model="form.showVideoOnSite"
                 >
                 </el-switch>
-                <span class="left-info" >是否愿意将演讲视频在涂梦平台上公开展示</span>
+                <span class="left-info" >是否愿意将演讲视频在途梦平台上公开展示</span>
             </el-form-item>
 
             <el-form-item label="您的照片" props="schoolSrc" >
@@ -51,11 +51,11 @@
             <el-form-item label="介绍人">
                 <el-input disabled v-model="form.inviter"></el-input>
             </el-form-item>
-            <el-form-item class="why-label" label="为什么申请涂梦演讲者">
+            <el-form-item class="why-label" label="为什么申请途梦演讲者">
                 <el-input disabled type="textarea" class="info-textarea" v-model="form.whyChooseUs"></el-input>
             </el-form-item>
             <el-form-item prop="radio" label-width="0" required >
-                <el-checkbox disabled v-model="form.radio"> 我已阅读并同意涂梦 <a class="tm-a" href="#">用户规约</a></el-checkbox>
+                <el-checkbox disabled v-model="form.radio"> 我已阅读并同意途梦 <a class="tm-a" href="#">用户规约</a></el-checkbox>
             </el-form-item>
         </el-form>
     </div>

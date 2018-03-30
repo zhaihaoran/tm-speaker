@@ -5,8 +5,8 @@
                 <img src="/static/image/admin/cerrifi_check.png" class="img-fluid" alt="hi">
             </div>
             <div class="card-wrapper">
-                <h2>欢迎申请涂梦演讲者</h2>
-                <p>完成认证信息，即可提交申请成为涂梦演讲者，分享您的知识和思考，让孩子们提前了解他们梦想的世界</p>
+                <h2>欢迎申请途梦演讲者</h2>
+                <p>完成认证信息，即可提交申请成为途梦演讲者，分享您的知识和思考，让孩子们提前了解他们梦想的世界</p>
             </div>
         </div>
         <div class="tm-card">
@@ -46,7 +46,7 @@
                         v-model="form.showVideoOnSite"
                     >
                     </el-switch>
-                    <span class="left-info" >是否愿意将演讲视频在涂梦平台上公开展示</span>
+                    <span class="left-info" >是否愿意将演讲视频在途梦平台上公开展示</span>
                 </el-form-item>
                 <el-form-item label="您的图片" props="pic1" >
                     <Upload action="/admin/act=upload#!method=POST" ></Upload>
@@ -67,11 +67,11 @@
                 <el-form-item label="介绍人">
                     <el-input v-model="form.inviter"></el-input>
                 </el-form-item>
-                <el-form-item class="why-label" label="为什么申请涂梦演讲者">
+                <el-form-item class="why-label" label="为什么申请途梦演讲者">
                     <el-input type="textarea" class="info-textarea" v-model="form.whyChooseUs"></el-input>
                 </el-form-item>
                 <el-form-item prop="radio" label-width="0" required >
-                    <el-checkbox v-model="form.radio"> 我已阅读并同意涂梦 <a class="tm-a" href="#">用户规约</a></el-checkbox>
+                    <el-checkbox v-model="form.radio"> 我已阅读并同意途梦 <a class="tm-a" href="#">用户规约</a></el-checkbox>
                 </el-form-item>
                 <el-button type="primary" @click="onSubmit('form')">提交审核</el-button>
                 <el-button @click="resetForm('form')">重置</el-button>
@@ -79,7 +79,7 @@
             <el-dialog width="30%" class="certi-submit-modal" :visible.sync="modal.submit" >
                 <span class="submit-modal"><i class="icon iconfont icon-submit"></i></span>
                 <h3>演讲者申请提交成功</h3>
-                <p>感谢您申请加入涂梦演讲者</p>
+                <p>感谢您申请加入途梦演讲者</p>
                 <p>我们将会尽快审核您的资料</p>
                 <p>通过审核后您将可以进行演讲分享</p>
                 <p>您可以随时登陆个人中心查看审核进展</p>
@@ -216,8 +216,13 @@ export default {
     }
 }
 
-.info-box .el-input {
-    max-width: 575px;
+.info-box {
+    .el-input {
+        max-width: 575px;
+    }
+    .el-form {
+        padding: 10px 30px;
+    }
 }
 
 .info-p {
@@ -245,7 +250,7 @@ export default {
     min-height: 100px !important;
 }
 
-/* 欢迎加入涂梦 */
+/* 欢迎加入途梦 */
 .invite-send.tm-card {
     display: flex;
     flex-direction: row;
