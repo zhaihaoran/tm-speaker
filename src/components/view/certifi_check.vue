@@ -1,55 +1,61 @@
 <template>
     <div>
-        <div class="tm-card invite-send certifi-info">
+        <div v-show="checkState === 1" class="tm-card invite-send certifi-info">
             <div class="card-image">
                 <img src="/static/image/admin/cerrifi_check.png" class="img-fluid" alt="hi">
             </div>
             <div class="card-wrapper">
-                <h2>欢迎申请途梦演讲者</h2>
-                <p>完成认证信息，即可提交申请成为途梦演讲者，分享您的知识和思考，让孩子们提前了解他们梦想的世界</p>
+                <h2>欢迎申请途梦学校</h2>
+                <p>完成认证信息，即可提交申请途梦学校，您的学校有机会获得各行各业志愿者的演讲分享服务，让孩子们提前了解他们梦想的世界</p>
             </div>
         </div>
-        <div class="tm-card">
-            <el-form class="info-box" ref="form" :status-icon="inline" :inline-message="inline" :model="form" :rules="rules" label-width="100px">
+        <div class="tm-card info-box">
+            <el-form ref="form" :model="form" :rules="rules" label-width="150px">
                 <h3>演讲者基本信息</h3>
                 <el-form-item label="姓名" prop="name" >
-                    <el-input v-model="form.name"></el-input>
+                    <el-input :disabled="isDisabled" v-model="form.name"></el-input>
                 </el-form-item>
-                <el-form-item label="性别" prop="name" >
-                    <el-radio-group size="small" v-model="form.sex">
-                        <el-radio-button label="2">男</el-radio-button>
-                        <el-radio-button label="1">女</el-radio-button>
+                <el-form-item label="性别" prop="sex" >
+                    <el-radio-group :disabled="isDisabled" size="small" v-model="form.sex">
+                        <el-radio-button label="1">男</el-radio-button>
+                        <el-radio-button label="2">女</el-radio-button>
                     </el-radio-group>
                 </el-form-item>
                 <el-form-item label="公司/机构名称" prop="company" >
-                    <el-input v-model="form.company"></el-input>
+                    <el-input :disabled="isDisabled" v-model="form.company"></el-input>
                 </el-form-item>
                 <el-form-item label="工作岗位" prop="title" >
-                    <el-input v-model="form.title"></el-input>
+                    <el-input :disabled="isDisabled" v-model="form.title"></el-input>
                 </el-form-item>
                 <el-form-item label="微信号" prop="wechat" >
-                    <el-input v-model="form.wechat"></el-input>
+                    <el-input :disabled="isDisabled" v-model="form.wechat"></el-input>
                 </el-form-item>
-                <el-form-item label="联系电话" prop="telephone" >
-                    <el-input v-model="form.telephone"></el-input>
+                <el-form-item label="邮箱" prop="email" >
+                    <el-input :disabled="isDisabled" v-model="form.email"></el-input>
+                </el-form-item>
+                <el-form-item label="联系电话" prop="phone" >
+                    <el-input :disabled="isDisabled" v-model="form.phone"></el-input>
                 </el-form-item>
                 <el-form-item label="通讯地址" prop="address" >
-                    <el-input v-model="form.address"></el-input>
+                    <el-input :disabled="isDisabled" v-model="form.address"></el-input>
                 </el-form-item>
 
-                <el-form-item label="可分享时间段" prop="shareTime" >
-                    <el-input class="info-textarea" type="textarea" v-model="form.idleTimeDesc"></el-input>
+                <el-form-item label="可分享时间段描述" prop="idleTimeDesc" >
+                    <el-input :rows="rows"  :disabled="isDisabled" class="info-textarea" type="textarea" v-model="form.idleTimeDesc"></el-input>
                 </el-form-item>
 
-                <el-form-item label="演讲内容公开">
+                <el-form-item label="演讲内容是否公开">
                     <el-switch
+                        :disabled="isDisabled"
                         v-model="form.showVideoOnSite"
+                        active-value="1"
+                        inactive-value="0"
                     >
                     </el-switch>
                     <span class="left-info" >是否愿意将演讲视频在途梦平台上公开展示</span>
                 </el-form-item>
                 <el-form-item label="您的图片" props="pic1" >
-                    <Upload action="/admin/act=upload#!method=POST" ></Upload>
+                    <Upload filepathname="photoShortPathFilename" previewname="photoUrl" :action="Api.upload" :preview="photoUrl" :disabled="isDisabled" ></Upload>
                     <div class="pic-info">
                         <h3>请拍摄能够清晰的看到正脸的照片</h3>
                         <p class="info-p">图片类型：JPG、PNG</p>
@@ -61,22 +67,25 @@
 
                 <div class="individar"></div>
                 <h3>附加信息</h3>
-                <el-form-item label="教育背景" required >
-                    <el-input type="textarea" class="info-textarea"  v-model="form.educationBackground"></el-input>
+                <el-form-item label="教育背景"  >
+                    <el-input :disabled="isDisabled" type="textarea" :rows="rows" class="info-textarea"  v-model="form.educationBackground"></el-input>
                 </el-form-item>
                 <el-form-item label="介绍人">
-                    <el-input v-model="form.inviter"></el-input>
+                    <el-input :disabled="isDisabled" v-model="form.inviter"></el-input>
                 </el-form-item>
                 <el-form-item class="why-label" label="为什么申请途梦演讲者">
-                    <el-input type="textarea" class="info-textarea" v-model="form.whyChooseUs"></el-input>
+                    <el-input :disabled="isDisabled" type="textarea" :rows="rows" class="info-textarea" v-model="form.whyChooseUs"></el-input>
                 </el-form-item>
-                <el-form-item prop="radio" label-width="0" required >
-                    <el-checkbox v-model="form.radio"> 我已阅读并同意途梦 <a class="tm-a" href="#">用户规约</a></el-checkbox>
+                <el-form-item label-width="0"  >
+                    <el-checkbox :disabled="isDisabled" v-model="isCheck" >我已阅读并同意途梦 <a class="tm-a" href="#">用户规约</a></el-checkbox>
                 </el-form-item>
-                <el-button type="primary" @click="onSubmit('form')">提交审核</el-button>
-                <el-button @click="resetForm('form')">重置</el-button>
+                <div v-if="!isDisabled">
+                    <el-button class="tm-border" @click="onSave('form')">保存文件</el-button>
+                    <el-button type="primary" @click="onSubmit('form')">提交审核</el-button>
+                </div>
             </el-form>
-            <el-dialog width="30%" class="certi-submit-modal" :visible.sync="modal.submit" >
+            <!-- modal -->
+            <el-dialog v-if="!isDisabled" width="30%" class="certi-submit-modal" :visible.sync="modal.submit" >
                 <span class="submit-modal"><i class="icon iconfont icon-submit"></i></span>
                 <h3>演讲者申请提交成功</h3>
                 <p>感谢您申请加入途梦演讲者</p>
@@ -91,95 +100,186 @@
     </div>
 </template>
 <script>
+import { mapState, mapMutations } from 'vuex';
+import { Api } from '@comp/lib/api_maps';
 import Upload from '@layout/upload.vue';
 export default {
     data() {
         return {
+            Api,
             modal: {
                 submit: false
             },
-            inline: true,
+            rows: 8,
             form: {
-                radios: 3,
-                sex: '1',
-                name: '',
-                region: '',
-                teacher: '',
-                telephone: '',
-                pic1: '',
-                pic2: '',
-                delivery: false,
-                type: [],
-                resource: '',
-                freeinfo: '',
-                radio: true
+                sex: 1
             },
             rules: {
                 name: [
                     {
                         required: true,
-                        message: '请输入学校名称',
-                        trigger: 'blur'
-                    },
-                    {
-                        min: 3,
-                        max: 5,
-                        message: '长度在 3 到 5 个字符',
+                        message: '请输入演讲者名称',
                         trigger: 'blur'
                     }
                 ],
-                region: [
+                address: [
                     {
                         required: true,
                         message: '请选择活动区域',
-                        trigger: 'change'
-                    }
-                ],
-                type: [
-                    {
-                        type: 'array',
-                        required: true,
-                        message: '请至少选择一个活动性质',
-                        trigger: 'change'
-                    }
-                ],
-                resource: [
-                    {
-                        required: true,
-                        message: '请选择活动资源',
-                        trigger: 'change'
-                    }
-                ],
-                freeinfo: [
-                    {
-                        required: true,
-                        message: '请填写活动形式',
                         trigger: 'blur'
                     }
                 ],
-                radio: [
+                company: [
+                    {
+                        required: true,
+                        message: '请输入机构名称',
+                        trigger: 'blur'
+                    }
+                ],
+                title: [
+                    {
+                        required: true,
+                        message: '请填写您的岗位',
+                        trigger: 'blur'
+                    }
+                ],
+                wechat: [
+                    {
+                        required: true,
+                        message: '请填写您的微信号',
+                        trigger: 'blur'
+                    }
+                ],
+                phone: [
+                    {
+                        required: true,
+                        message: '请输入联系方式',
+                        trigger: 'blur'
+                    }
+                ],
+                idleTimeDesc: [
+                    {
+                        required: true,
+                        message: '必填',
+                        trigger: 'blur'
+                    }
+                ],
+                sex: [
                     {
                         required: true,
                         message: '必须勾选',
                         trigger: 'change'
                     }
                 ]
-            }
+            },
+            isOk: false
         };
     },
+    computed: {
+        ...mapState({
+            checkState: state => state.common.checkState,
+            photoUrl: state => state.upload.photoUrl,
+            photoShortPathFilename: state =>
+                state.upload.photoShortPathFilename,
+            // 动态绑定disabled
+            isDisabled() {
+                return this.checkState === 3;
+            }
+        }),
+        isCheck: {
+            set(value) {
+                this.isOk = !this.isOk;
+            },
+            get() {
+                return this.isDisabled ? !this.isOk : this.isOk;
+            }
+        }
+    },
+    mounted() {
+        this.getFormData({
+            act: 'getApplication',
+            onSuccess: res => {
+                /* sex 传回来应该为1 */
+                this.form = res.data.data;
+
+                console.log(this.form);
+
+                const { photoShortPathFilename, photoUrl } = this.form;
+
+                this.update({
+                    photoShortPathFilename,
+                    photoUrl
+                });
+
+                console.log('checkState', this.checkState);
+                console.log(this.form);
+            },
+            onError: res => {
+                if (res.data.code === 212) {
+                    this.form = {};
+                }
+            }
+        });
+    },
     methods: {
-        onSubmit(form) {
+        ...mapMutations(['getFormData', 'formSubmit', 'update']),
+        handleForm(form, action, onSuccess, onError) {
+            const cfg = Object.assign(this.form, {
+                photoShortPathFilename: this.photoShortPathFilename
+            });
+
+            // 去除form中的无关参数
+            delete cfg.photoUrl;
+            delete cfg.rejectDesc;
+
             this.$refs[form].validate(valid => {
-                if (valid) {
-                    this.modal.submit = true;
+                if (valid && this.isCheck) {
+                    const data = {
+                        act: action,
+                        ...cfg,
+                        isMessage: false,
+                        onSuccess,
+                        onError
+                    };
+                    this.formSubmit(data);
                 } else {
-                    console.log('error submit! please try agin');
+                    this.$message({
+                        showClose: true,
+                        message: '格式有问题，请重试',
+                        type: 'error'
+                    });
                     return false;
                 }
             });
+
+            return cfg;
         },
-        resetForm(formName) {
-            this.$refs[formName].resetFields();
+        onSubmit(form) {
+            this.handleForm(
+                form,
+                'submitApplication',
+                res => {
+                    this.modal.submit = true;
+                },
+                res => {}
+            );
+        },
+        onSave(form) {
+            this.handleForm(
+                form,
+                'modifyApplication',
+                res => {
+                    debugger;
+                    console.log(res);
+                },
+                res => {
+                    debugger;
+                    console.log(res);
+                }
+            );
+        },
+        handleRemove(file, fileList) {
+            console.log(file, fileList);
         }
     },
     components: {

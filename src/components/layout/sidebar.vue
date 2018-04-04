@@ -1,67 +1,18 @@
 <template>
    <el-aside class="admin-aside" width="200px">
         <!-- 主视图 -->
-        <el-menu v-show="main" :default-active.sync="path" :default-openeds="['/invite']" class="admin-sider-menu" :collapse="sidebarState" >
-            <router-link v-show="checkState === 1" to="/invite/send" >
-                <el-menu-item class="sider-menu-item" index="/invite/send">
-                    <i class="el-icon-phone"></i>发起邀约
-                </el-menu-item>
-            </router-link>
-            <el-submenu v-show="checkState === 1" index="/invite">
-                <template slot="title"><i class="el-icon-menu"></i><span slot="title">邀约信息</span></template>
-                <router-link to="/invite/over" >
-                    <el-menu-item class="sider-menu-item" index="/invite/over">
-                        已发起邀约
-                    </el-menu-item>
-                </router-link>
-                <router-link to="/invite/received" >
-                    <el-menu-item class="sider-menu-item" index="/invite/received">
-                        收到的邀约
-                    </el-menu-item>
-                </router-link>
-                <router-link to="/underway" >
-                    <el-menu-item class="sider-menu-item" index="/underway">
-                        进行中
-                    </el-menu-item>
-                </router-link>
-                <router-link to="/done" >
-                    <el-menu-item class="sider-menu-item" index="/done">
-                        已完成
-                    </el-menu-item>
-                </router-link>
-                <router-link to="/refused" >
-                    <el-menu-item class="sider-menu-item" index="/refused">
-                        被拒绝
-                    </el-menu-item>
-                </router-link>
-                <router-link to="/refuse" >
-                    <el-menu-item class="sider-menu-item" index="/refuse">
-                        我拒绝
-                    </el-menu-item>
-                </router-link>
-                <router-link to="/invite/all" >
-                    <el-menu-item class="sider-menu-item" index="/invite/all">
-                        全部邀约
-                    </el-menu-item>
-                </router-link>
-            </el-submenu>
-            <router-link v-show="checkState === 1" to="/setting" >
-                <el-menu-item class="sider-menu-item" index="/setting">
-                    <i class="el-icon-setting"></i>主页设置
-                </el-menu-item>
-            </router-link>
-            <router-link v-show="checkState === 1" to="/certification/checked" >
-                <el-menu-item class="sider-menu-item" index="/certification/checked">
-                    <i class="el-icon-message"></i>演讲者资料 (已审核)
-                </el-menu-item>
-            </router-link>
-            <router-link v-show="checkState === 0" to="/certification/check" >
-                <el-menu-item class="sider-menu-item" index="/certification/check">
-                    <i class="el-icon-message"></i>演讲者资料 (未审核)
+        <el-menu router v-show="main" :default-active.sync="path" :default-openeds="['/invite']" class="admin-sider-menu" :collapse="sidebarState" >
+            <router-link v-for="menu in menuList" :key="menu.$index" :to="sidebarRender(menu,'path')" >
+                <el-menu-item class="sider-menu-item"
+                    :index="sidebarRender(menu,'path')" >
+                    <i :class="sidebarRender(menu,'icon')"></i>
+                    {{sidebarRender(menu,'name')}}
+                    <span v-if="!!sidebarRender(menu,'status')" >(
+                        {{sidebarRender(menu,'status')[menu.status]}}
+                    )</span>
                 </el-menu-item>
             </router-link>
         </el-menu>
-
         <!-- help -->
         <el-menu v-show="help" :default-active.sync="path" :default-openeds="['/help/flow','/help/download']" class="admin-sider-menu" :collapse="sidebarState" >
             <el-submenu index="/help/flow">
@@ -90,31 +41,44 @@
 </template>
 
 <script>
+import axios from 'axios';
+import qs from 'qs';
+import { attrs, sidebarRender } from '@comp/lib/api_maps';
 import { mapState, mapMutations } from 'vuex';
 
 export default {
     data() {
         return {
-            path: this.$route.path
+            attrs,
+            menuList: {},
+            path: ''
         };
     },
     mounted() {
+        axios({
+            data: qs.stringify({
+                act: 'getMenuList'
+            })
+        }).then(res => {
+            const menus = res.data.data.menuList;
+            this.menuList = menus;
+            const checkState = +menus.find(el => el.menuId == 20401).status;
+            this.setValue({ checkState });
+        });
         this.changeSidebarView();
     },
-    // 组件每次更新 都要做sidebar渲染处理
     updated() {
-        // 每次更新都要确保path实时更新
         this.changeSidebarView();
     },
     // 可以将模块的空间名称字符串作为第一个参数传递给函数
     computed: mapState({
         help: state => state.common.help_sidebar,
         main: state => state.common.common_sidebar,
-        sidebarState: state => state.common.sidebar_toggle,
-        checkState: state => state.common.check_state
+        sidebarState: state => state.common.sidebar_toggle
     }),
     methods: {
-        ...mapMutations(['switchSidebarView']),
+        sidebarRender,
+        ...mapMutations(['setValue', 'switchSidebarView']),
         changeSidebarView() {
             this.path = this.$route.path;
             if (this.path.indexOf('help') > -1) {

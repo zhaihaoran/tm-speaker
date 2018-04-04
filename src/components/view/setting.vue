@@ -4,40 +4,48 @@
             <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="setting-form" >
                 <el-form-item label="头像">
                     <Cropper
-                        boxClass="avatar"
-                        action='/admin/act=upload#!method=POST'
+                        v-on:update="handleUpdateCropperUrl"
+                        filepathname="pathfilename"
+                        previewname="photoUrl"
+                        :previewUrl="form.profilePhotoUrl"
+                        :action='Api.upload'
                         aspectRatio.number=0.5
                     ></Cropper>
                 </el-form-item>
-                <el-form-item label="学校名称" prop="schoolName" >
-                    河北实验中学
+                <el-form-item label="学校名称" prop="name" >
+                    {{form.name}}
                 </el-form-item>
-                <el-form-item label="学校地址" prop="schoolPos" >
-                    河北省石家庄市奕成县石家庄实验中学
+                <el-form-item label="学校地址" prop="address" >
+                   {{form.address}}
                 </el-form-item>
-                <el-form-item label="简介" prop="des1" >
-                    <el-input type="textarea" class="tm-textarea" v-model="form.des1"></el-input>
+                <el-form-item label="简要介绍" prop="schoolShortDesc" >
+                    <el-input v-model="form.schoolShortDesc"></el-input>
                 </el-form-item>
-                <el-form-item label="教学特色" prop="des2" >
-                    <el-input type="textarea" class="tm-textarea" v-model="form.des2"></el-input>
+                <el-form-item label="学校简介" prop="schoolDesc" >
+                    <el-input type="textarea" class="tm-textarea" v-model="form.schoolDesc"></el-input>
                 </el-form-item>
-                <el-form-item label="学校状况" prop="des3" >
-                    <el-input type="textarea" class="tm-textarea" v-model="form.des3"></el-input>
+                <el-form-item label="办学理念" prop="philosophy" >
+                    <el-input  type="textarea" class="tm-textarea" v-model="form.philosophy"></el-input>
+                </el-form-item>
+                <el-form-item label="校园文化" prop="culture" >
+                    <el-input  type="textarea" class="tm-textarea" v-model="form.culture"></el-input>
+                </el-form-item>
+                <el-form-item label="发展历程" prop="growth" >
+                    <el-input type="textarea" class="tm-textarea" v-model="form.growth"></el-input>
                 </el-form-item>
                 <el-button type="primary" @click="onSubmit('form')">保存</el-button>
-                <el-button @click="resetForm('form')">重置</el-button>
             </el-form>
         </el-tab-pane>
         <el-tab-pane label="相册">
             <div class="upload-pic">
                 <el-upload
-                    action="/admin/act=upload#!method=POST"
+                    :action="Api.upload"
                     :show-file-list="false"
                     :limit="10"
+                    :on-change="handlePicChange"
+                    :auto-upload="false"
                     :on-exceed="handleExceed"
-                    :on-success="handleSuccess"
-                    :on-remove="handleRemove"
-                    :file-list="photos"
+                    :file-list="photoList"
                     >
                     <el-button size="small" type="primary">点击上传</el-button>
                     <div slot="tip" class="el-upload__tip upload-tip">只能上传jpg/png文件，且不超过500kb</div>
@@ -45,28 +53,31 @@
             </div>
             <div class="individar"></div>
             <el-row :gutter="10">
-                <el-col class="tm-col-5 pic-cube" :sm="12" :md="8" :lg="6" v-for="photo in photos" :key="photo.id" v-dragging="{ item: photo, list: photos, group: 'photo' }" >
-                    <img ref="photo" :src="photo.url" class="img-fluid" alt="">
+                <div class="empty-box" v-show="photoList.length == 0" >
+                    暂无图片
+                </div>
+                <el-col class="tm-col-5 pic-cube" :sm="12" :md="8" :lg="6" v-for="photo in photoList" :key="photo.schoolPhotoId" v-dragging="{ item: photo, list: photoList, group: 'photo' }" >
+                    <img @click="handleDeletePic(photo)" ref="photo" :src="photo.photoUrl" class="img-fluid" :time="photo.addTimestamp">
                 </el-col>
             </el-row>
         </el-tab-pane>
         <el-tab-pane label="视频">
             <el-row :gutter="10">
-                <el-col class="tm-col-5" :sm="12" :md="8" :lg="6" v-for="video in videos" :key="video.id" >
-                    <div :class="[videoClass,{active:video.personalPageRecommend}]" >
+                <el-col class="tm-col-5" :sm="12" :md="8" :lg="6" v-for="video in videos" :key="video.videoId" >
+                    <div :class="[videoClass,{active:videoIdOfRecommended == video.videoId}]" >
                         <div class="card-image">
-                            <img class="img-fluid" :src="video.img">
-                            <span class="vd-times badge">{{video.time}}</span>
+                            <img class="img-fluid" :src="video.previewUrl">
+                            <span class="vd-times badge">{{video.duration}}</span>
                         </div>
-                        <div class="card-content">
-                            <span class="card-title grey-333">{{video.title}}</span>
+                        <div :href="video.linkUrl" class="card-content">
+                            <span class="card-title grey-333">{{video.videoTitle}}</span>
                             <div class="vd-extra">
-                                <span>演讲者：{{video.author}}</span>
-                                <span>学校：{{video.school}}</span>
-                                <span>{{video.startTime}} <span class="text-right" >{{video.count}} 次播放</span> </span>
+                                <span>演讲者：{{video.speakerName}}</span>
+                                <span>学校：{{video.schoolName}}</span>
+                                <span>{{video.addTimestamp}} <span class="text-right" >{{video.playTimes}} 次播放</span> </span>
                             </div>
                         </div>
-                        <span @click="recommend(video)"  class="bages"  ><i class="el-icon-upload2"></i>推荐</span>
+                        <span @click="recommend(video,videoIdOfRecommended == video.videoId)" class="bages"><i class="el-icon-upload2"></i>推荐</span>
                         <div class="recommend-box">
                             <span>点亮按钮可设置为推荐视频</span>
                         </div>
@@ -75,9 +86,9 @@
             </el-row>
             <el-pagination
                 :current-page.sync="current"
-                :page-size="10"
+                :page-size="8"
                 layout="total, prev, pager, next"
-                :total="100"
+                :total="count"
                 class="photo-pagination"
             >
             </el-pagination>
@@ -85,144 +96,115 @@
     </el-tabs>
 </template>
 <script>
-import $ from 'jquery';
-import axios from 'axios';
 import Cropper from '@layout/modal/cropper.vue';
+import jQuery from 'jquery';
 import '@comp/lib/velocity.min.js';
 import '@comp/lib/materialbox.js';
-import Util from '@comp/lib/utils.js';
+import { mapState, mapMutations } from 'vuex';
+
+import { Api } from '@comp/lib/api_maps';
+
 export default {
-    mounted() {
-        this.$dragging.$on('dragged', ({ value }) => {
-            console.log(value);
-            console.log('hahaha');
-        });
-        axios.post('/admin/act=upload#!method=POST').then(res => {
-            console.log(res);
-        });
-    },
     data() {
         return {
+            photoList: [],
             videoClass: {
                 video: true,
                 'card-hover': true,
                 hoverable: true
             },
-            current: 3,
-            form: {
-                schoolName: '',
-                schoolPos: '',
-                dest1: '',
-                dest2: '',
-                dest3: ''
-            },
-            rules: {
-                schoolName: [],
-                schoolPos: '',
-                dest1: '',
-                dest2: '',
-                dest3: ''
-            },
-            videos: [
-                {
-                    id: '1',
-                    time: '12:58',
-                    img: '/static/image/card.png',
-                    title: '成为更好的自己',
-                    author: '周程程',
-                    count: 9999,
-                    startTime: '2017-12-30',
-                    school: '华中师范大学附属中学',
-                    personalPageRecommend: 1
-                },
-                {
-                    id: '2',
-                    time: '12:58',
-                    img: '/static/image/card.png',
-                    title: 'haha1',
-                    author: '周程程',
-                    count: 9999,
-                    startTime: '2017-12-30',
-                    school: '华中师范大学附属中学',
-                    personalPageRecommend: 0
-                },
-                {
-                    id: '3',
-                    time: '12:58',
-                    img: '/static/image/card.png',
-                    title: 'haha2',
-                    author: '周程程',
-                    count: 9999,
-                    startTime: '2017-12-30',
-                    school: '华中师范大学附属中学',
-                    personalPageRecommend: 0
-                },
-                {
-                    id: '4',
-                    time: '12:58',
-                    img: '/static/image/card.png',
-                    title: 'haha3',
-                    author: '周程程',
-                    count: 9999,
-                    startTime: '2017-12-30',
-                    school: '华中师范大学附属中学',
-                    personalPageRecommend: 0
-                },
-                {
-                    id: '5',
-                    time: '12:58',
-                    img: '/static/image/card.png',
-                    title: 'haha4',
-                    author: '周程程',
-                    count: 9999,
-                    startTime: '2017-12-30',
-                    school: '华中师范大学附属中学',
-                    personalPageRecommend: 0
-                }
-            ],
-            photos: [
-                // 在static下的文件不经过处理，引用必须用绝对路径
-                {
-                    id: 1,
-                    url: '/static/image/guests/guest1.png'
-                },
-                {
-                    id: 2,
-                    url: '/static/image/guests/guest2.png'
-                },
-                {
-                    id: 3,
-                    url: '/static/image/guests/guest3.png'
-                },
-                {
-                    id: 4,
-                    url: '/static/image/guests/guest4.png'
-                },
-                {
-                    id: 5,
-                    url: '/static/image/guests/guest1.png'
-                },
-                {
-                    id: 6,
-                    url: '/static/image/guests/guest2.png'
-                },
-                {
-                    id: 7,
-                    url: '/static/image/guests/guest3.png'
-                }
-            ]
+            current: 1,
+            videoIdOfRecommended: '',
+            count: 0,
+            rules: {},
+            videos: [],
+            Api,
+            form: {}
         };
     },
+    mounted() {
+        this.$dragging.$on('dragged', ({ value }) => {
+            console.log('hahaha');
+        });
+        $(this.$refs.photo).materialbox();
+
+        this.getFormData({
+            act: 'getPersonalPageGeneral',
+            onSuccess: res => {
+                this.form = res.data.data;
+            }
+        });
+
+        /* 相册数据 */
+        this.getArrayData({
+            act: 'getPersonalPagePhotoList',
+            onSuccess: res => {
+                this.photoList = res.data.data.photoList;
+            }
+        });
+
+        /* 视频信息 */
+        this.getArrayData({
+            act: 'getPersonalPageVideoList',
+            onSuccess: res => {
+                this.videos = res.data.data.data;
+                this.count = +res.data.data.count;
+                this.videoIdOfRecommended = res.data.data.videoIdOfRecommended;
+            }
+        });
+    },
+    computed: {
+        ...mapState({
+            pathfilename: state => state.upload.pathfilename,
+            photoUrl: state => state.search.photoUrl
+        })
+    },
     methods: {
-        recommend(value) {
-            value.personalPageRecommend = 1;
+        ...mapMutations([
+            'update',
+            'getFormData',
+            'formSubmit',
+            'getArrayData',
+            'photoUpload'
+        ]),
+        /* 设置cropperUrl */
+        handleUpdateCropperUrl(obj) {
+            this.form.profilePhotoUrl = obj.fileUrl;
+            this.form.profilePhotoShortPathFilename = obj.shortPathFilename;
+        },
+        recommend(video, state) {
+            if (!state) {
+                this.formSubmit({
+                    act: 'setPersonalPageVideoRecommend',
+                    videoId: video.videoId,
+                    onSuccess: res => {
+                        this.videoIdOfRecommended = video.videoId;
+                    }
+                });
+            }
+        },
+        handleSetPathFileName(res) {
+            console.log(res);
         },
         onSubmit(form) {
+            const cfg = Object.assign(this.form, {
+                profilePhotoShortPathFilename: this.pathfilename,
+                profilePhotoUrl: this.photoUrl
+            });
+
             this.$refs[form].validate(valid => {
                 if (valid) {
-                    console.log('OK');
+                    this.formSubmit({
+                        act: 'modifyPersonalPageGeneral',
+                        ...cfg,
+                        onSuccess: res => {
+                            console.log('修改成功');
+                        },
+                        onError: res => {
+                            console.log('失败');
+                        }
+                    });
                 } else {
-                    console.log('error submit! please try agin');
                     return false;
                 }
             });
@@ -230,23 +212,48 @@ export default {
         resetForm(formName) {
             this.$refs[formName].resetFields();
         },
-        handleRemove(file, fileList) {
-            console.log(file, fileList);
-        },
         handleExceed(files, fileList) {
             this.$message.warning(
                 `当前限制选择 10 个文件，共选择了 ${files.length +
                     fileList.length} 个文件`
             );
         },
-        handleSuccess(res, fileList) {
-            // 成功的话
-            if (res.code === 123) {
-                this.photos.push({
-                    id: '11',
-                    url: res.data.fileUrl
-                });
-            }
+        /* 添加图片 */
+        handlePicChange(file) {
+            let formCfg = new FormData();
+            formCfg.append('file', file.raw);
+            formCfg.append('act', 'addPersonalPagePhoto');
+            this.photoUpload({
+                formCfg,
+                onSuccess: res => {
+                    console.log(res);
+                    this.photoList.push(res.data.data);
+                },
+                onError: res => {
+                    console.log('error', res);
+                }
+            });
+        },
+        /* 删除照片 */
+        handleDeletePic(row) {
+            this.$confirm('确认删除吗?', '提示', {
+                confirmButtonText: '确定',
+                cancelButtonText: '取消',
+                type: 'warning'
+            })
+                .then(() => {
+                    this.formSubmit({
+                        act: 'removePersonalPagePhoto',
+                        schoolPhotoId: row.schoolPhotoId,
+                        onSuccess: res => {
+                            const index = this.photoList.findIndex(
+                                el => el.schoolPhotoId === row.schoolPhotoId
+                            );
+                            this.photoList.splice(index, 1);
+                        }
+                    });
+                })
+                .catch(() => {});
         }
     },
     components: {
@@ -264,6 +271,7 @@ export default {
 }
 .setting-form {
     max-width: 500px;
+    padding: 30px;
 }
 .photo-pagination {
     float: right;

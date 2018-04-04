@@ -13,11 +13,17 @@
         <el-button type="text" v-popover:popover v-if="progress === 2"  >待上课</el-button>
         <el-button type="text" v-popover:popover v-if="progress === 3"  >待课后反馈提交</el-button>
         <el-button type="text" v-popover:popover v-if="progress === 4"  >待课后反馈确认</el-button>
+        <el-button type="text" v-popover:popover v-if="progress === 5"  >完成</el-button>
     </div>
 </template>
 <script>
 export default {
-    props: ['progress']
+    props: {
+        progress: {
+            type: Number,
+            default: 1
+        }
+    }
 };
 </script>
 

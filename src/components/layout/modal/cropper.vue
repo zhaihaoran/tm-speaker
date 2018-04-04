@@ -1,28 +1,49 @@
 <template>
     <div :class="boxClass" id="cropper">
         <el-upload
+            ref="upload"
             class="avatar-uploader"
             :action="action"
+            :auto-upload="false"
             list-type="picture-card"
             :show-file-list="false"
-            :auto-upload="false"
             :on-change="change"
             >
-            <img v-if="url" :src="url" class="img-fluid">
+            <img v-if="previewUrl" :src="previewUrl" class="img-fluid">
             <i v-else class="el-icon-plus"></i>
         </el-upload>
         <!-- 遮罩层 -->
         <div class="container" v-show="panel">
-            <img id="image" class="img-fluid" :src="url" alt="Picture">
+            <img id="image" class="img-fluid" :src="previewUrl" alt="Picture">
             <el-button id="cancel" @click="cancel">取 消</el-button>
             <el-button type="primary" id="button" @click="commit" >确 定</el-button>
         </div>
     </div>
 </template>
 <script>
+import { mapState, mapMutations } from 'vuex';
+
 import Cropper from 'cropperjs';
 export default {
+    data() {
+        return {
+            picValue: '', //原图 File 文件
+            blob: '', // canvas Blob 文件
+            cropper: '',
+            panel: false,
+            url: this.previewUrl
+        };
+    },
     props: {
+        previewUrl: {
+            type: String
+        },
+        filepathname: {
+            type: String
+        },
+        previewname: {
+            type: String
+        },
         boxClass: {
             type: String,
             default: 'box'
@@ -52,14 +73,6 @@ export default {
             default: ''
         }
     },
-    data() {
-        return {
-            picValue: '',
-            cropper: '',
-            panel: false,
-            url: ''
-        };
-    },
     mounted() {
         //初始化这个裁剪框
         var self = this;
@@ -77,6 +90,7 @@ export default {
         });
     },
     methods: {
+        ...mapMutations(['update', 'commonUpload']),
         //取消上传
         cancel() {
             this.panel = false;
@@ -144,8 +158,13 @@ export default {
             // Round
             roundedCanvas = this.getRoundedCanvas(croppedCanvas);
             this.url = roundedCanvas.toDataURL();
-            //上传图片
-            this.postImg();
+            // 经过剪裁之后，如何将canvas的数据传递给接口？
+            // canvas转Blob后，file文件类型本身也是blob二进制类型，通过blob来作为接口数据传递
+            roundedCanvas.toBlob(blob => {
+                this.blob = blob;
+                //上传图片
+                this.postImg();
+            });
         },
         //canvas画图
         getRoundedCanvas(sourceCanvas) {
@@ -173,11 +192,22 @@ export default {
         },
         //提交上传函数
         postImg() {
-            this.$message({
-                message: '上传成功',
-                type: 'success',
-                showClose: true,
-                duration: 3000
+            let formCfg = new FormData();
+            // this.blob = Object.assign(this.picValue, this.blob);
+            // console.log(this.picValue);
+            // console.log(this.blob);
+            formCfg.append('file', this.blob, this.picValue.name);
+
+            this.commonUpload({
+                formCfg,
+                filepathname: this.filepathname,
+                previewname: this.previewname,
+                onSuccess: res => {
+                    this.$emit('update', {
+                        fileUrl: res.data.data.fileUrl,
+                        shortPathFilename: res.data.data.shortPathFilename
+                    });
+                }
             });
         }
     }

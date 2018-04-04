@@ -2,7 +2,7 @@
     <el-container class="admin-layout">
         <Header />
         <el-container class="admin-context" >
-            <Sidebar v-show="isLogin>0" />
+            <Sidebar />
             <el-main class="admin-wrapper" >
                 <router-view/>
             </el-main>
@@ -17,21 +17,9 @@ import { mapState, mapMutations } from 'vuex';
 
 export default {
     name: 'App',
-    components: { Sidebar, Header },
-    computed: mapState({
-        isLogin: state => state.common.login_state
-    }),
-    mounted() {
-        this.initState();
-    },
-    methods: {
-        ...mapMutations(['initState'])
-    }
+    components: { Sidebar, Header }
 };
 </script>
-<style lang="scss">
-@import '../scss/_school.scss';
-@import '../scss/admin_common.scss';
-</style>
+
 
 

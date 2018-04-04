@@ -1,6 +1,9 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-
+import axios from 'axios'
+import {
+    Message
+} from 'element-ui';
 
 // 发起邀约
 import Invite_send from '@comp/view/invite_send.vue'
@@ -12,7 +15,6 @@ import Invite_received from '@comp/view/invite_received.vue'
 // 进行中
 import Underway from '@comp/view/underway.vue'
 
-import Certification_checked from '@comp/view/certifi_checked.vue'
 import Certification_check from '@comp/view/certifi_check.vue'
 import Invite_all from '@comp/view/invite_all.vue'
 import Refused from '@comp/view/refused.vue'
@@ -22,9 +24,8 @@ import Setting from '@comp/view/setting.vue'
 import Flow_school from '@comp/view/flow_school.vue'
 import Flow_speaker from '@comp/view/flow_speaker.vue'
 import Download from '@comp/view/download.vue'
-
-// 登陆
-import Login from '@comp/view/login.vue'
+// error
+import ErrorPage from '@comp/view/errorPage.vue'
 
 Vue.use(Router)
 
@@ -33,14 +34,14 @@ Vue.use(Router)
 const router = new Router({
     routes: [{
         path: '/',
-        redirect: '/invite/send'
+        redirect: '/certification/check'
     }, {
         path: '/help',
         redirect: '/help/flow/school'
     }, {
-        path: '/login',
-        name: 'login',
-        component: Login,
+        path: '/404',
+        name: '404',
+        component: ErrorPage,
     }, {
         path: '/help/flow/school',
         name: 'flow_school',
@@ -73,13 +74,6 @@ const router = new Router({
         path: '/invite/received',
         name: 'invite_received',
         component: Invite_received,
-        meta: {
-            requireAuth: true,
-        },
-    }, {
-        path: '/certification/checked',
-        name: 'Certification_checked',
-        component: Certification_checked,
         meta: {
             requireAuth: true,
         },
@@ -142,24 +136,61 @@ const router = new Router({
     }]
 })
 
-// 拦截器
+// 拦截器 --- 路由拦截
 router.beforeEach((to, from, next) => {
-    console.log(to.fullPath)
-    if (to.meta.requireAuth) { // 判断该路由是否需要登录权限
-        // 判断用户是否登陆
-        if (+sessionStorage.isLogin > 0) {
-            next();
-        } else {
-            next({
-                path: '/login',
-                query: {
-                    redirect: to.fullPath
-                }
-            })
-        }
+    // 如果跳转到其他网站，则404
+    if (to.matched.length < 1) {
+        console.log("无效地址");
+        next({
+            path: '/404',
+        })
     } else {
         next();
     }
+})
+
+// axios
+
+// 全局配置
+axios.defaults.baseURL = 'http://10.0.0.148/api';
+axios.defaults.url = 'speakerConsole/';
+axios.defaults.method = 'post';
+axios.defaults.withCredentials = true;
+
+// --- 接口拦截
+/* 请求拦截 */
+axios.interceptors.request.use(config => {
+    // 在请求发送前做什么
+    return config;
+}, err => {
+    return Promise.reject(err)
+})
+
+const home = "http://10.0.0.148/"
+
+/* 响应拦截 */
+axios.interceptors.response.use(res => {
+    // 对响应数据做点什么
+    if (res.data.code == 105 ) {
+        // 返回首页
+        Message.error({
+            showClose: true,
+            message: '登陆过期,请重新登陆',
+            type: 'error',
+            onClose: () => {
+                console.log("登陆");
+                window.location.href=home
+            }
+        })
+        return res;
+    } else if( res.data.code == 1)  {
+        return res;
+    } else {
+        console.log("error",res.data);
+        return res;
+    }
+}, err => {
+    return Promise.reject(err)
 })
 
 export default router;

@@ -1,14 +1,7 @@
 <template>
     <div class="cell" >
-        <div v-if="scope.row.status == 1 && scope.row.fromSide == 1" >
-            <el-button size="mini" @click="handleEdit(scope.$index,scope.row)" >修改</el-button>
-            <el-button size="mini" class="tm-btn-border" @click="handledelete(scope.row)" >删除</el-button>
-        </div>
-        <div v-if="scope.row.status == 1 && scope.row.fromSide == 2" >
-            <el-button size="mini" type="danger" class="tm-btn" @click="modal.agree=true" >同意</el-button>
-            <el-button size="mini" class="tm-btn-border" @click="modal.refuse=true" >拒绝</el-button>
-        </div>
-
+        <el-button size="mini" type="danger" class="tm-btn" @click="modal.agree=true" >通过</el-button>
+        <el-button size="mini" class="tm-btn-border" @click="modal.refuse=true" >驳回</el-button>
         <!-- modal -->
         <el-dialog
             :visible.sync="modal.agree"
@@ -29,19 +22,17 @@
             <span>请填写拒绝原因，用于告知邀请者</span>
             <el-form ref="form" >
                 <el-form-item class="no-margin" >
-                    <el-input type="textarea" v-model="rejectDesc" class="tm-textarea"></el-input>
+                    <el-input type="textarea" class="tm-textarea"></el-input>
                 </el-form-item>
             </el-form>
             <span slot="footer" class="tm-modal-footer">
                 <el-button class="tm-btn-border" @click="modal.refuse = false">取 消</el-button>
-                <el-button class="tm-btn" type="primary" @click="handleRefuse(scope.$index,scope.row)">确 定</el-button>
+                <el-button class="tm-btn" type="primary" @click="handleRefuse()">确 定</el-button>
             </span>
         </el-dialog>
     </div>
 </template>
 <script>
-import { mapState, mapMutations } from 'vuex';
-
 export default {
     data() {
         return {
@@ -49,39 +40,27 @@ export default {
                 agree: false,
                 delete: false,
                 refuse: false
-            },
-            rejectDesc: ''
+            }
         };
     },
     props: ['scope', 'handleEdit'],
     methods: {
-        ...mapMutations(['deleteSubmit', 'Ok', 'refuse']),
-        handleOk(index, obj) {
+        handleOk() {
             this.modal.agree = false;
-            this.Ok({
-                act: 'acceptAppointment',
-                appointmentId: obj.appointmentId
-            });
         },
-        handleRefuse(index, obj) {
-            console.log(this.rejectDesc);
-            this.modal.refuse = false;
-            this.refuse({
-                act: 'rejectAppointment',
-                appointmentId: obj.appointmentId,
-                rejectDesc: this.rejectDesc
-            });
+        handleRefuse() {
+            this.modal.delete = false;
         },
-        handledelete(obj) {
+        handledelete() {
             this.$confirm('您确认要删除此次邀约, 是否继续?', '提示', {
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
                 type: 'warning'
             })
                 .then(() => {
-                    this.deleteSubmit({
-                        act: 'removeAppointment',
-                        appointmentId: obj.appointmentId
+                    this.$message({
+                        type: 'success',
+                        message: '删除成功!'
                     });
                 })
                 .catch(() => {});

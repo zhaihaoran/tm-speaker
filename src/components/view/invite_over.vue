@@ -1,114 +1,132 @@
 <template>
-    <div class="tm-card" >
-        <el-table :data="tableData" border class="tm-table" >
-            <el-table-column
-                prop="date"
-                align="center"
-                label="日期">
-            </el-table-column>
-            <el-table-column
-                prop="name"
-                align="center"
-                label="姓名">
-            </el-table-column>
-            <el-table-column
-                prop="address"
-                align="center"
-                label="地址">
-            </el-table-column>
-            <el-table-column label="消息" align="center" >
-                <template slot-scope="scope">
-                    <MessageBox :scope="scope" ></MessageBox>
-                </template>
-            </el-table-column>
-            <el-table-column align="center" label="操作">
-                <template slot-scope="scope">
-                    <Operation :scope="scope"></Operation>
-                </template>
-            </el-table-column>
-        </el-table>
-        <el-dialog
-            title="提示"
-            :visible.sync="convertion"
-            width="30%"
-        >
-        <span>这是一段信息</span>
-        <span slot="footer" class="dialog-footer">
-            <el-button @click="convertion = false">取 消</el-button>
-            <el-button type="primary" @click="convertion = false">确 定</el-button>
-        </span>
-        </el-dialog>
-        <!-- 分页 -->
-        <el-pagination
-            @size-change="handleSizeChange"
-            @current-change="handleCurrentChange"
-            :current-page.sync="currentPage"
-            :page-size="150"
-            layout="total, prev, pager, next"
-            :total="1000"
-            class="offer-pagination"
-        >
-        </el-pagination>
+    <div>
+        <div class="tm-card">
+            <Table :loading="loading" :is-pagination="false" :data="data" >
+                <el-table-column
+                    align="center"
+                    prop="school"
+                    label="学校"
+                    >
+                </el-table-column>
+                <el-table-column
+                    align="center"
+                    prop="speakTitle"
+                    label="演讲主题"
+                    >
+                </el-table-column>
+                <el-table-column
+                    align="center"
+                    prop="speakTimestamp"
+                    label="演讲时间">
+                    <template slot-scope="scope">
+                        {{dateformat(scope.row.speakTimestamp)}}
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    align="center"
+                    prop="speakDuration"
+                    label="演讲时长（分钟）">
+                </el-table-column>
+                <el-table-column
+                    align="center"
+                    prop="addTimestamp"
+                    label="发起邀约时间">
+                    <template slot-scope="scope">
+                        {{dateformat(scope.row.addTimestamp)}}
+                    </template>
+                </el-table-column>
+                <el-table-column label="消息" prop="messages"  align="center" >
+                    <template slot-scope="scope">
+                        <MessageBox :scope="scope" ></MessageBox>
+                    </template>
+                </el-table-column>
+                <el-table-column
+                    align="center"
+                    label="学校进展">
+                    <template slot-scope="scope">
+                        <el-popover class="offer-step" ref="schoolpopover" trigger="click">
+                            <el-steps direction="vertical" class="admin-step" :active="+scope.row.schoolStatus">
+                                <el-step title="待开课通知"></el-step>
+                                <el-step title="待上课"></el-step>
+                                <el-step title="待课后反馈提交"></el-step>
+                                <el-step title="待课后反馈确认"></el-step>
+                                <el-step title="完成"></el-step>
+                            </el-steps>
+                        </el-popover>
+                        <el-button type="text" v-popover:schoolpopover >
+                            {{attrs['schoolStatus'][scope.row.schoolStatus]}}
+                        </el-button>
+                    </template>
+                </el-table-column>
+                <el-table-column align="center" width="180px" label="操作">
+                    <template slot-scope="scope">
+                        <Operation :handleEdit="handleEdit" :scope="scope"></Operation>
+                    </template>
+                </el-table-column>
+            </Table>
+            <!-- edit -->
+            <EditInvite></EditInvite>
+        </div>
     </div>
 </template>
-
 <script>
 import Operation from '@layout/operation.vue';
 import MessageBox from '@layout/modal/message.vue';
+import Table from '@layout/table.vue';
+import EditInvite from '@layout/modal/editInvite.vue';
+import {
+    attrs,
+    formatAttr,
+    dateformat,
+    commonPageInit
+} from '@comp/lib/api_maps.js';
+
+import { mapState, mapMutations } from 'vuex';
+
 export default {
     data() {
         return {
-            currentPage: 2,
-            tableData: [
-                {
-                    date: '2016-05-02',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1518 弄',
-                    state: 1,
-                    chatUnreadQuantity: 2
-                },
-                {
-                    date: '2016-05-04',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1517 弄',
-                    state: 0,
-                    chatUnreadQuantity: 2
-                },
-                {
-                    date: '2016-05-01',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1519 弄',
-                    state: 0,
-                    chatUnreadQuantity: 2
-                },
-                {
-                    date: '2016-05-03',
-                    name: '王小虎',
-                    address: '上海市普陀区金沙江路 1516 弄',
-                    state: 0,
-                    chatUnreadQuantity: 2
-                }
-            ],
-            convertion: false
+            attrs,
+            form: {},
+            modal_edit: false
         };
     },
+    mounted() {
+        commonPageInit(
+            this,
+            { status: 1, fromSide: 1 },
+            {
+                act: 'getAppointmentList',
+                status: 1,
+                fromSide: 1
+            }
+        );
+    },
+    computed: {
+        ...mapState({
+            data: state => state.search.data,
+            loading: state => state.search.tableLoading
+        })
+    },
     methods: {
-        handleSizeChange(val) {
-            console.log(`每页 ${val} 条`);
-        },
-        handleCurrentChange(val) {
-            console.log(`当前页: ${val}`);
+        dateformat,
+        ...mapMutations([
+            'updateValue',
+            'getPageData',
+            'formSubmit',
+            'showModal'
+        ]),
+        handleEdit(index, row) {
+            this.showModal(row);
         }
     },
-    components: { MessageBox, Operation }
+    components: {
+        Operation,
+        MessageBox,
+        Table,
+        EditInvite
+    }
 };
 </script>
-
-<style scoped >
-.offer-pagination {
-    display: flex;
-    justify-content: flex-end;
-}
-</style>
 
 

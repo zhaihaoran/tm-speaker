@@ -1,22 +1,26 @@
 <template>
     <div>
-        <Search :searchConfig="searchConfig" ></Search>
         <div class="tm-card">
-            <el-table :data="listData" border class="tm-table" >
+            <Table :is-pagination="false" :loading="loading" :data="data" >
                 <el-table-column
                     prop="fromSide"
                     align="center"
-                    label="邀约发起者">
+                    width="120px"
+                    :formatter="formatAttr"
+                    label="邀约发起者"
+                    :filters="[{text: '演讲者', value: '演讲者'}, {text: '学校', value: '学校'}]"
+                    :filter-method="filterFromSide"
+                >
                     <template slot-scope="scope">
                         <el-tag
-                        :type="scope.row.fromSide === '学校' ? 'primary' : 'success'"
-                        close-transition>{{scope.row.fromSide}}</el-tag>
+                        :type="scope.row.fromSide == 1 ? 'primary' : 'success'"
+                        close-transition>{{attrs["fromSide"][scope.row.fromSide]}}</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column
-                    prop="speakerName"
+                    prop="school"
                     align="center"
-                    label="演讲者">
+                    label="学校">
                 </el-table-column>
                 <el-table-column
                     prop="speakTitle"
@@ -24,9 +28,12 @@
                     label="演讲主题">
                 </el-table-column>
                 <el-table-column
-                    prop="speakTimestamp"
                     align="center"
+                    prop="speakTimestamp"
                     label="演讲时间">
+                    <template slot-scope="scope">
+                        {{dateformat(scope.row.speakTimestamp)}}
+                    </template>
                 </el-table-column>
                 <el-table-column
                     prop="speakDuration"
@@ -34,16 +41,11 @@
                     label="演讲时长（分钟）">
                 </el-table-column>
                 <el-table-column
-                    prop="ct"
                     align="center"
+                    prop="addTimestamp"
                     label="发起邀约时间">
-                </el-table-column>
-                <el-table-column
-                    prop="reason"
-                    align="center"
-                    label="拒絕原因">
                     <template slot-scope="scope">
-                        <el-button type="text" @click="showReason(scope.row.reason)" >查看原因</el-button>
+                        {{dateformat(scope.row.addTimestamp)}}
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -53,50 +55,52 @@
                         <MessageBox :scope="scope" ></MessageBox>
                     </template>
                 </el-table-column>
-            </el-table>
+            </Table>
         </div>
     </div>
 </template>
 <script>
-import Search from '@layout/search.vue';
 import MessageBox from '@layout/modal/message.vue';
-import mapsAttr from '@comp/lib/api_maps.js';
+import Table from '@layout/table.vue';
+
+import {
+    attrs,
+    formatAttr,
+    dateformat,
+    commonPageInit
+} from '@comp/lib/api_maps.js';
+import { mapState, mapMutations } from 'vuex';
 
 export default {
     data() {
         return {
-            searchConfig: {
-                input: [973822200000, 973908600000],
-                category: 'right'
-            },
-            listData: [
-                {
-                    fromSide: mapsAttr['fromSide'][2],
-                    speakerName: 'zhaiharoan',
-                    speakTitle: '电影人的梦想',
-                    speakTimestamp: '2017-12-12 12:12',
-                    speakDuration: 60,
-                    ct: '2015-12-12 12:12',
-                    chatUnreadQuantity: 5, // 对话信息数
-                    reason: '不开心'
-                },
-                {
-                    fromSide: mapsAttr['fromSide'][1],
-                    speakerName: 'zhaiharoan',
-                    speakTitle: '电影人的梦想',
-                    speakTimestamp: '2017-12-12 12:12',
-                    speakDuration: 60,
-                    ct: '2015-12-12 12:12',
-                    chatUnreadQuantity: 5, // 对话信息数
-                    reason: '不开心'
-                }
-            ]
+            attrs
         };
     },
-    components: { Search, MessageBox },
+    mounted() {
+        commonPageInit(
+            this,
+            { status: 3 },
+            {
+                act: 'getAppointmentList',
+                status: 3
+            }
+        );
+    },
+    components: { MessageBox, Table },
+    computed: {
+        ...mapState({
+            data: state => state.search.data,
+            loading: state => state.search.tableLoading
+        })
+    },
     methods: {
-        showReason(reason) {
-            this.$alert(reason, '拒绝原因').catch(() => {});
+        dateformat,
+        formatAttr,
+        ...mapMutations(['updateValue', 'getPageData', 'formSubmit']),
+        filterFromSide(value, row, column) {
+            const property = column['property'];
+            return attrs[property][row[property]] === value;
         }
     }
 };

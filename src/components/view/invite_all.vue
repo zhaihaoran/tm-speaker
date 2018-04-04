@@ -1,17 +1,35 @@
 <template>
     <div>
-        <Search :searchConfig="searchConfig" ></Search>
+        <Search :search="handleSearch" >
+            <template slot-scope="props" >
+                <div class="search-input">
+                    <TimeRange></TimeRange>
+                </div>
+            </template>
+        </Search>
         <div class="tm-card">
-            <el-table :data="listData" border class="tm-table" >
+            <Table :loading="tableLoading" :data="data" :totalCount="count" >
                 <el-table-column
                     prop="status"
                     align="center"
                     label="状态">
+                    <template slot-scope="scope">
+                        {{attrs["status"][scope.row.status+''+scope.row.fromSide]}}
+                    </template>
                 </el-table-column>
                 <el-table-column
                     prop="fromSide"
                     align="center"
-                    label="邀约发起者">
+                    :formatter="formatAttr"
+                    label="发起者"
+                    :filters="[{text: '演讲者', value: '演讲者'}, {text: '学校', value: '学校'}]"
+                    :filter-method="filterFromSide"
+                >
+                    <template slot-scope="scope">
+                        <el-tag
+                        :type="scope.row.fromSide == 1 ? 'primary' : 'success'"
+                        close-transition>{{attrs["fromSide"][scope.row.fromSide]}}</el-tag>
+                    </template>
                 </el-table-column>
                 <el-table-column
                     prop="school"
@@ -27,6 +45,9 @@
                     prop="speakTimestamp"
                     align="center"
                     label="演讲时间">
+                    <template slot-scope="scope">
+                        {{dateformat(scope.row.speakTimestamp)}}
+                    </template>
                 </el-table-column>
                 <el-table-column
                     prop="speakDuration"
@@ -34,24 +55,32 @@
                     label="演讲时长（分钟）">
                 </el-table-column>
                 <el-table-column
-                    prop="ct"
+                    prop="addTimestamp"
                     align="center"
                     label="发起邀约时间">
+                    <template slot-scope="scope">
+                        {{dateformat(scope.row.addTimestamp)}}
+                    </template>
                 </el-table-column>
                 <el-table-column
                     prop="schoolStatus"
                     align="center"
-                    label="进展">
+                    :formatter="formatAttr"
+                    label="学校进展">
                 </el-table-column>
                 <el-table-column
                     prop="speakerStatus"
                     align="center"
+                    :formatter="formatAttr"
                     label="演讲者进展">
                 </el-table-column>
                 <el-table-column
                     prop="reason"
                     align="center"
                     label="拒绝原因">
+                    <template slot-scope="scope">
+                        <el-button v-show="scope.row.status == 4" type="text" @click="showReason(scope.row.reason)" >查看原因</el-button>
+                    </template>
                 </el-table-column>
                 <el-table-column
                     align="center"
@@ -66,109 +95,90 @@
                     label="操作">
                     <template slot-scope="scope" >
                         <Operation :handleEdit="handleEdit" :scope="scope"></Operation>
-                        <!-- modal edit -->
-                        <el-dialog
-                            :visible.sync="modal_edit"
-                            width="30%"
-                        >
-                            <el-form ref="form" :model="scope.row" label-width="80px" >
-                                <el-form-item label="演讲者" >
-                                    <span>{{scope.row.speakerName}}</span>
-                                </el-form-item>
-                                <el-form-item label="演讲主题" >
-                                    <el-input v-model="scope.row.speakTitle" ></el-input>
-                                </el-form-item>
-                                <el-form-item label="演讲时间" >
-                                    <el-date-picker
-                                        v-model="scope.row.speakTimestamp"
-                                        type="datetime"
-                                        placeholder="选择日期时间">
-                                    </el-date-picker>
-                                </el-form-item>
-                                <el-form-item label="演讲时长" >
-                                    <el-input v-model="scope.row.speakDuration" >
-                                        <template slot="append">分钟</template>
-                                    </el-input>
-                                </el-form-item>
-                                <el-form-item label="邀约时间" >
-                                    <span>{{scope.row.speakTimestamp}}</span>
-                                </el-form-item>
-                            </el-form>
-                            <span slot="footer" class="tm-modal-footer">
-                                <el-button class="tm-btn" type="primary" @click="modal_edit = false">确 定</el-button>
-                            </span>
-                        </el-dialog>
                     </template>
                 </el-table-column>
-            </el-table>
-            <el-pagination
-                :current-page.sync="paging.current"
-                :page-size="20"
-                layout="total, prev, pager, next"
-                :total="paging.totalCount"
-                class="pagination"
-            >
-            </el-pagination>
+            </Table>
+            <!-- edit -->
+            <EditInvite></EditInvite>
         </div>
     </div>
 </template>
 <script>
+import { mapState, mapMutations } from 'vuex';
+import {
+    attrs,
+    formatAttr,
+    dateformat,
+    commonPageInit
+} from '@comp/lib/api_maps.js';
+
 import Operation from '@layout/operation.vue';
+import EditInvite from '@layout/modal/editInvite.vue';
 import Search from '@layout/search.vue';
+import Table from '@layout/table.vue';
 import MessageBox from '@layout/modal/message.vue';
-import mapsAttr from '@comp/lib/api_maps.js';
+import TimeRange from '@layout/timerange.vue';
 
 export default {
     data() {
         return {
-            paging: {
-                current: 1,
-                totalCount: 111
-            },
-            searchConfig: {
-                input: [973822200000, 973908600000],
-                category: 'right'
-            },
-            modal_edit: false,
-            listData: [
-                {
-                    state: 0, // 0 :同意 1：修改
-                    status: mapsAttr['status'][1], //1. 发起中 2 进行中 3已完成 4 已拒绝
-                    fromSide: mapsAttr['fromSide'][1],
-                    speakerName: 'zhaiharoan',
-                    speakTitle: '电影人的梦想',
-                    speakTimestamp: '2017-12-12 12:12',
-                    speakDuration: 60,
-                    ct: '2015-12-12 12:12',
-                    chatUnreadQuantity: 2, // 对话信息数
-                    schoolStatus: mapsAttr['schoolStatus'][1], // 学校进展状态
-                    speakerStatus: mapsAttr['speakerStatus'][1], // 演讲者进展状态
-                    reason: '不开心'
-                },
-                {
-                    state: 1, // 0 :同意 1：修改
-                    status: mapsAttr['status'][2], //1. 发起中 2 进行中 3已完成 4 已拒绝
-                    fromSide: mapsAttr['fromSide'][2],
-                    speakerName: 'zhaiharoan',
-                    speakTitle: '电影人的梦想',
-                    speakTimestamp: '2017-12-12 12:12',
-                    speakDuration: 60,
-                    ct: '2015-12-12 12:12',
-                    chatUnreadQuantity: 2, // 对话信息数
-                    schoolStatus: mapsAttr['schoolStatus'][2], // 学校进展状态
-                    speakerStatus: mapsAttr['speakerStatus'][2], // 演讲者进展状态
-                    reason: '不开心'
-                }
-            ]
+            attrs,
+            form: {}
         };
     },
-    components: { Search, Operation, MessageBox },
+    computed: {
+        ...mapState({
+            orderType: state => state.search.orderType,
+            timerange: state => state.search.timerange,
+            data: state => state.search.data,
+            count: state => state.search.count,
+            tableLoading: state => state.search.tableLoading,
+            page: state => state.search.page,
+            perPage: state => state.search.perPage,
+            status: state => state.search.status
+        })
+    },
+    components: { Search, Operation, MessageBox, EditInvite, Table, TimeRange },
+    mounted() {
+        commonPageInit(
+            this,
+            { status: 0 },
+            {
+                act: 'getAppointmentList',
+                status: 0
+            }
+        );
+    },
     methods: {
+        formatAttr,
+        dateformat,
+        ...mapMutations([
+            'updateValue',
+            'getPageData',
+            'formSubmit',
+            'showModal'
+        ]),
         handleEdit(index, row) {
-            console.log(index);
-            console.log(row);
-            this.modal_edit = true;
-            this.form = Object.assign(row);
+            this.showModal(row);
+        },
+        filterFromSide(value, row, column) {
+            const property = column['property'];
+            return attrs[property][row[property]] === value;
+        },
+        showReason(reason) {
+            this.$alert(reason, '拒绝原因').catch(() => {});
+        },
+        handleSearch() {
+            const data = {
+                act: 'getAppointmentList',
+                orderType: this.orderType,
+                speakTimestampStart: this.timerange[0],
+                speakTimestampEnd: this.timerange[1],
+                page: this.page,
+                perPage: this.perPage,
+                status: this.status
+            };
+            this.getPageData(data);
         }
     }
 };

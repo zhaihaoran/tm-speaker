@@ -1,7 +1,13 @@
 <template>
     <div>
-        <Search :searchConfig="searchConfig" ></Search>
-        <div v-for="person in persons" :key="person.id" class="tm-card in-card">
+        <Search :search="handleSearch" >
+            <template slot-scope="props" >
+                <div class="search-input">
+                    <el-input type="search" placeholder="搜索关键字" v-model="searchText" ></el-input>
+                </div>
+            </template>
+        </Search>
+        <div v-for="person in data" :key="person.$index" class="tm-card in-card">
             <a href="/home_lecturer.html" class="card-image">
                 <img :src="person.image" class="img-fluid" alt="">
             </a>
@@ -13,16 +19,18 @@
                 </p>
                 <p class="no-margin text-overflow" >简介：{{person.description}}</p>
             </div>
-            <el-button @click="handleInvite()" class="tm-btn invite-btn" >邀约</el-button>
+            <el-button @click="handleEdit(person)" class="tm-btn invite-btn">邀约</el-button>
         </div>
+        <!-- edit -->
+        <EditInvite title="发起邀约" ></EditInvite>
         <el-card class="text-center" >
-             <el-pagination
+            <el-pagination
                 @size-change="handleSizeChange"
                 @current-change="handleCurrentChange"
-                :current-page.sync="currentPage"
-                :page-size="10"
+                :current-page.sync="page"
+                :page-size="perPage"
                 layout="total, prev, pager, next"
-                :total="200"
+                :total="count"
                 class="offer-pagination"
             >
             </el-pagination>
@@ -30,71 +38,82 @@
     </div>
 </template>
 <script>
+import { mapState, mapMutations } from 'vuex';
+import EditInvite from '@layout/modal/sendInvite.vue';
 import Search from '@layout/search.vue';
 export default {
     data() {
         return {
-            searchConfig: {
-                input: [973822200000, 973908600000],
-                category: 'right'
-            },
-            currentPage: 3,
-            persons: [
-                {
-                    id: 1,
-                    name: '张小山',
-                    image: '/static/image/guests/guest1.png',
-                    info: '英语老师，野外探险爱好者',
-                    invitenum: 328,
-                    contrinum: 32,
-                    description:
-                        '我们学校特别困难，夏天没有风扇，冬天没有暖气，连玻璃都是用纸糊的，烧炉子都买不起煤。惨,我们学校特别困难，夏天没有风扇，冬天没有暖气，连玻璃都是用纸糊的，烧炉子都买不起煤。惨,我们学校特别困难，夏天没有风扇，冬天没有暖气，连玻璃都是用纸糊的，烧炉子都买不起煤。惨,我们学校特别困难，夏天没有风扇，冬天没有暖气，连玻璃都是用纸糊的，烧炉子都买不起煤。惨'
-                },
-                {
-                    id: 2,
-                    name: '张小山',
-                    image: '/static/image/guests/guest2.png',
-                    info: '英语老师，野外探险爱好者',
-                    invitenum: 328,
-                    contrinum: 32,
-                    description:
-                        '我们学校特别困难，夏天没有风扇，冬天没有暖气，连玻璃都是用纸糊的，烧炉子都买不起煤。惨,我们学校特别困难，夏天没有风扇，冬天没有暖气，连玻璃都是用纸糊的，烧炉子都买不起煤。惨,我们学校特别困难，夏天没有风扇，冬天没有暖气，连玻璃都是用纸糊的，烧炉子都买不起煤。惨,我们学校特别困难，夏天没有风扇，冬天没有暖气，连玻璃都是用纸糊的，烧炉子都买不起煤。惨'
-                },
-                {
-                    id: 3,
-                    name: '张小山',
-                    image: '/static/image/guests/guest3.png',
-                    info: '英语老师，野外探险爱好者',
-                    invitenum: 328,
-                    contrinum: 32,
-                    description:
-                        '我们学校特别困难，夏天没有风扇，冬天没有暖气，连玻璃都是用纸糊的，烧炉子都买不起煤。惨,我们学校特别困难，夏天没有风扇，冬天没有暖气，连玻璃都是用纸糊的，烧炉子都买不起煤。惨,我们学校特别困难，夏天没有风扇，冬天没有暖气，连玻璃都是用纸糊的，烧炉子都买不起煤。惨,我们学校特别困难，夏天没有风扇，冬天没有暖气，连玻璃都是用纸糊的，烧炉子都买不起煤。惨'
-                },
-                {
-                    id: 4,
-                    name: '张小山',
-                    image: '/static/image/guests/guest4.png',
-                    info: '英语老师，野外探险爱好者',
-                    invitenum: 328,
-                    contrinum: 32,
-                    description:
-                        '我们学校特别困难，夏天没有风扇，冬天没有暖气，连玻璃都是用纸糊的，烧炉子都买不起煤。惨,我们学校特别困难，夏天没有风扇，冬天没有暖气，连玻璃都是用纸糊的，烧炉子都买不起煤。惨,我们学校特别困难，夏天没有风扇，冬天没有暖气，连玻璃都是用纸糊的，烧炉子都买不起煤。惨,我们学校特别困难，夏天没有风扇，冬天没有暖气，连玻璃都是用纸糊的，烧炉子都买不起煤。惨'
-                }
-            ]
+            searchText: ''
         };
     },
+    computed: {
+        ...mapState({
+            orderType: state => state.search.orderType,
+            data: state => state.search.data,
+            count: state => state.search.count,
+            loading: state => state.search.tableLoading,
+            page: state => state.search.page,
+            perPage: state => state.search.perPage
+        })
+    },
     components: {
-        Search
+        Search,
+        EditInvite
+    },
+    mounted() {
+        const data = {
+            act: 'getSpeakerList',
+            onError: res => {},
+            onSuccess: res => {
+                console.log(res);
+            }
+        };
+        this.getPageData(data);
     },
     methods: {
+        ...mapMutations(['getPageData', 'showModal', 'formSubmit']),
+        handleEdit(row) {
+            const obj = {
+                speakerId: row.speakerId,
+                speakerName: row.name,
+                speakDuration: '',
+                speakerTitle: '',
+                speakTimestamp: 0,
+                addTimestamp: 0
+            };
+            this.showModal(obj);
+        },
         handleSizeChange(val) {
             console.log(`每页 ${val} 条`);
         },
         handleCurrentChange(val) {
             console.log(`当前页: ${val}`);
         },
-        handleInvite() {
-            console.log(this);
+        handleInvite({ speakerId, speakTitle, speakTimestamp, speakDuration }) {
+            // 发起邀约 --- 参数对不上？ 为什么要传其他东西，不只需要id
+            const cfg = {
+                act: 'createAppointment',
+                speakerId,
+                speakTitle,
+                speakTimestamp,
+                speakDuration
+            };
+            this.formSubmit(cfg);
+        },
+        handleSearch() {
+            const data = {
+                act: 'getSpeakerList',
+                orderType: this.orderType,
+                searchText: this.searchText,
+                page: this.page,
+                perPage: this.perPage,
+                onError: res => {
+                    console.log('success');
+                },
+                onSuccess: res => {}
+            };
+            this.getPageData(data);
         }
     }
 };
