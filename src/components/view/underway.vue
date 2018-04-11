@@ -8,8 +8,6 @@
                     :formatter="formatAttr"
                     label="邀约发起者"
                     width="120px"
-                    :filters="[{text: '演讲者', value: '演讲者'}, {text: '学校', value: '学校'}]"
-                    :filter-method="filterFromSide"
                 >
                     <template slot-scope="scope">
                         <el-tag
@@ -24,11 +22,13 @@
                 </el-table-column>
                 <el-table-column
                     prop="speakTitle"
+                    :show-overflow-tooltip="true"
                     align="center"
                     label="演讲主题">
                 </el-table-column>
                 <el-table-column
                     prop="speakTimestamp"
+                    width="140px"
                     align="center"
                     sortable
                     label="演讲时间">
@@ -39,10 +39,11 @@
                 <el-table-column
                     prop="speakDuration"
                     align="center"
-                    label="演讲时长（分钟）">
+                    label="演讲时长（分钟）" width="80">
                 </el-table-column>
                 <el-table-column
                     prop="addTimestamp"
+                    width="140px"
                     align="center"
                     label="发起邀约时间">
                     <template slot-scope="scope">
@@ -172,10 +173,7 @@ export default {
             'getFeedList',
             'photoUpload'
         ]),
-        filterFromSide(value, row, column) {
-            const property = column['property'];
-            return attrs[property][row[property]] === value;
-        },
+
         handleRemove(file, fileList) {
             console.log('remove');
             console.log(file, fileList);

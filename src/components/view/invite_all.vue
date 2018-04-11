@@ -10,11 +10,25 @@
         <div class="tm-card">
             <Table :loading="tableLoading" :data="data" >
                 <el-table-column
+                    type="index"
+                    align="center"
+                    width="40"
+                >
+                </el-table-column>
+                <!-- <el-table-column label="展开" type="expand">
+                    <template slot-scope="scope">
+                        <h2>{{attrs["status"][scope.row.status+''+scope.row.fromSide]}}</h2>
+                    </template>
+                </el-table-column> -->
+                <el-table-column
                     prop="status"
                     align="center"
                     label="状态">
                     <template slot-scope="scope">
-                        {{attrs["status"][scope.row.status+''+scope.row.fromSide]}}
+                        <el-tag
+                        :type="attrs['status'][scope.row.status+''+scope.row.fromSide].tags"
+                        close-transition>
+                        {{attrs["status"][scope.row.status+''+scope.row.fromSide].text}}</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -22,8 +36,6 @@
                     align="center"
                     :formatter="formatAttr"
                     label="发起者"
-                    :filters="[{text: '演讲者', value: '演讲者'}, {text: '学校', value: '学校'}]"
-                    :filter-method="filterFromSide"
                 >
                     <template slot-scope="scope">
                         <el-tag
@@ -39,11 +51,14 @@
                 <el-table-column
                     prop="speakTitle"
                     align="center"
+                    :show-overflow-tooltip="true"
                     label="演讲主题">
                 </el-table-column>
                 <el-table-column
                     prop="speakTimestamp"
                     align="center"
+                    width="140px"
+
                     label="演讲时间">
                     <template slot-scope="scope">
                         {{dateformat(scope.row.speakTimestamp)}}
@@ -52,10 +67,12 @@
                 <el-table-column
                     prop="speakDuration"
                     align="center"
-                    label="演讲时长（分钟）">
+                    label="演讲时长（分钟）" width="80"
+                    >
                 </el-table-column>
                 <el-table-column
                     prop="addTimestamp"
+                    width="140px"
                     align="center"
                     label="发起邀约时间">
                     <template slot-scope="scope">
@@ -79,7 +96,7 @@
                     align="center"
                     label="拒绝原因">
                     <template slot-scope="scope">
-                        <el-button v-show="scope.row.status == 4" type="text" @click="showReason(scope.row.reason)" >查看原因</el-button>
+                        <el-button  v-show="scope.row.status == 4" type="text" @click="showReason(scope.row)" >查看原因</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -91,7 +108,7 @@
                 </el-table-column>
                 <el-table-column
                     align="center"
-                    min-width="160px"
+                    width="180px"
                     label="操作">
                     <template slot-scope="scope" >
                         <Operation :handleEdit="handleEdit" :scope="scope"></Operation>
@@ -172,17 +189,23 @@ export default {
             'updateValue',
             'getPageData',
             'formSubmit',
-            'showModal'
+            'showModal',
+            'getRejectDesc'
         ]),
         handleEdit(index, row) {
             this.showModal(row);
         },
-        filterFromSide(value, row, column) {
-            const property = column['property'];
-            return attrs[property][row[property]] === value;
-        },
-        showReason(reason) {
-            this.$alert(reason, '拒绝原因').catch(() => {});
+
+        showReason(obj) {
+            this.getRejectDesc({
+                act: 'getRejectDescOfAppointment',
+                appointmentId: obj.appointmentId,
+                onSuccess: res => {
+                    this.$alert(res.data.data.rejectDesc, '拒绝原因').catch(
+                        () => {}
+                    );
+                }
+            });
         }
     }
 };

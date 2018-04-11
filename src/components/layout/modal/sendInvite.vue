@@ -20,7 +20,7 @@
                     placeholder="选择日期时间">
                 </el-date-picker>
             </el-form-item>
-            <el-form-item label="演讲时长" >
+            <el-form-item label="演讲时长">
                 <el-input placeholder="60分钟以上" v-model="form.speakDuration" >
                     <template slot="append">分钟</template>
                 </el-input>

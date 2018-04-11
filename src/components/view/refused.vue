@@ -16,11 +16,13 @@
                 </el-table-column>
                 <el-table-column
                     prop="speakTitle"
+                    :show-overflow-tooltip="true"
                     align="center"
                     label="演讲主题">
                 </el-table-column>
                 <el-table-column
                     prop="speakTimestamp"
+                    width="140px"
                     align="center"
                     label="演讲时间">
                     <template slot-scope="scope">
@@ -30,10 +32,11 @@
                 <el-table-column
                     prop="speakDuration"
                     align="center"
-                    label="演讲时长（分钟）">
+                    label="演讲时长（分钟）" width="80">
                 </el-table-column>
                 <el-table-column
                     prop="addTimestamp"
+                    width="140px"
                     align="center"
                     label="发起邀约时间">
                     <template slot-scope="scope">

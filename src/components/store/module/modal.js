@@ -1,10 +1,4 @@
-import axios from 'axios';
-import qs from 'qs';
-
-import {
-    Message
-} from 'element-ui';
-
+import Util from '@comp/lib/utils'
 
 const state = {
     form: {
@@ -12,30 +6,7 @@ const state = {
         addTimestamp: new Date().getTime() / 1000,
     },
     modal: false,
-    speakTimestamp: 0
-}
-
-const fetchData = ({
-    onSuccess,
-    onError,
-    cfg,
-    isMessage = false,
-    successText = "成功",
-    errorText = "失败",
-    ActionSuccess
-}) => {
-    axios({
-        data: qs.stringify(cfg)
-    }).then(res => {
-        if (res && res.data.code === 1) {
-            isMessage && Message.success(successText)
-            ActionSuccess && ActionSuccess(res);
-            onSuccess && onSuccess(res)
-        } else {
-            isMessage && Message.error(errorText)
-            onError && onError(res);
-        }
-    });
+    speakTimestamp: new Date().getTime() / 1000
 }
 
 const mutations = {
@@ -49,7 +20,7 @@ const mutations = {
         onSuccess,
         ...cfg
     }) {
-        fetchData({
+        Util.fetchData({
             cfg,
             onSuccess,
             isMessage: true,
@@ -60,7 +31,7 @@ const mutations = {
     closeModal(state, cfg) {
         state.modal = false;
         state.form = {
-            speakTimestamp: 0,
+            speakTimestamp: new Date().getTime() / 1000,
             addTimestamp: 0
         };
     },

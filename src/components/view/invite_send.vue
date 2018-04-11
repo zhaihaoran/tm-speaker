@@ -8,13 +8,16 @@
             </template>
         </Search>
         <div v-for="school in data" :key="school.$index" class="tm-card in-card">
-            <a href="/home_lecturer.html" class="card-image">
-                <img :src="school.photoUrl" class="img-fluid" :alt="school.schoolName">
+            <a :href="handleHomePage(school.schoolId)" class="card-image">
+                <img :src="school.photoUrl" class="min-images img-fluid" :alt="school.schoolName">
             </a>
             <div class="card-wrapper">
-                <p class="no-margin" >{{school.name}}</p>
-                <p class="no-margin" >{{school.schoolShortDesc}}</p>
-                <p class="no-margin" ><span class="num tm-text-color" >{{school.finishedClass}}</span> 演讲者开课数</p>
+                <p class="no-margin">
+                    <span class="teacher-name" >{{school.name}}</span>
+                    <span v-show="+isPoor>0" class="tm-bage">穷</span>
+                </p>
+                <p class="mm" >{{school.schoolShortDesc}}</p>
+                <p class="m-10" ><span class="num tm-text-color" >{{school.finishedClass}}</span> 开课数</p>
                 <p class="no-margin text-overflow" >简介：{{school.schoolDesc}}</p>
             </div>
             <el-button @click="handleEdit(school)" class="tm-btn invite-btn">邀约</el-button>
@@ -77,6 +80,9 @@ export default {
                 speakTimestamp: 0,
                 addTimestamp: 0
             });
+        },
+        handleHomePage(id) {
+            return `/school/schoolId/${id}`;
         }
     }
 };
@@ -102,7 +108,7 @@ export default {
         max-width: 740px;
         p {
             max-height: 66px;
-            line-height: 22px;
+            line-height: 26px;
             .num {
                 font-size: 20px;
                 font-weight: bold;
@@ -123,5 +129,27 @@ export default {
         top: 20px;
         padding: 12px 26px;
     }
+}
+.min-images {
+    min-height: 150px;
+    min-width: 100%;
+    background: #ececec;
+}
+.tm-bage {
+    background: #bb2133;
+    color: #fff;
+    padding: 3px;
+    width: 20px;
+    margin-left: 5px;
+    display: inline-block;
+    text-align: center;
+    line-height: 20px;
+}
+.mm {
+    margin: 0;
+    margin-top: 5px;
+}
+.m-10 {
+    margin: 5px 0;
 }
 </style>

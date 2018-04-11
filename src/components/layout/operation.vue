@@ -57,7 +57,6 @@ export default {
     methods: {
         ...mapMutations(['deleteSubmit', 'Ok', 'refuse']),
         handleOk(index, obj) {
-            debugger;
             this.modal.agree = false;
             this.Ok({
                 act: 'acceptAppointment',

@@ -49,9 +49,9 @@ module.exports = {
 
         // Paths
         assetsRoot: path.resolve(__dirname, '../dist'),
-        assetsSubDirectory: 'static/schoolConsole/static',
+        assetsSubDirectory: 'static/speakerConsole/static',
         // js css
-        assetsPublicPath: '/static/schoolConsole/',
+        assetsPublicPath: '/static/speakerConsole/',
 
         /**
          * Source Maps

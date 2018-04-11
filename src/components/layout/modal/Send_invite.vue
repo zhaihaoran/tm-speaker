@@ -7,16 +7,19 @@
     >
         <el-form ref="form" :model="form" label-width="80px" >
             <el-form-item label="学校名称" >
-                <span>{{form.schoolName}}</span>
+                <span>{{form.name}}</span>
             </el-form-item>
             <el-form-item label="演讲主题" >
                 <el-input placeholder="演讲主题" v-model="form.speakTitle" ></el-input>
             </el-form-item>
             <el-form-item label="演讲时间" >
                 <el-date-picker
-                    v-model.number="speakTimestamp"
+                    v-model.number="time"
                     type="datetime"
+                    :picker-options="pickerOptions1"
+                    :default-value="defaultValue"
                     value-format="timestamp"
+                    format="yyyy 年 MM 月 dd 日 HH:mm:ss"
                     placeholder="选择日期时间">
                 </el-date-picker>
             </el-form-item>
@@ -44,6 +47,37 @@ import {
 } from '@comp/lib/api_maps.js';
 
 export default {
+    data() {
+        return {
+            defaultValue: '',
+            pickerOptions1: {
+                shortcuts: [
+                    {
+                        text: '今天',
+                        onClick(picker) {
+                            picker.$emit('pick', new Date());
+                        }
+                    },
+                    {
+                        text: '昨天',
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() - 3600 * 1000 * 24);
+                            picker.$emit('pick', date);
+                        }
+                    },
+                    {
+                        text: '一周前',
+                        onClick(picker) {
+                            const date = new Date();
+                            date.setTime(date.getTime() - 3600 * 1000 * 24 * 7);
+                            picker.$emit('pick', date);
+                        }
+                    }
+                ]
+            }
+        };
+    },
     props: {
         title: {
             type: String,
@@ -53,17 +87,17 @@ export default {
     computed: {
         ...mapState({
             form: state => state.modal.form,
-            modal: state => state.modal.modal
+            modal: state => state.modal.modal,
+            speakTimestamp: state => state.modal.speakTimestamp
         }),
-        speakTimestamp: {
+        time: {
             set(value) {
-                console.log(value);
-                this.$store.commit('setDateValue', {
+                this.setDateValue({
                     speakTimestamp: value / 1000
                 });
             },
             get() {
-                return this.$store.state.modal.speakTimestamp * 1000;
+                return this.speakTimestamp * 1000;
             }
         }
     },

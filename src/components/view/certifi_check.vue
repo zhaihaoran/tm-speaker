@@ -285,11 +285,9 @@ export default {
                 form,
                 'modifyApplication',
                 res => {
-                    debugger;
                     console.log(res);
                 },
                 res => {
-                    debugger;
                     console.log(res);
                 }
             );

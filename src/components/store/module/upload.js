@@ -1,8 +1,4 @@
-import axios from 'axios';
-import qs from 'qs';
-import {
-    Message
-} from 'element-ui';
+import Util from '@comp/lib/utils'
 
 const state = {
     classroomPhotoShortPathFilename: '',
@@ -11,34 +7,6 @@ const state = {
     schoolPhotoUrl: '',
     pathfilename: '',
     photoUrl: ''
-}
-
-const fetchData = ({
-    url,
-    onSuccess,
-    onError,
-    cfg,
-    isMessage = false,
-    successText = "上传成功",
-    errorText = "上传失败",
-    ActionSuccess
-}) => {
-    axios({
-        url,
-        headers: {
-            'Content-Type': 'multipart/form-data',
-        },
-        data: cfg
-    }).then(res => {
-        if (res && res.data.code === 1) {
-            isMessage && Message.success(successText)
-            ActionSuccess && ActionSuccess(res);
-            onSuccess && onSuccess(res)
-        } else {
-            isMessage && Message.error(errorText)
-            onError && onError(res);
-        }
-    });
 }
 
 const mutations = {
@@ -53,7 +21,7 @@ const mutations = {
         formCfg
     }) {
         formCfg.append('act', 'upload');
-        fetchData({
+        Util.uploadPost({
             url: "api/common/",
             cfg: formCfg,
             onSuccess,
@@ -71,7 +39,7 @@ const mutations = {
         onError,
         formCfg
     }) {
-        fetchData({
+        Util.uploadPost({
             url: "api/speakerConsole/",
             cfg: formCfg,
             isMessage: true,

@@ -1,8 +1,4 @@
-import axios from 'axios';
-import qs from 'qs';
-import {
-    Message
-} from 'element-ui';
+import Util from '@comp/lib/utils'
 
 const state = {
     timerange: [], // 开始时间，结束时间
@@ -19,31 +15,6 @@ const state = {
     feedList: [] //反馈内容列表
 }
 
-
-const fetchPost = ({
-    onSuccess,
-    onError,
-    isMessage = false,
-    cfg,
-    successText = "成功",
-    errorText = "失败",
-    ActionSuccess
-}) => {
-    axios({
-        data: qs.stringify(cfg)
-    }).then(res => {
-        if (res && res.data.code === 1) {
-            isMessage && Message.success(successText)
-            ActionSuccess && ActionSuccess(res);
-            onSuccess && onSuccess(res)
-        } else {
-            isMessage && Message.error(errorText)
-            onError && onError(res);
-        }
-    });
-}
-
-
 const mutations = {
     updateValue(state, payload) {
         state = Object.assign(state, payload)
@@ -55,21 +26,12 @@ const mutations = {
             state.timerange = [array[0] / 1000, array[1] / 1000]
         }
     },
-    resetValue(state) {
-        state = {
-            timerange: [], // 开始时间，结束时间
-            orderType: 0, // 排序类型
-            status: 1, // 发起状态
-            page: 1, //页码
-            perPage: 20 //每页数量
-        }
-    },
     getPageData(state, {
         onSuccess,
         ...cfg
     }) {
         state.tableLoading = true;
-        fetchPost({
+        Util.fetchPost({
             onSuccess,
             cfg,
             ActionSuccess: res => {
@@ -90,7 +52,7 @@ const mutations = {
     },
     /* 删除 */
     deleteSubmit(state, cfg) {
-        fetchPost({
+        Util.fetchPost({
             cfg,
             isMessage: true,
             successText: "删除成功",
@@ -103,7 +65,7 @@ const mutations = {
     },
     /* 拒绝 */
     refuse(state, cfg) {
-        fetchPost({
+        Util.fetchPost({
             cfg,
             isMessage: true,
             successText: "操作成功",
@@ -115,7 +77,7 @@ const mutations = {
     },
     /* 同意 */
     Ok(state, cfg) {
-        fetchPost({
+        Util.fetchPost({
             cfg,
             isMessage: true,
             successText: "操作成功",
@@ -130,7 +92,7 @@ const mutations = {
         onSuccess,
         ...cfg
     }) {
-        fetchPost({
+        Util.fetchPost({
             onSuccess,
             cfg
         });
@@ -140,11 +102,19 @@ const mutations = {
         onSuccess,
         ...cfg
     }) {
-        fetchPost({
+        Util.fetchPost({
             onSuccess,
             cfg,
             ActionSuccess: res => {
                 state.chatList = res.data.data.chatMessageList
+                // 要对聊天数据进行排序
+                // 打印对象记得用console.table!!
+                // console.table(state.chatList);
+                state.chatList.sort((obj1,obj2)=>{
+                    let val1 = +obj1.addTimestamp
+                    let val2 = +obj2.addTimestamp
+                    return val1 - val2
+                })
             }
         });
     },
@@ -153,7 +123,7 @@ const mutations = {
         onSuccess,
         ...cfg
     }) {
-        fetchPost({
+        Util.fetchPost({
             onSuccess,
             cfg,
             ActionSuccess: res => {
@@ -168,7 +138,7 @@ const mutations = {
     },
     /* 获取反馈列表 */
     getFeedList(state, cfg) {
-        fetchPost({
+        Util.fetchPost({
             cfg,
             ActionSuccess: res => {
                 state.feedList = res.data.data.feedbackList;

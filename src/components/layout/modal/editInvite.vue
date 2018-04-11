@@ -17,10 +17,12 @@
                     v-model.number="speakTimestamp"
                     type="datetime"
                     value-format="timestamp"
+                    format="yyyy 年 MM 月 dd 日 HH:mm:ss"
+                    :default-value="defaultValue"
                     placeholder="选择日期时间">
                 </el-date-picker>
             </el-form-item>
-            <el-form-item label="演讲时长" >
+            <el-form-item label="演讲时长" width="80" >
                 <el-input v-model="form.speakDuration" >
                     <template slot="append">分钟</template>
                 </el-input>
@@ -44,6 +46,11 @@ import {
 } from '@comp/lib/api_maps.js';
 
 export default {
+    data() {
+        return {
+            defaultValue: ''
+        };
+    },
     props: {
         title: {
             type: String,

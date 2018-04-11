@@ -1,8 +1,4 @@
-import axios from 'axios';
-import qs from 'qs';
-import {
-    Message
-} from 'element-ui';
+import Util from '@comp/lib/utils'
 
 const state = {
     common_sidebar: false, // 主体侧边栏状态
@@ -12,30 +8,6 @@ const state = {
     login_state: 0, // 登陆状态 0：未登录
     checkState: 0, // 审核状态
 }
-
-const fetchPost = ({
-    onSuccess,
-    onError,
-    isMessage = false,
-    cfg,
-    successText = "成功",
-    errorText = "失败",
-    ActionSuccess
-}) => {
-    axios({
-        data: qs.stringify(cfg)
-    }).then(res => {
-        if (res && res.data.code === 1) {
-            isMessage && Message.success(successText)
-            ActionSuccess && ActionSuccess(res);
-            onSuccess && onSuccess(res)
-        } else {
-            isMessage && Message.error(errorText)
-            onError && onError(res);
-        }
-    });
-}
-
 // 模块的mutations 、 actions、getter 默认注册在全局命名空间的
 const mutations = {
     setValue(state, payload) {
@@ -50,15 +22,11 @@ const mutations = {
         onSuccess,
         ...cfg
     }) {
-        axios({
-            data: qs.stringify(cfg)
-        }).then(res => {
-            if (res && res.data.code === 1) {
-                onSuccess && onSuccess(res);
-            } else {
-                onError && onError(res);
-            }
-        });
+        Util.fetchPost({
+            onError,
+            onSuccess,
+            cfg
+        })
     },
     /* 数组数据 - 照片 */
     getArrayData(state, {
@@ -66,15 +34,11 @@ const mutations = {
         onSuccess,
         ...cfg
     }) {
-        axios({
-            data: qs.stringify(cfg)
-        }).then(res => {
-            if (res && res.data.code === 1) {
-                onSuccess && onSuccess(res);
-            } else {
-                onError && onError(res);
-            }
-        });
+        Util.fetchPost({
+            onError,
+            onSuccess,
+            cfg
+        })
     },
     /* 获取表单数据 */
     formSubmit(state, {
@@ -85,7 +49,7 @@ const mutations = {
         errorText = "提交失败",
         ...cfg
     }) {
-        fetchPost({
+        Util.fetchPost({
             onError,
             onSuccess,
             isMessage,
@@ -103,6 +67,7 @@ const mutations = {
             state.common_sidebar = true;
         }
     },
+    /* abolition */
     login(state) {
         state.login_state = 1;
         sessionStorage.isLogin = 1;
