@@ -81,15 +81,17 @@ const mutations = {
         onError,
         onSuccess,
         isMessage = true,
+        successText = "提交成功",
+        errorText = "提交失败",
         ...cfg
     }) {
         fetchPost({
             onError,
             onSuccess,
-            isMessage: isMessage,
-            successText: "提交成功",
+            isMessage,
+            successText,
             cfg,
-            errorText: "提交失败"
+            errorText
         })
     },
     switchSidebarView(state, view) {

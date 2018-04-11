@@ -1,12 +1,11 @@
 <template>
     <div :class="boxClass" id="cropper">
         <el-upload
-            ref="upload"
             class="avatar-uploader"
             :action="action"
-            :auto-upload="false"
             list-type="picture-card"
             :show-file-list="false"
+            :auto-upload="false"
             :on-change="change"
             >
             <img v-if="previewUrl" :src="previewUrl" class="img-fluid">
@@ -14,7 +13,7 @@
         </el-upload>
         <!-- 遮罩层 -->
         <div class="container" v-show="panel">
-            <img id="image" class="img-fluid" :src="previewUrl" alt="Picture">
+            <img id="image" class="img-fluid" :src="url" alt="Picture">
             <el-button id="cancel" @click="cancel">取 消</el-button>
             <el-button type="primary" id="button" @click="commit" >确 定</el-button>
         </div>
@@ -22,18 +21,9 @@
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex';
-
 import Cropper from 'cropperjs';
+
 export default {
-    data() {
-        return {
-            picValue: '', //原图 File 文件
-            blob: '', // canvas Blob 文件
-            cropper: '',
-            panel: false,
-            url: this.previewUrl
-        };
-    },
     props: {
         previewUrl: {
             type: String
@@ -73,6 +63,15 @@ export default {
             default: ''
         }
     },
+    data() {
+        return {
+            picValue: '',
+            blob: '', // canvas Blob 文件
+            cropper: '',
+            panel: false,
+            url: ''
+        };
+    },
     mounted() {
         //初始化这个裁剪框
         var self = this;
@@ -94,8 +93,6 @@ export default {
         //取消上传
         cancel() {
             this.panel = false;
-            var obj = document.getElementById('change');
-            obj.outerHTML = obj.outerHTML;
         },
         //创建url路径
         getObjectURL(file) {

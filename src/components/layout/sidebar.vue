@@ -7,10 +7,11 @@
                     :index="sidebarRender(menu,'path')" >
                     <i :class="sidebarRender(menu,'icon')"></i>
                     {{sidebarRender(menu,'name')}}
-                    <span v-if="!!sidebarRender(menu,'status')" >(
+                    <span v-if="sidebarRender(menu,'status')" >(
                         {{sidebarRender(menu,'status')[menu.status]}}
                     )</span>
                 </el-menu-item>
+                <div class="dividar" v-show="sidebarRender(menu,'dividar')" ></div>
             </router-link>
         </el-menu>
         <!-- help -->
@@ -51,7 +52,7 @@ export default {
         return {
             attrs,
             menuList: {},
-            path: ''
+            path: this.$route.path
         };
     },
     mounted() {
@@ -63,6 +64,7 @@ export default {
             const menus = res.data.data.menuList;
             this.menuList = menus;
             const checkState = +menus.find(el => el.menuId == 20401).status;
+            console.log(checkState);
             this.setValue({ checkState });
         });
         this.changeSidebarView();
@@ -90,3 +92,10 @@ export default {
     }
 };
 </script>
+<style lang="scss" scoped>
+.dividar {
+    height: 2px;
+    background: #4e4b4b;
+}
+</style>
+

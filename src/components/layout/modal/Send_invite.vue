@@ -10,7 +10,7 @@
                 <span>{{form.schoolName}}</span>
             </el-form-item>
             <el-form-item label="演讲主题" >
-                <el-input v-model="form.speakTitle" ></el-input>
+                <el-input placeholder="演讲主题" v-model="form.speakTitle" ></el-input>
             </el-form-item>
             <el-form-item label="演讲时间" >
                 <el-date-picker
@@ -21,7 +21,7 @@
                 </el-date-picker>
             </el-form-item>
             <el-form-item label="演讲时长" >
-                <el-input v-model="form.speakDuration" >
+                <el-input placeholder="60分钟以上" v-model="form.speakDuration" >
                     <template slot="append">分钟</template>
                 </el-input>
             </el-form-item>
@@ -68,29 +68,18 @@ export default {
         }
     },
     methods: {
-        ...mapMutations([
-            'formSubmit',
-            'setDateValue',
-            'closeModal',
-            'updatelist'
-        ]),
+        ...mapMutations(['formSubmit', 'setDateValue', 'closeModal']),
         dateformat,
         handleSubmitForm() {
-            let cfg = {
-                appointmentId: this.form.appointmentId,
+            this.formSubmit({
+                act: 'createAppointment',
+                schoolId: this.form.schoolId,
                 speakTitle: this.form.speakTitle,
                 speakTimestamp: this.speakTimestamp / 1000,
                 speakDuration: this.form.speakDuration,
-                addTimestamp: this.form.addTimestamp
-            };
-
-            this.formSubmit({
-                act: 'modifyAppointment',
-                ...cfg,
-                successText: '修改成功',
-                errorText: '修改失败',
+                successText: '邀约成功',
+                errorText: '邀约失败',
                 onSuccess: res => {
-                    this.updatelist(cfg);
                     this.handleClose();
                 }
             });
@@ -101,4 +90,5 @@ export default {
     }
 };
 </script>
+
 

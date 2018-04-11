@@ -1,16 +1,16 @@
 <template>
     <div>
-        <Search :search="handleSearch" >
+        <Search :cfg="searchCfg" >
             <template slot-scope="props" >
                 <div class="search-input">
-                    <el-input type="search" placeholder="搜索关键字" v-model="searchText" ></el-input>
+                    <el-input type="search" placeholder="搜索关键字" v-model="searchCfg.searchText" ></el-input>
                 </div>
             </template>
         </Search>
         <div class="tm-card">
-            <Table :is-pagination="false" :data="data" >
+            <Table :data="data" >
                 <el-table-column
-                    prop="school"
+                    prop="schoolName"
                     align="center"
                     label="学校">
                 </el-table-column>
@@ -56,6 +56,7 @@
                     </template>
                 </el-table-column>
             </Table>
+            <Pagination :cfg="searchCfg" :count="count" ></Pagination>
         </div>
     </div>
 </template>
@@ -69,12 +70,19 @@ import {
 } from '@comp/lib/api_maps.js';
 
 import Search from '@layout/search.vue';
+import Pagination from '@layout/pagination.vue';
 import Table from '@layout/table.vue';
 import MessageBox from '@layout/modal/message.vue';
 export default {
     data() {
         return {
-            searchText: ''
+            searchCfg: {
+                act: 'getAppointmentList',
+                orderType: this.orderType,
+                status: 4,
+                fromSide: 2,
+                searchText: ''
+            }
         };
     },
     mounted() {
@@ -98,7 +106,7 @@ export default {
             perPage: state => state.search.perPage
         })
     },
-    components: { Search, MessageBox, Table },
+    components: { Search, MessageBox, Table, Pagination },
     methods: {
         dateformat,
         ...mapMutations([
@@ -118,20 +126,6 @@ export default {
                     );
                 }
             });
-        },
-        handleSearch() {
-            const data = {
-                act: 'getSpeakerList',
-                orderType: this.orderType,
-                searchText: this.searchText,
-                page: this.page,
-                perPage: this.perPage,
-                onError: res => {
-                    console.log('success');
-                },
-                onSuccess: res => {}
-            };
-            this.getPageData(data);
         }
     }
 };

@@ -2,6 +2,7 @@
     <el-date-picker
         v-model="timerange"
         value-format="timestamp"
+        :default-time="now"
         type="datetimerange"
         :picker-options="pickerOptions"
         range-separator="至"
@@ -51,18 +52,18 @@ export default {
                         }
                     }
                 ]
-            }
+            },
+            now: new Date().getTime()
         };
     },
     computed: {
         timerange: {
             set(value) {
-                this.$store.commit('updateValue', {
-                    timerange: value
-                });
+                this.$store.commit('setTimeRange', value || []);
             },
             get() {
-                return this.$store.state.search.timerange;
+                let ary = this.$store.state.search.timerange;
+                return [ary[0] * 1000, ary[1] * 1000];
             }
         }
     },
@@ -77,7 +78,7 @@ export default {
         }
     },
     methods: {
-        ...mapMutations(['updateValue'])
+        ...mapMutations(['setTimeRange'])
     }
 };
 </script>

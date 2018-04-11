@@ -16,47 +16,49 @@ const attrs = {
         10101: {
             name: "发起邀约",
             path: "/invite/send",
-            icon: "el-icon-phone"
+            icon: "el-icon-phone",
+            dividar: true
         },
         10201: {
             name: "已发起邀约",
             path: "/invite/over",
-            icon: "el-icon-phone"
+            icon: "el-icon-message"
         },
         10202: {
             name: "收到的邀约",
             path: "/invite/received",
-            icon: "el-icon-phone"
+            icon: "el-icon-phone-outline"
         },
         10203: {
             name: "进行中",
             path: "/underway",
-            icon: "el-icon-phone"
+            icon: "el-icon-date"
         },
         10204: {
             name: "已完成",
             path: "/done",
-            icon: "el-icon-phone"
+            icon: "el-icon-printer"
         },
         10205: {
             name: "被拒绝",
             path: "/refused",
-            icon: "el-icon-phone"
+            icon: "el-icon-circle-close-outline"
         },
         10206: {
             name: "我拒绝",
             path: "/refuse",
-            icon: "el-icon-phone"
+            icon: "el-icon-circle-close"
         },
         10207: {
             name: "全部邀约",
             path: "/invite/all",
-            icon: "el-icon-phone"
+            icon: "el-icon-view"
         },
         10301: {
             name: "主页设置",
             path: "/setting",
-            icon: "el-icon-phone"
+            icon: "el-icon-setting",
+            dividar: true
         },
         10401: {
             name: "学校资料",
@@ -67,7 +69,7 @@ const attrs = {
                 3: "已审核",
                 4: "已驳回"
             },
-            icon: "el-icon-phone"
+            icon: "el-icon-document",
         },
         /* 演讲者 */
         20101: {
@@ -78,42 +80,42 @@ const attrs = {
         20201: {
             name: "已发起邀约",
             path: "/invite/over",
-            icon: "el-icon-phone"
+            icon: "el-icon-message"
         },
         20202: {
             name: "收到的邀约",
             path: "/invite/received",
-            icon: "el-icon-phone"
+            icon: "el-icon-phone-outline"
         },
         20203: {
             name: "进行中",
             path: "/underway",
-            icon: "el-icon-phone"
+            icon: "el-icon-date"
         },
         20204: {
             name: "已完成",
             path: "/done",
-            icon: "el-icon-phone"
+            icon: "el-icon-printer"
         },
         20205: {
             name: "被拒绝",
             path: "/refused",
-            icon: "el-icon-phone"
+            icon: "el-icon-circle-close-outline"
         },
         20206: {
             name: "我拒绝",
             path: "/refuse",
-            icon: "el-icon-phone"
+            icon: "el-icon-circle-close"
         },
         20207: {
             name: "全部邀约",
             path: "/invite/all",
-            icon: "el-icon-phone"
+            icon: "el-icon-view"
         },
         20301: {
             name: "主页设置",
             path: "/setting",
-            icon: "el-icon-phone"
+            icon: "el-icon-setting"
         },
         20401: {
             name: "演讲者资料",
@@ -124,10 +126,15 @@ const attrs = {
                 3: "已审核",
                 4: "已驳回"
             },
-            icon: "el-icon-phone"
+            icon: "el-icon-document"
         }
     },
-
+    // 审核状态
+    "checkStatus": {
+        1: "未审核",
+        2: "已提交",
+        3: "已审核"
+    },
     // 排序类型
     "orderType": {
         0: "无排序",
@@ -183,7 +190,7 @@ const attrs = {
         2: '服务器关闭',
         // 代码功能Code
         101: '未知的action',
-        102: '处理正常结束',
+        102: '错误的参数',
         103: '加密通讯验证失败',
         104: '会话session不匹配',
         105: '会话session过期',
@@ -214,6 +221,17 @@ const attrs = {
         220: '缺少反馈',
         221: '邀约反馈不存在',
         222: '学校不存在',
+        223: '个人主页照片数量已达最大值',
+        224: '个人主页照片不存在',
+        225: '个人主页照片所有者不正确',
+        226: '视频不存在',
+        227: '视频与用户不相关',
+        228: '视频不可用',
+        229: '演讲者不存在',
+        230: '用户类型不正确',
+        231: '学校或演讲者申请表的审核状态不允许操作',
+        232: '发送验证码失败',
+        233: '发送验证码不正确',
     },
 }
 

@@ -1,10 +1,10 @@
 <template>
     <div class="cell" >
-        <div v-if="scope.row.status == 1 && scope.row.fromSide == 1" >
+        <div v-if="scope.row.status == 1 && scope.row.fromSide == 2" >
             <el-button size="mini" @click="handleEdit(scope.$index,scope.row)" >修改</el-button>
             <el-button size="mini" class="tm-btn-border" @click="handledelete(scope.row)" >删除</el-button>
         </div>
-        <div v-if="scope.row.status == 1 && scope.row.fromSide == 2" >
+        <div v-if="scope.row.status == 1 && scope.row.fromSide == 1" >
             <el-button size="mini" type="danger" class="tm-btn" @click="modal.agree=true" >同意</el-button>
             <el-button size="mini" class="tm-btn-border" @click="modal.refuse=true" >拒绝</el-button>
         </div>
@@ -57,6 +57,7 @@ export default {
     methods: {
         ...mapMutations(['deleteSubmit', 'Ok', 'refuse']),
         handleOk(index, obj) {
+            debugger;
             this.modal.agree = false;
             this.Ok({
                 act: 'acceptAppointment',

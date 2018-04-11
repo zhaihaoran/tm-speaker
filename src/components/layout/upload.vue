@@ -59,13 +59,5 @@ export default {
     }
 };
 </script>
-<style lang="scss">
-.avatar-uploader .el-upload--picture-card {
-    width: 380px;
-    height: 250px;
-    line-height: 250px;
-    overflow: hidden;
-}
-</style>
 
 

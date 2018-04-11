@@ -1,11 +1,11 @@
 <template>
     <div>
         <div class="tm-card">
-            <Table :loading="loading" :is-pagination="false" :data="data" >
+            <Table :loading="loading"  :data="data" >
                 <el-table-column
                     align="center"
-                    prop="school"
-                    label="学校"
+                    prop="schoolName"
+                    label="学校姓名"
                     >
                 </el-table-column>
                 <el-table-column
@@ -94,11 +94,11 @@ export default {
     mounted() {
         commonPageInit(
             this,
-            { status: 1, fromSide: 1 },
+            { status: 1, fromSide: 2 },
             {
                 act: 'getAppointmentList',
                 status: 1,
-                fromSide: 1
+                fromSide: 2
             }
         );
     },

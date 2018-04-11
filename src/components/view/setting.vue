@@ -12,27 +12,25 @@
                         aspectRatio.number=0.5
                     ></Cropper>
                 </el-form-item>
-                <el-form-item label="学校名称" prop="name" >
+                <el-form-item label="演讲者名称" prop="name" >
                     {{form.name}}
                 </el-form-item>
                 <el-form-item label="学校地址" prop="address" >
                    {{form.address}}
                 </el-form-item>
-                <el-form-item label="简要介绍" prop="schoolShortDesc" >
-                    <el-input v-model="form.schoolShortDesc"></el-input>
+                <el-form-item label="家乡" prop="hometown" >
+                    <el-input v-model="form.hometown"></el-input>
                 </el-form-item>
-                <el-form-item label="学校简介" prop="schoolDesc" >
-                    <el-input type="textarea" class="tm-textarea" v-model="form.schoolDesc"></el-input>
+                <el-form-item label="常居地点" prop="live" >
+                    <el-input v-model="form.live"></el-input>
                 </el-form-item>
-                <el-form-item label="办学理念" prop="philosophy" >
-                    <el-input  type="textarea" class="tm-textarea" v-model="form.philosophy"></el-input>
+                <el-form-item label="简要介绍" prop="speakerShortDesc" >
+                    <el-input v-model="form.speakerShortDesc"></el-input>
                 </el-form-item>
-                <el-form-item label="校园文化" prop="culture" >
-                    <el-input  type="textarea" class="tm-textarea" v-model="form.culture"></el-input>
+                <el-form-item label="简介" prop="speakerDesc" >
+                    <el-input type="textarea" class="tm-textarea" v-model="form.speakerDesc"></el-input>
                 </el-form-item>
-                <el-form-item label="发展历程" prop="growth" >
-                    <el-input type="textarea" class="tm-textarea" v-model="form.growth"></el-input>
-                </el-form-item>
+
                 <el-button type="primary" @click="onSubmit('form')">保存</el-button>
             </el-form>
         </el-tab-pane>
@@ -56,7 +54,7 @@
                 <div class="empty-box" v-show="photoList.length == 0" >
                     暂无图片
                 </div>
-                <el-col class="tm-col-5 pic-cube" :sm="12" :md="8" :lg="6" v-for="photo in photoList" :key="photo.schoolPhotoId" v-dragging="{ item: photo, list: photoList, group: 'photo' }" >
+                <el-col class="tm-col-5 pic-cube" :sm="12" :md="8" :lg="6" v-for="photo in photoList" :key="photo.speakerPhotoId" v-dragging="{ item: photo, list: photoList, group: 'photo' }" >
                     <img @click="handleDeletePic(photo)" ref="photo" :src="photo.photoUrl" class="img-fluid" :time="photo.addTimestamp">
                 </el-col>
             </el-row>
@@ -66,7 +64,7 @@
                 <el-col class="tm-col-5" :sm="12" :md="8" :lg="6" v-for="video in videos" :key="video.videoId" >
                     <div :class="[videoClass,{active:videoIdOfRecommended == video.videoId}]" >
                         <div class="card-image">
-                            <img class="img-fluid" :src="video.previewUrl">
+                            <img class="img-fluid min-images" :src="video.previewUrl">
                             <span class="vd-times badge">{{video.duration}}</span>
                         </div>
                         <div :href="video.linkUrl" class="card-content">
@@ -74,7 +72,7 @@
                             <div class="vd-extra">
                                 <span>演讲者：{{video.speakerName}}</span>
                                 <span>学校：{{video.schoolName}}</span>
-                                <span>{{video.addTimestamp}} <span class="text-right" >{{video.playTimes}} 次播放</span> </span>
+                                <span>{{dateformat(video.addTimestamp)}} <span class="text-right" >{{video.playTimes}} 次播放</span> </span>
                             </div>
                         </div>
                         <span @click="recommend(video,videoIdOfRecommended == video.videoId)" class="bages"><i class="el-icon-upload2"></i>推荐</span>
@@ -96,13 +94,14 @@
     </el-tabs>
 </template>
 <script>
-import Cropper from '@layout/modal/cropper.vue';
 import jQuery from 'jquery';
 import '@comp/lib/velocity.min.js';
 import '@comp/lib/materialbox.js';
 import { mapState, mapMutations } from 'vuex';
 
-import { Api } from '@comp/lib/api_maps';
+import { Api, dateformat } from '@comp/lib/api_maps';
+
+import Cropper from '@layout/modal/Cropper.vue';
 
 export default {
     data() {
@@ -160,6 +159,7 @@ export default {
         })
     },
     methods: {
+        dateformat,
         ...mapMutations([
             'update',
             'getFormData',
@@ -244,10 +244,12 @@ export default {
                 .then(() => {
                     this.formSubmit({
                         act: 'removePersonalPagePhoto',
-                        schoolPhotoId: row.schoolPhotoId,
+                        speakerPhotoId: row.speakerPhotoId,
+                        successText: '删除成功',
+                        errorText: '删除失败',
                         onSuccess: res => {
                             const index = this.photoList.findIndex(
-                                el => el.schoolPhotoId === row.schoolPhotoId
+                                el => el.speakerPhotoId === row.speakerPhotoId
                             );
                             this.photoList.splice(index, 1);
                         }
@@ -343,6 +345,12 @@ export default {
 }
 .picture-card {
     display: none;
+}
+
+.min-images {
+    min-height: 150px;
+    min-width: 100%;
+    background: #ececec;
 }
 </style>
 

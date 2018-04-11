@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="tm-card">
-            <Table :loading="loading" :is-pagination="false" :data="data" >
+            <Table :loading="loading" :data="data" >
                 <el-table-column
                     prop="fromSide"
                     align="center"
@@ -18,7 +18,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                    prop="school"
+                    prop="schoolName"
                     align="center"
                     label="学校">
                 </el-table-column>
@@ -142,17 +142,7 @@ export default {
                 upload: false,
                 imageUrl: '',
                 image: false
-            },
-            responseImages: [
-                {
-                    name: 'guest1.jpeg',
-                    url: '/static/image/guests/guest1.png'
-                },
-                {
-                    name: 'guest2.jpeg',
-                    url: '/static/image/guests/guest1.png'
-                }
-            ]
+            }
         };
     },
     mounted() {

@@ -11,21 +11,11 @@
                 <router-link to="/" > <span @click.capture="switchSidebarView('main')" >管理中心</span> </router-link>
             </li>
             <li class="nav-header-item">
-                <a href="https://www.baidu.com">网站首页</a>
+                <a :href="baseURL">网站首页</a>
             </li>
             <li class="nav-header-item">
                 <router-link to="/help" ><span @click="switchSidebarView('help')" >帮助</span> </router-link>
             </li>
-            <!-- 已登录 -->
-            <!-- <li v-show="loginState === 1" class="nav-header-item user-logo">
-                <img :src="user_logo" alt="user">
-            </li>
-            <li v-show="loginState === 1" class="nav-header-item">
-                <a href="##" @click="handleSignOut" >退出</a>
-            </li>
-            <li v-show="loginState === 0" class="nav-header-item"  >
-                <router-link to="/login" >请登陆</router-link>
-            </li> -->
         </ul>
     </el-header>
 </template>
@@ -33,6 +23,7 @@
 <script>
 import logo from '@image/logo/logo_white.png';
 import qinghua from '@image/logo/tsinghua.png';
+import { baseURL } from '@comp/lib/api_maps';
 import { mapState, mapMutations } from 'vuex';
 
 export default {
@@ -40,7 +31,8 @@ export default {
     data() {
         return {
             logo,
-            user_logo: qinghua
+            user_logo: qinghua,
+            baseURL
         };
     },
     mounted() {},

@@ -4,7 +4,7 @@
             <Table :loading="loading" :data="data" >
                 <el-table-column
                     align="center"
-                    prop="school"
+                    prop="schoolName"
                     label="学校"
                     >
                 </el-table-column>

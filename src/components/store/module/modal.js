@@ -44,6 +44,7 @@ const mutations = {
         state.form = Object.assign(state.form, data)
         state.speakTimestamp = data.speakTimestamp
     },
+    /* modal edit */
     submit(state, {
         onSuccess,
         ...cfg

@@ -1,7 +1,7 @@
 <template>
     <div>
         <div class="tm-card">
-            <Table :is-pagination="false" :loading="loading" :data="data" >
+            <Table :loading="loading" :data="data" >
                 <el-table-column
                     prop="fromSide"
                     align="center"
@@ -18,7 +18,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                    prop="school"
+                    prop="schoolName"
                     align="center"
                     label="学校">
                 </el-table-column>

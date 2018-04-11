@@ -2,7 +2,7 @@
     <div>
         <div v-show="checkState === 1" class="tm-card invite-send certifi-info">
             <div class="card-image">
-                <img src="/static/image/admin/cerrifi_check.png" class="img-fluid" alt="hi">
+                <img :src="cerrifi_check" class="img-fluid" alt="hi">
             </div>
             <div class="card-wrapper">
                 <h2>欢迎申请途梦学校</h2>
@@ -61,7 +61,7 @@
                         <p class="info-p">图片类型：JPG、PNG</p>
                         <p class="info-p">图片大小：不超过5M</p>
                         <h3 class="mm">样例</h3>
-                        <img src="/static/image/banner.png" class="img-fluid" alt="demo">
+                        <img :src="schoolDemo" class="img-fluid" alt="demo">
                     </div>
                 </el-form-item>
 
@@ -77,7 +77,7 @@
                     <el-input :disabled="isDisabled" type="textarea" :rows="rows" class="info-textarea" v-model="form.whyChooseUs"></el-input>
                 </el-form-item>
                 <el-form-item label-width="0"  >
-                    <el-checkbox :disabled="isDisabled" v-model="isCheck" >我已阅读并同意途梦 <a class="tm-a" href="#">用户规约</a></el-checkbox>
+                    <el-checkbox :disabled="isDisabled" v-model="isCheck" >我已阅读并同意途梦 <a class="tm-a" @click="modal.rules=true" >用户规约</a></el-checkbox>
                 </el-form-item>
                 <div v-if="!isDisabled">
                     <el-button class="tm-border" @click="onSave('form')">保存文件</el-button>
@@ -96,19 +96,34 @@
                     <a href="/" class="tm-btn" >去首页看看</a>
                 </span>
             </el-dialog>
+            <!-- 用户规约 -->
+            <el-dialog width="50%" center :visible.sync="modal.rules" title="用户规约" >
+                <div class="rules-context">
+                    hahaha
+                </div>
+                <span slot="footer">
+                    <el-button class="tm-btn-border" @click="modal.rules=false">取 消</el-button>
+                    <el-button class="tm-btn" type="primary" @click="modal.rules=false" >确 定</el-button>
+                </span>
+            </el-dialog>
         </div>
     </div>
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex';
 import { Api } from '@comp/lib/api_maps';
+
+import cerrifi_check from '@image/admin/cerrifi_check.png';
+import schoolDemo from '@image/admin/class.png';
+
 import Upload from '@layout/upload.vue';
 export default {
     data() {
         return {
             Api,
             modal: {
-                submit: false
+                submit: false,
+                rules: false
             },
             rows: 8,
             form: {
@@ -172,6 +187,8 @@ export default {
                     }
                 ]
             },
+            cerrifi_check,
+            schoolDemo,
             isOk: false
         };
     },
@@ -228,7 +245,6 @@ export default {
                 photoShortPathFilename: this.photoShortPathFilename
             });
 
-            // 去除form中的无关参数
             delete cfg.photoUrl;
             delete cfg.rejectDesc;
 
@@ -287,15 +303,23 @@ export default {
     }
 };
 </script>
-<style lang="scss"  scoped>
-.certi-submit-modal {
-    text-align: center;
+<style lang="scss" scoped >
+.el-dialog__wrapper.certi-submit-modal {
     p {
         margin: 0;
+        text-align: center;
     }
-    .submit-modal i {
-        font-size: 55px;
-        color: rgb(116, 189, 184);
+    h3 {
+        text-align: center;
+    }
+    .submit-modal {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 30px;
+        i {
+            font-size: 55px;
+            color: rgb(116, 189, 184);
+        }
     }
 }
 
@@ -304,87 +328,140 @@ export default {
     position: absolute;
     top: 0;
     left: 400px;
-    h3 {
-        margin: 0;
-        color: #606266;
-        line-height: 24px;
-        font-size: 14px;
-        margin-bottom: 10px;
-    }
-    .mm {
-        margin-top: 10px;
-    }
+}
+.pic-info > h3 {
+    margin: 0;
+    color: #606266;
+    line-height: 24px;
+    font-size: 14px;
+    margin-bottom: 10px;
+}
+.pic-info > .mm {
+    margin-top: 10px;
 }
 
 .info-box {
     .el-input {
-        max-width: 575px;
+        max-width: 600px;
     }
     .el-form {
         padding: 10px 30px;
     }
-}
-
-.info-p {
-    margin: 0;
-    font-size: 14px;
-    line-height: 25px;
-    color: #606266;
-}
-
-.info-h3 {
-    font-weight: bold;
-}
-
-.info-h5 {
-    font-weight: bold;
-    font-size: 16px;
-    line-height: 25px;
-    margin: 0;
-}
-
-.info-textarea {
-    max-width: 575px;
-}
-.info-textarea textarea {
-    min-height: 100px !important;
-}
-
-/* 欢迎加入途梦 */
-.invite-send.tm-card {
-    display: flex;
-    flex-direction: row;
-    background: rgb(249, 242, 232);
-    border: 1px solid #e97a50;
-    .card-image {
-        display: flex;
-        padding: 10px;
-        align-items: center;
-        justify-content: center;
-        width: 160px;
-        overflow: hidden;
+    .info-p {
+        margin: 0;
+        font-size: 14px;
+        line-height: 25px;
+        color: #606266;
     }
-    .card-wrapper {
+
+    .info-h3 {
+        font-weight: bold;
+    }
+
+    .info-h5 {
+        font-weight: bold;
+        font-size: 16px;
+        line-height: 25px;
+        margin: 0;
+    }
+
+    .info-textarea {
+        max-width: 600px;
+    }
+}
+
+.info-table {
+    display: flex;
+    margin: 25px 0;
+    max-width: 800px;
+    .info-table-col {
+        display: flex;
+        flex-direction: column;
         flex: 1;
-        color: #6e6e6e;
-        padding-left: 20px;
-        p {
-            max-width: 750px;
-            line-height: 28px;
-            margin-top: 10px;
-            max-height: 66px;
-            overflow: hidden;
-            text-overflow: ellipsis;
+        > div {
+            justify-content: center;
+            align-items: center;
+            display: flex;
+            border: 1px solid #e2e2e2;
+            flex-direction: column;
+        }
+        .cube {
+            flex: 1;
+            height: 110px;
+            p,
+            .el-radio-group {
+                width: 100%;
+                padding-left: 60px;
+            }
+        }
+        .cube-big {
+            flex: 2;
+            height: 220px;
         }
     }
 }
 
-.why-label {
-    label.el-form-item__label {
-        line-height: 20px;
-    }
+.certifi-info.invite-send {
+    background: rgb(249, 242, 232);
+    border: 1px solid #e97a50;
+}
+
+.certifi-info.invite-send .card-image {
+    display: flex;
+    width: auto;
+    padding: 10px;
+    align-items: center;
+    justify-content: center;
+}
+
+.certifi-info.invite-send .card-wrapper p {
+    max-width: 750px;
+    line-height: 28px;
+    margin-top: 10px;
+}
+.certifi-info.invite-send .card-wrapper h2 {
+    margin-bottom: 10px;
+}
+.invite-send.tm-card {
+    display: flex;
+    flex-direction: row;
+}
+.invite-send .card-image {
+    width: 160px;
+    overflow: hidden;
+}
+.invite-send .card-wrapper {
+    flex: 1;
+    color: #6e6e6e;
+    padding-left: 20px;
+}
+.invite-send .card-wrapper p {
+    max-height: 66px;
+    line-height: 22px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.invite-send .card-wrapper p .num {
+    font-size: 20px;
+    font-weight: bold;
+    margin-right: 10px;
+}
+
+.invite-send .card-wrapper p .teacher-name {
+    font-size: 22px;
+    font-weight: bold;
+    color: #000;
+    margin-right: 20px;
+}
+
+.rules-context {
+    padding: 20px;
+    background: #f5f7fa;
+    overflow-x: hidden;
+    overflow-y: auto;
+    height: 400px;
 }
 </style>
-
 
 

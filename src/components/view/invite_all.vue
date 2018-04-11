@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Search :search="handleSearch" >
+        <Search :cfg="searchCfg" >
             <template slot-scope="props" >
                 <div class="search-input">
                     <TimeRange></TimeRange>
@@ -8,7 +8,7 @@
             </template>
         </Search>
         <div class="tm-card">
-            <Table :loading="tableLoading" :data="data" :totalCount="count" >
+            <Table :loading="tableLoading" :data="data" >
                 <el-table-column
                     prop="status"
                     align="center"
@@ -32,7 +32,7 @@
                     </template>
                 </el-table-column>
                 <el-table-column
-                    prop="school"
+                    prop="schoolName"
                     align="center"
                     label="学校">
                 </el-table-column>
@@ -98,6 +98,7 @@
                     </template>
                 </el-table-column>
             </Table>
+            <Pagination :cfg="searchCfg" :count="count" ></Pagination>
             <!-- edit -->
             <EditInvite></EditInvite>
         </div>
@@ -112,6 +113,7 @@ import {
     commonPageInit
 } from '@comp/lib/api_maps.js';
 
+import Pagination from '@layout/pagination.vue';
 import Operation from '@layout/operation.vue';
 import EditInvite from '@layout/modal/editInvite.vue';
 import Search from '@layout/search.vue';
@@ -123,7 +125,13 @@ export default {
     data() {
         return {
             attrs,
-            form: {}
+            form: {},
+            searchCfg: {
+                act: 'getAppointmentList',
+                orderType: this.orderType,
+                speakTimestampStart: undefined,
+                speakTimestampEnd: undefined
+            }
         };
     },
     computed: {
@@ -138,7 +146,15 @@ export default {
             status: state => state.search.status
         })
     },
-    components: { Search, Operation, MessageBox, EditInvite, Table, TimeRange },
+    components: {
+        Search,
+        Operation,
+        MessageBox,
+        EditInvite,
+        Table,
+        TimeRange,
+        Pagination
+    },
     mounted() {
         commonPageInit(
             this,
@@ -167,18 +183,6 @@ export default {
         },
         showReason(reason) {
             this.$alert(reason, '拒绝原因').catch(() => {});
-        },
-        handleSearch() {
-            const data = {
-                act: 'getAppointmentList',
-                orderType: this.orderType,
-                speakTimestampStart: this.timerange[0],
-                speakTimestampEnd: this.timerange[1],
-                page: this.page,
-                perPage: this.perPage,
-                status: this.status
-            };
-            this.getPageData(data);
         }
     }
 };

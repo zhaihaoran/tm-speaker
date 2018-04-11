@@ -17,6 +17,20 @@ $sider_item_active: rgb(29, 27, 27);
 $context_bg: rgb(236, 236, 236);
 // shadow
 
+.flow-step {
+    height: 800px;
+    padding: 40px;
+    .step-click.el-step.is-vertical {
+        .el-step__title {
+            color: #bb2133;
+            text-decoration: underline;
+            &:hover {
+                cursor: pointer;
+            }
+        }
+    }
+}
+
 body {
     margin: 0;
     padding: 0;
@@ -37,6 +51,13 @@ a {
 .search-input {
     display: inline-block;
     margin-left: 5px;
+}
+
+.avatar-uploader .el-upload--picture-card {
+    width: 380px;
+    height: 250px;
+    line-height: 250px;
+    overflow: hidden;
 }
 
 // bages
@@ -173,14 +194,14 @@ a {
     z-index: 200;
     overflow: hidden;
     background-color: $sider_bg;
-    box-shadow: 0 1px 1px rgba(0, 0, 0, 0.1);
+    box-shadow: 0 0px 3px 1px rgba(0, 0, 0, 0.1);
     .el-submenu__title {
         color: $sider_font;
         &:hover,
         &:focus,
         &:active {
             background-color: $sider_active;
-            color: #fff;
+            color: $sider_font_hover;
         }
     }
     .el-menu {
@@ -192,12 +213,11 @@ a {
             &:focus,
             &:hover {
                 background: $sider_item_active;
-                color: #fff;
+                color: $sider_font_hover;
             }
             &.is-active {
                 background: $sider_item_active;
                 border-left: 5px solid $primary-color;
-                color: #fff;
                 outline: 0;
             }
         }
@@ -206,7 +226,7 @@ a {
         width: 100%;
         background-color: $sider_bg;
         .el-submenu.is-opened {
-            background: $sider_active;
+            background: $sider_submenu_bg;
             .el-menu {
                 background-color: $sider_active;
             }
@@ -217,7 +237,7 @@ a {
 .admin-header {
     position: relative;
     z-index: 300;
-    background: $primary-color;
+    background: $header-bg;
     display: flex;
     flex-direction: row;
     box-shadow: 0 4px 18px 0 rgba(0, 0, 0, 0.12),
@@ -253,6 +273,7 @@ a {
 }
 
 .admin-wrapper {
+    position: relative;
     background: $context_bg;
 }
 
@@ -396,7 +417,7 @@ img {
 
 .message-modal {
     .el-dialog__body {
-        padding: 20px 0 5px;
+        padding: 0;
     }
     .el-dialog__header {
         padding: 15px;
@@ -404,7 +425,7 @@ img {
 }
 
 .el-dialog__body {
-    padding: 10px 30px;
+    padding: 10px 30px 30px;
 }
 
 .el-date-editor.el-input,

@@ -9,7 +9,7 @@ const state = {
     orderType: 0, // 排序类型
     status: 1, // 发起状态
     page: 1, //页码
-    perPage: 20, //每页数量
+    perPage: 10, //每页数量
     data: [], // 数据
     fromSide: 0, // 从哪来
     form: {}, // 表单信息
@@ -48,6 +48,13 @@ const mutations = {
     updateValue(state, payload) {
         state = Object.assign(state, payload)
     },
+    setTimeRange(state, array) {
+        if (array.length == 0) {
+            state.timerange = [];
+        } else {
+            state.timerange = [array[0] / 1000, array[1] / 1000]
+        }
+    },
     resetValue(state) {
         state = {
             timerange: [], // 开始时间，结束时间
@@ -57,9 +64,13 @@ const mutations = {
             perPage: 20 //每页数量
         }
     },
-    getPageData(state, cfg) {
+    getPageData(state, {
+        onSuccess,
+        ...cfg
+    }) {
         state.tableLoading = true;
         fetchPost({
+            onSuccess,
             cfg,
             ActionSuccess: res => {
                 state.data = res.data.data.data;
@@ -68,27 +79,37 @@ const mutations = {
             }
         })
     },
+    /* 更新data中一行数据 */
+    updatelist(state, row) {
+        state.data.map(el => {
+            if (+el.addTimestamp === +row.addTimestamp) {
+                return Object.assign(el, row)
+            }
+            return el;
+        })
+    },
     /* 删除 */
-    deleteSubmit(state, {
-        appointmentId,
-        ...cfg
-    }) {
+    deleteSubmit(state, cfg) {
         fetchPost({
-            appointmentId,
+            cfg,
+            isMessage: true,
+            successText: "删除成功",
+            errorText: "删除失败",
             onSuccess: res => {
                 // 提交成功
-                state.data = state.data.filter(el => el.appointmentId !== appointmentId);
+                state.data = state.data.filter(el => el.appointmentId !== cfg.appointmentId);
             },
-            ...cfg
         });
     },
     /* 拒绝 */
     refuse(state, cfg) {
         fetchPost({
             cfg,
+            isMessage: true,
+            successText: "操作成功",
+            errorText: "操作失败",
             onSuccess: res => {
-                // 提交成功
-                state.data = state.data.filter(el => el.appointmentId !== appointmentId);
+                state.data = state.data.filter(el => el.appointmentId !== cfg.appointmentId);
             },
         });
     },
@@ -96,8 +117,11 @@ const mutations = {
     Ok(state, cfg) {
         fetchPost({
             cfg,
+            isMessage: true,
+            successText: "操作成功",
+            errorText: "操作失败",
             onSuccess: res => {
-                console.log(res);
+                state.data = state.data.filter(el => el.appointmentId !== cfg.appointmentId);
             },
         });
     },
@@ -134,10 +158,10 @@ const mutations = {
             cfg,
             ActionSuccess: res => {
                 state.chatList.push({
-                    senderType: 1,
+                    senderType: 2,
                     senderName: "我", // 发送者名称
                     message: cfg.message, // 消息
-                    addTimestamp: Math.floor(new Date().getTime()/1000)
+                    addTimestamp: Math.floor(new Date().getTime() / 1000)
                 })
             }
         });
