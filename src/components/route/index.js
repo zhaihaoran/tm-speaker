@@ -1,9 +1,5 @@
 import Vue from 'vue'
 import Router from 'vue-router'
-import axios from 'axios'
-import {
-    Message
-} from 'element-ui';
 
 // 发起邀约
 import Invite_send from '@comp/view/invite_send.vue'

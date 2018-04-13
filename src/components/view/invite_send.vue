@@ -7,6 +7,9 @@
                 </div>
             </template>
         </Search>
+        <div class="tm-card center" v-show="data.length<1" >
+            <img :src="emptyImage" class="img-fluid" alt="empty">
+        </div>
         <div v-for="school in data" :key="school.$index" class="tm-card in-card">
             <a :href="handleHomePage(school.schoolId)" class="card-image">
                 <img :src="school.photoUrl" class="min-images img-fluid" :alt="school.schoolName">
@@ -35,9 +38,12 @@ import Pagination from '@layout/pagination.vue';
 import EditInvite from '@layout/modal/Send_invite.vue';
 import Search from '@layout/search.vue';
 
+import emptyImage from '@image/empty.png';
+
 export default {
     data() {
         return {
+            emptyImage,
             searchCfg: {
                 act: 'getSchoolList',
                 orderType: this.orderType,

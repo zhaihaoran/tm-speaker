@@ -76,13 +76,13 @@ export default {
                 appointmentId: row.appointmentId,
                 onSuccess: res => {
                     this.loading = false;
-                    this.$refs.mesbox.scrollTop = this.$refs.mesbox.scrollHeight;
+                    this.$nextTick(function() {
+                        this.$refs.mesbox.scrollTop = this.$refs.mesbox.scrollHeight;
+                    });
                 }
             });
         },
-        handleSend() {
-            console.log('haha');
-        },
+
         sendMessage(row) {
             if (!this.message) {
                 this.$message('消息不能为空');

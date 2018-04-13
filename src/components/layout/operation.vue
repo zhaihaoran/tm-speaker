@@ -24,9 +24,10 @@
         <el-dialog
             :visible.sync="modal.refuse"
             width="30%"
+            class="refuse-dialog"
         >
             <h3 class="text-center modal-title" >确定拒绝邀约吗？</h3>
-            <span>请填写拒绝原因，用于告知邀请者</span>
+            <span class="r-title" >请填写拒绝原因，用于告知邀请者</span>
             <el-form ref="form" >
                 <el-form-item class="no-margin" >
                     <el-input type="textarea" v-model="rejectDesc" class="tm-textarea"></el-input>
@@ -89,4 +90,12 @@ export default {
     }
 };
 </script>
-
+<style>
+.refuse-dialog .el-dialog__body {
+    padding: 10px 30px;
+}
+.refuse-dialog span.r-title {
+    display: inline-block;
+    margin-bottom: 10px;
+}
+</style>
