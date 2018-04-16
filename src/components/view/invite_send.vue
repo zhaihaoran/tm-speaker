@@ -133,7 +133,7 @@ export default {
         position: absolute;
         right: 20px;
         top: 20px;
-        padding: 12px 26px;
+        padding: 12px 20px;
     }
 }
 .min-images {

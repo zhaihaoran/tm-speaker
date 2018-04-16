@@ -7,6 +7,8 @@ const state = {
     // sesson里取
     login_state: 0, // 登陆状态 0：未登录
     checkState: 0, // 审核状态
+    menuList: {}, // 菜单列表
+    users: {}, //用户信息
 }
 // 模块的mutations 、 actions、getter 默认注册在全局命名空间的
 const mutations = {
@@ -17,6 +19,29 @@ const mutations = {
         //在这里改变state中的数据
         state.check_state = state.check_state ? 0 : 1
     },
+    /**
+     * 拿到用户登陆状态
+     *
+     * @param {any} state
+     * @param {any}
+     */
+    getUserLogin(state, baseUrl) {
+        const cfg = {
+            act: 'getUserLogin',
+        }
+        Util.commonPost({
+            url: "api/common/",
+            cfg,
+            ActionSuccess: res => {
+                let cfg = res.data.data;
+                if (cfg && +cfg.isLogin > 0) {
+                    state.users = cfg
+                } else {
+                    window.location.href = baseUrl
+                }
+            }
+        })
+    },
     getFormData(state, {
         onError,
         onSuccess,
@@ -26,6 +51,24 @@ const mutations = {
             onError,
             onSuccess,
             cfg
+        })
+    },
+    /**
+     *
+     * 获取用户菜单列表
+     * @param {any} state
+     * @param {any}
+     */
+    getMenuList(state) {
+        const cfg = {
+            act: 'getMenuList',
+        }
+        Util.fetchPost({
+            cfg,
+            ActionSuccess: res => {
+                state.menuList = res.data.data.menuList;
+                state.checkState = state.menuList.find(el => el.menuId == 10401).status;
+            }
         })
     },
     /* 数组数据 - 照片 */
@@ -67,14 +110,23 @@ const mutations = {
             state.common_sidebar = true;
         }
     },
-    /* abolition */
-    login(state) {
-        state.login_state = 1;
-        sessionStorage.isLogin = 1;
-    },
-    signout(state) {
-        state.login_state = 0;
-        sessionStorage.isLogin = 0;
+    signout(state, baseUrl) {
+        state = {};
+        const cfg = {
+            act: 'logout',
+        }
+        Util.commonPost({
+            url: "api/common/",
+            cfg,
+            ActionSuccess: res => {
+                let cfg = res.data.data;
+                if (cfg && +cfg.isLogin > 0) {
+                    state.users = cfg
+                } else {
+                    window.location.href = baseUrl
+                }
+            }
+        })
     },
     handleCheckState(state, ) {
         state.check_state = 0;

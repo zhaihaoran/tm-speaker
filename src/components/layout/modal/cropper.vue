@@ -1,7 +1,7 @@
 <template>
-    <div :class="boxClass" id="cropper">
+    <div id="cropper">
         <el-upload
-            class="avatar-uploader"
+            :class="classes"
             :action="action"
             list-type="picture-card"
             :show-file-list="false"
@@ -34,9 +34,9 @@ export default {
         previewname: {
             type: String
         },
-        boxClass: {
+        classes: {
             type: String,
-            default: 'box'
+            default: 'avatar-uploader'
         },
         croppable: {
             type: Boolean,

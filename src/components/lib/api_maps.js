@@ -48,48 +48,48 @@ const attrs = {
         10101: {
             name: "发起邀约",
             path: "/invite/send",
-            icon: "el-icon-phone",
+            icon: "icon-faqiyaoyue",
             dividar: true
         },
         10201: {
             name: "已发起邀约",
             path: "/invite/over",
-            icon: "el-icon-message"
+            icon: "icon-yifaqiyaoyue"
         },
         10202: {
             name: "收到的邀约",
             path: "/invite/received",
-            icon: "el-icon-phone-outline"
+            icon: "icon-shoudaoyaoyue"
         },
         10203: {
             name: "进行中",
             path: "/underway",
-            icon: "el-icon-date"
+            icon: "icon-jinxingzhong"
         },
         10204: {
             name: "已完成",
             path: "/done",
-            icon: "el-icon-printer"
+            icon: "icon-yiwancheng"
         },
         10205: {
             name: "被拒绝",
             path: "/refused",
-            icon: "el-icon-circle-close-outline"
+            icon: "icon-beijujue"
         },
         10206: {
             name: "我拒绝",
             path: "/refuse",
-            icon: "el-icon-circle-close"
+            icon: "icon-shanchuguanbicha"
         },
         10207: {
             name: "全部邀约",
             path: "/invite/all",
-            icon: "el-icon-view"
+            icon: "icon-all"
         },
         10301: {
             name: "主页设置",
             path: "/setting",
-            icon: "el-icon-setting",
+            icon: "icon-setting",
             dividar: true
         },
         10401: {
@@ -101,54 +101,54 @@ const attrs = {
                 3: "已审核",
                 4: "已驳回"
             },
-            icon: "el-icon-document",
+            icon: "icon-ziliao",
         },
         /* 演讲者 */
         20101: {
             name: "发起邀约",
             path: "/invite/send",
-            icon: "el-icon-phone",
+            icon: "icon-faqiyaoyue",
             dividar: true
         },
         20201: {
             name: "已发起邀约",
             path: "/invite/over",
-            icon: "el-icon-message"
+            icon: "icon-yifaqiyaoyue"
         },
         20202: {
             name: "收到的邀约",
             path: "/invite/received",
-            icon: "el-icon-phone-outline"
+            icon: "icon-shoudaoyaoyue"
         },
         20203: {
             name: "进行中",
             path: "/underway",
-            icon: "el-icon-date"
+            icon: "icon-jinxingzhong"
         },
         20204: {
             name: "已完成",
             path: "/done",
-            icon: "el-icon-printer"
+            icon: "icon-yiwancheng"
         },
         20205: {
             name: "被拒绝",
             path: "/refused",
-            icon: "el-icon-circle-close-outline"
+            icon: "icon-beijujue"
         },
         20206: {
             name: "我拒绝",
             path: "/refuse",
-            icon: "el-icon-circle-close"
+            icon: "icon-shanchuguanbicha"
         },
         20207: {
             name: "全部邀约",
             path: "/invite/all",
-            icon: "el-icon-view"
+            icon: "icon-all"
         },
         20301: {
             name: "主页设置",
             path: "/setting",
-            icon: "el-icon-setting",
+            icon: "icon-setting",
             dividar: true
         },
         20401: {
@@ -160,7 +160,7 @@ const attrs = {
                 3: "已审核",
                 4: "已驳回"
             },
-            icon: "el-icon-document"
+            icon: "icon-ziliao",
         }
     },
     // 审核状态
@@ -216,6 +216,12 @@ const attrs = {
         1: "女",
         2: "男",
     },
+    // 身份
+    "userType": {
+        1: "学校",
+        2: "演讲者",
+        3: "管理员"
+    }
 }
 
 const baseURL = 'http://10.0.0.148';
