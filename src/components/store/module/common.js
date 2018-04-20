@@ -67,7 +67,7 @@ const mutations = {
             cfg,
             ActionSuccess: res => {
                 state.menuList = res.data.data.menuList;
-                state.checkState = state.menuList.find(el => el.menuId == 10401).status;
+                state.checkState = state.menuList.find(el => el.menuId == 20401).status;
             }
         })
     },

@@ -17,7 +17,7 @@
             <div class="card-wrapper">
                 <p class="no-margin">
                     <span class="teacher-name" >{{school.name}}</span>
-                    <span v-show="+isPoor>0" class="tm-bage">穷</span>
+                    <span v-show="+school.isPoor > 0" class="tm-bage">穷</span>
                 </p>
                 <p class="mm" >{{school.schoolShortDesc}}</p>
                 <p class="m-10" ><span class="num tm-text-color" >{{school.finishedClass}}</span> 开课数</p>
@@ -27,8 +27,8 @@
         </div>
         <!-- edit -->
         <EditInvite title="发起邀约" ></EditInvite>
-        <el-card class="text-center" >
-            <Pagination classes="center" :cfg="searchCfg" :count="count" ></Pagination>
+        <el-card class="pagi-card" >
+            <Pagination classes="center offer-pagination" :cfg="searchCfg" :count="count" ></Pagination>
         </el-card>
     </div>
 </template>
@@ -157,5 +157,8 @@ export default {
 }
 .m-10 {
     margin: 5px 0;
+}
+.el-card__body {
+    padding: 0;
 }
 </style>

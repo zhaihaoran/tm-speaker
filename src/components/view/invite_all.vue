@@ -103,7 +103,7 @@
                     align="center"
                     label="消息">
                     <template slot-scope="scope">
-                        <MessageBox :scope="scope" ></MessageBox>
+                        <MessageBox :canSend="+scope.row.status === 1" :scope="scope" ></MessageBox>
                     </template>
                 </el-table-column>
                 <el-table-column

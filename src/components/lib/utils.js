@@ -68,4 +68,29 @@ export default {
             }
         });
     },
+
+    commonPost({
+        url,
+        onSuccess,
+        onError,
+        isMessage = false,
+        cfg,
+        successText = "成功",
+        errorText = "失败",
+        ActionSuccess
+    }) {
+        axios({
+            url,
+            data: qs.stringify(cfg)
+        }).then(res => {
+            if (res && res.data.code === 1) {
+                isMessage && Message.success(successText)
+                ActionSuccess && ActionSuccess(res);
+                onSuccess && onSuccess(res)
+            } else {
+                Message.error(`${errorText},原因：${code[res.data.code]}`)
+                onError && onError(res);
+            }
+        });
+    }
 }

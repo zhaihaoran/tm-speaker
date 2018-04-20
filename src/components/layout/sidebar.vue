@@ -31,7 +31,7 @@
             </el-submenu>
             <el-submenu index="/help/download">
                 <template slot="title"><i class="el-icon-download"></i><span slot="title">下载</span></template>
-                <router-link to="/help/download/resources" >
+                <router-link to=" /help/download/resources" >
                     <el-menu-item class="sider-menu-item" index="/help/download/resources">
                         演讲者上课流程
                     </el-menu-item>
@@ -48,8 +48,8 @@ import { mapState, mapMutations } from 'vuex';
 export default {
     data() {
         return {
-            menuList: {},
-            path: this.$route.path
+            path: this.$route.path,
+            iconfont: 'icon iconfont sd-icon'
         };
     },
     mounted() {
@@ -69,7 +69,7 @@ export default {
     }),
     methods: {
         sidebarRender,
-        ...mapMutations(['setValue', 'switchSidebarView']),
+        ...mapMutations(['setValue', 'getMenuList', 'switchSidebarView']),
         changeSidebarView() {
             this.path = this.$route.path;
             if (this.path.indexOf('help') > -1) {

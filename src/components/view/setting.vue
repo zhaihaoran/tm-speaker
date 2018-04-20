@@ -35,7 +35,7 @@
                 <el-button type="primary" @click="onSubmit('form')">保存</el-button>
             </el-form>
         </el-tab-pane>
-        <el-tab-pane label="相册">
+        <el-tab-pane name="photo" label="相册">
             <div class="upload-pic">
                 <el-upload
                     :action="Api.upload"
@@ -71,7 +71,7 @@
                 <img width="100%" :src="dialogImageUrl" alt="">
             </el-dialog>
         </el-tab-pane>
-        <el-tab-pane label="视频">
+        <el-tab-pane name="video" label="视频">
             <el-row :gutter="10">
                 <el-col class="tm-col-5" :sm="12" :md="8" :lg="6" v-for="video in videos" :key="video.videoId" >
                     <div :class="[videoClass,{active:videoIdOfRecommended == video.videoId}]" >
@@ -145,7 +145,7 @@ export default {
     computed: {
         ...mapState({
             pathfilename: state => state.upload.pathfilename,
-            photoUrl: state => state.search.photoUrl
+            photoUrl: state => state.upload.photoUrl
         })
     },
     methods: {
@@ -158,6 +158,7 @@ export default {
             'photoUpload'
         ]),
         handleLoading(context) {
+            console.log(context.name);
             switch (context.name) {
                 case 'common':
                     this.handleForm();
@@ -229,9 +230,6 @@ export default {
                 });
             }
         },
-        handleSetPathFileName(res) {
-            console.log(res);
-        },
         onSubmit(form) {
             const cfg = Object.assign(this.form, {
                 profilePhotoShortPathFilename: this.pathfilename,
@@ -254,9 +252,6 @@ export default {
                     return false;
                 }
             });
-        },
-        resetForm(formName) {
-            this.$refs[formName].resetFields();
         },
         handleExceed(files, fileList) {
             this.$message.warning(
