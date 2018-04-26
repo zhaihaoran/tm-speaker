@@ -43,24 +43,6 @@
                         <MessageBox :scope="scope" ></MessageBox>
                     </template>
                 </el-table-column>
-                <el-table-column
-                    align="center"
-                    label="学校进展">
-                    <template slot-scope="scope">
-                        <el-popover class="offer-step" ref="schoolpopover" trigger="click">
-                            <el-steps direction="vertical" class="admin-step" :active="+scope.row.schoolStatus">
-                                <el-step title="待开课通知"></el-step>
-                                <el-step title="待上课"></el-step>
-                                <el-step title="待课后反馈提交"></el-step>
-                                <el-step title="待课后反馈确认"></el-step>
-                                <el-step title="完成"></el-step>
-                            </el-steps>
-                        </el-popover>
-                        <el-button type="text" v-popover:schoolpopover >
-                            {{attrs['schoolStatus'][scope.row.schoolStatus]}}
-                        </el-button>
-                    </template>
-                </el-table-column>
                 <el-table-column align="center" width="180px" label="操作">
                     <template slot-scope="scope">
                         <Operation :handleEdit="handleEdit" :scope="scope"></Operation>

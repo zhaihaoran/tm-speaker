@@ -1,9 +1,9 @@
 <template>
     <div>
-        <Search :cfg="searchCfg" >
+        <Search left-text="无排序" center-text="邀约数" right-text="受益人次" :cfg="searchCfg" ref="sr_component" >
             <template slot-scope="props" >
                 <div class="search-input">
-                    <el-input type="search" placeholder="搜索关键字" v-model="searchCfg.searchText" ></el-input>
+                    <el-input type="search" @keyup.native.enter="handleSearch" placeholder="搜索关键字" v-model="searchCfg.searchText" ></el-input>
                 </div>
             </template>
         </Search>
@@ -89,6 +89,9 @@ export default {
         },
         handleHomePage(id) {
             return `/school/schoolId/${id}`;
+        },
+        handleSearch() {
+            this.$refs.sr_component.handleSearch();
         }
     }
 };

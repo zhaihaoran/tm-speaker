@@ -6,7 +6,7 @@ const state = {
         addTimestamp: new Date().getTime() / 1000,
     },
     modal: false,
-    speakTimestamp: new Date().getTime() / 1000
+    speakTimestamp: ""
 }
 
 const mutations = {
@@ -31,7 +31,7 @@ const mutations = {
     closeModal(state, cfg) {
         state.modal = false;
         state.form = {
-            speakTimestamp: new Date().getTime() / 1000,
+            speakTimestamp: 0,
             addTimestamp: 0
         };
     },

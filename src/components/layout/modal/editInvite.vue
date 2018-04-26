@@ -3,6 +3,7 @@
         :visible.sync="modal"
         :title="title"
         width="30%"
+        :close-on-click-modal="false"
         :before-close="handleClose"
     >
         <el-form ref="form" :model="form" label-width="80px" >
@@ -13,16 +14,13 @@
                 <el-input v-model="form.speakTitle" ></el-input>
             </el-form-item>
             <el-form-item label="演讲时间" >
-                <el-date-picker
-                    v-model.number="speakTimestamp"
+               <el-date-picker
+                    v-model="timestamp"
                     type="datetime"
-                    value-format="timestamp"
-                    format="yyyy 年 MM 月 dd 日 HH:mm:ss"
-                    :default-value="defaultValue"
                     placeholder="选择日期时间">
                 </el-date-picker>
             </el-form-item>
-            <el-form-item label="演讲时长" width="80" >
+            <el-form-item label="演讲时长" >
                 <el-input v-model="form.speakDuration" >
                     <template slot="append">分钟</template>
                 </el-input>
@@ -48,7 +46,7 @@ import {
 export default {
     data() {
         return {
-            defaultValue: ''
+            timestamp: ''
         };
     },
     props: {
@@ -57,22 +55,17 @@ export default {
             default: ''
         }
     },
+    watch: {
+        speakTimestamp(val) {
+            this.timestamp = !!val ? new Date(+val * 1000) : '';
+        }
+    },
     computed: {
         ...mapState({
             form: state => state.modal.form,
-            modal: state => state.modal.modal
-        }),
-        speakTimestamp: {
-            set(value) {
-                console.log(value);
-                this.$store.commit('setDateValue', {
-                    speakTimestamp: value / 1000
-                });
-            },
-            get() {
-                return this.$store.state.modal.speakTimestamp * 1000;
-            }
-        }
+            modal: state => state.modal.modal,
+            speakTimestamp: state => state.modal.speakTimestamp
+        })
     },
     methods: {
         ...mapMutations([
@@ -86,7 +79,9 @@ export default {
             let cfg = {
                 appointmentId: this.form.appointmentId,
                 speakTitle: this.form.speakTitle,
-                speakTimestamp: this.speakTimestamp / 1000,
+                speakTimestamp: Math.floor(
+                    new Date(this.timestamp).getTime() / 1000
+                ),
                 speakDuration: this.form.speakDuration,
                 addTimestamp: this.form.addTimestamp
             };

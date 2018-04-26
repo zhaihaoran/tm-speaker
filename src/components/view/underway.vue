@@ -1,7 +1,14 @@
 <template>
     <div>
+        <Search :cfg="searchCfg" >
+            <template slot-scope="props" >
+                <div class="search-input">
+                    <TimeRange></TimeRange>
+                </div>
+            </template>
+        </Search>
         <div class="tm-card">
-            <Table :loading="loading" :data="data" >
+            <Table :loading="tableLoading" :data="data" >
                 <el-table-column
                     prop="fromSide"
                     align="center"
@@ -65,15 +72,14 @@
                                 <el-step title="完成"></el-step>
                             </el-steps>
                         </el-popover>
-                        <!-- <el-button type="text" v-if="scope.row.schoolStatus === 3"  ><span v-popover:popover >待课后反馈提交</span><span  > </span></el-button> -->
-                        <el-button type="text" v-popover:popover >{{attrs["schoolStatus"][scope.row.schoolStatus]}} <span class="normal-a" @click.stop.prevent='handleShowImage(scope.row)' v-if="scope.row.schoolStatus == 3" >(立即上传）</span> </el-button>
+                        <el-button type="text" v-popover:popover >{{attrs["schoolStatus"][scope.row.schoolStatus]}} </el-button>
                     </template>
                 </el-table-column>
                 <el-table-column
                     prop="speakerStatus"
                     align="center"
                     min-width="120px"
-                    label="演讲者进展">
+                    label="梦享家进展">
                     <template slot-scope="scope">
                         <el-popover class="offer-step" ref="popovers" trigger="click">
                             <el-steps direction="vertical" class="admin-step" :active="+scope.row.speakerStatus">
@@ -93,29 +99,7 @@
                     </template>
                 </el-table-column>
             </Table>
-            <!-- 反馈 -->
-            <el-dialog :visible.sync="modal.upload" title="查看反馈" >
-                <el-dialog append-to-body :visible.sync="modal.image" >
-                    <img width="100%" :src="modal.imageUrl" alt="">
-                </el-dialog>
-                <el-upload
-                    class="upload-box"
-                    action=""
-                    :on-change="handleChange"
-                    :on-preview="handlePreview"
-                    :on-remove="handleRemove"
-                    :before-remove="beforeRemove"
-                    :auto-upload="false"
-                    :limit="3"
-                    list-type="picture-card"
-                    :on-exceed="handleExceed"
-                    :file-list="feedList">
-                    <i class="el-icon-plus avatar-uploader-icon"></i>
-                </el-upload>
-                <span slot="footer" class="dialog-footer center">
-                    <el-button @click="handleSubmitFeedList" type="primary" >提交反馈</el-button>
-                </span>
-            </el-dialog>
+            <Pagination :cfg="searchCfg" :count="count" ></Pagination>
         </div>
     </div>
 </template>
@@ -129,12 +113,11 @@ import {
 } from '@comp/lib/api_maps.js';
 import MessageBox from '@layout/modal/message.vue';
 import Table from '@layout/table.vue';
+import Pagination from '@layout/pagination.vue';
+import Search from '@layout/search.vue';
+import TimeRange from '@layout/timerange.vue';
 
 export default {
-    components: {
-        MessageBox,
-        Table
-    },
     data() {
         return {
             currentId: '',
@@ -143,6 +126,13 @@ export default {
                 upload: false,
                 imageUrl: '',
                 image: false
+            },
+            searchCfg: {
+                act: 'getAppointmentList',
+                status: 2,
+                orderType: this.orderType,
+                speakTimestampStart: undefined,
+                speakTimestampEnd: undefined
             }
         };
     },
@@ -159,9 +149,19 @@ export default {
     computed: {
         ...mapState({
             data: state => state.search.data,
-            loading: state => state.search.tableLoading,
-            feedList: state => state.search.feedList
+            tableLoading: state => state.search.tableLoading,
+            orderType: state => state.search.orderType,
+            timerange: state => state.search.timerange,
+            count: state => state.search.count,
+            status: state => state.search.status
         })
+    },
+    components: {
+        MessageBox,
+        Table,
+        Pagination,
+        Search,
+        TimeRange
     },
     methods: {
         dateformat,
@@ -172,59 +172,7 @@ export default {
             'formSubmit',
             'getFeedList',
             'photoUpload'
-        ]),
-
-        handleRemove(file, fileList) {
-            console.log('remove');
-            console.log(file, fileList);
-        },
-        /* 上传照片 */
-        handleChange(file) {
-            let formCfg = new FormData();
-            formCfg.append('act', 'uploadFeedback');
-            formCfg.append('appointmentId', this.currentId);
-            formCfg.append('file', file.raw);
-            this.photoUpload({
-                formCfg,
-                onSuccess: res => {
-                    this.updateValue({
-                        feedList: feedList.push(res.data.data)
-                    });
-                },
-                onError: res => {
-                    console.log('error', res);
-                }
-            });
-        },
-        // 学校预览照片，并可以上传
-        handleShowImage(row) {
-            this.modal.upload = true;
-            this.currentId = row.appointmentId;
-            this.getFeedList({
-                act: 'getFeedbackList',
-                appointmentId: row.appointmentId
-            });
-        },
-        handlePreview(file) {
-            this.ImageUrl = file.url;
-            this.Visible = true;
-        },
-        handleExceed(files, fileList) {
-            this.$message.warning(
-                `当前限制选择 3 个文件，本次选择了 ${
-                    files.length
-                } 个文件，共选择了 ${files.length + fileList.length} 个文件`
-            );
-        },
-        beforeRemove(file, fileList) {
-            return this.$confirm(`确定移除 ${file.name}？`);
-        },
-        handleSubmitFeedList() {
-            this.formSubmit({
-                act: 'submitFeedback',
-                appointmentId: this.currentId
-            });
-        }
+        ])
     }
 };
 </script>

@@ -1,7 +1,7 @@
 <template>
    <el-aside class="admin-aside" width="200px">
         <!-- 主视图 -->
-        <el-menu router v-show="main" :default-active.sync="path" :default-openeds="['/invite']" class="admin-sider-menu" :collapse="sidebarState" >
+        <el-menu router v-show="main" :default-active.sync="$route.path" :default-openeds="['/invite']" class="admin-sider-menu" :collapse="sidebarState" >
             <router-link v-for="menu in menuList" :key="menu.$index" :to="sidebarRender(menu,'path')" >
                 <el-menu-item class="sider-menu-item"
                     :index="sidebarRender(menu,'path')" >
@@ -15,7 +15,7 @@
             </router-link>
         </el-menu>
         <!-- help -->
-        <el-menu v-show="help" :default-active.sync="path" :default-openeds="['/help/flow','/help/download']" class="admin-sider-menu" :collapse="sidebarState" >
+        <el-menu v-show="help" :default-active.sync="$route.path" :default-openeds="['/help/flow','/help/download']" class="admin-sider-menu" :collapse="sidebarState" >
             <el-submenu index="/help/flow">
                 <template slot="title"><i class="el-icon-tickets"></i><span slot="title">流程指南</span></template>
                 <router-link to="/help/flow/school" >
@@ -25,7 +25,7 @@
                 </router-link>
                 <router-link to="/help/flow/speaker" >
                     <el-menu-item class="sider-menu-item" index="/help/flow/speaker">
-                        演讲者上课流程
+                        梦享家上课流程
                     </el-menu-item>
                 </router-link>
             </el-submenu>
@@ -33,7 +33,7 @@
                 <template slot="title"><i class="el-icon-download"></i><span slot="title">下载</span></template>
                 <router-link to=" /help/download/resources" >
                     <el-menu-item class="sider-menu-item" index="/help/download/resources">
-                        演讲者上课流程
+                        梦享家上课流程
                     </el-menu-item>
                 </router-link>
             </el-submenu>
@@ -56,9 +56,6 @@ export default {
         this.getMenuList();
         this.changeSidebarView();
     },
-    updated() {
-        this.changeSidebarView();
-    },
     // 可以将模块的空间名称字符串作为第一个参数传递给函数
     computed: mapState({
         help: state => state.common.help_sidebar,
@@ -71,7 +68,6 @@ export default {
         sidebarRender,
         ...mapMutations(['setValue', 'getMenuList', 'switchSidebarView']),
         changeSidebarView() {
-            this.path = this.$route.path;
             if (this.path.indexOf('help') > -1) {
                 this.switchSidebarView('help');
             } else {

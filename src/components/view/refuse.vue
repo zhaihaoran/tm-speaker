@@ -3,11 +3,11 @@
         <Search :cfg="searchCfg" >
             <template slot-scope="props" >
                 <div class="search-input">
-                    <el-input type="search" placeholder="搜索关键字" v-model="searchCfg.searchText" ></el-input>
+                    <TimeRange></TimeRange>
                 </div>
             </template>
         </Search>
-        <div class="tm-card">
+        <div class="tm-card" :loading="tableLoading" >
             <Table :data="data" >
                 <el-table-column
                     prop="schoolName"
@@ -48,7 +48,7 @@
                     align="center"
                     label="拒绝原因">
                     <template slot-scope="scope">
-                        <el-button type="text" @click="showReason(scope.row)" >查看原因</el-button>
+                        <el-button type="text" @click="showReason(scope.row)" >查看</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -76,6 +76,8 @@ import Search from '@layout/search.vue';
 import Pagination from '@layout/pagination.vue';
 import Table from '@layout/table.vue';
 import MessageBox from '@layout/modal/message.vue';
+import TimeRange from '@layout/timerange.vue';
+
 export default {
     data() {
         return {
@@ -84,7 +86,8 @@ export default {
                 orderType: this.orderType,
                 status: 4,
                 fromSide: 2,
-                searchText: ''
+                speakTimestampStart: undefined,
+                speakTimestampEnd: undefined
             }
         };
     },
@@ -101,15 +104,15 @@ export default {
     },
     computed: {
         ...mapState({
-            orderType: state => state.search.orderType,
             data: state => state.search.data,
+            tableLoading: state => state.search.tableLoading,
+            orderType: state => state.search.orderType,
+            timerange: state => state.search.timerange,
             count: state => state.search.count,
-            loading: state => state.search.tableLoading,
-            page: state => state.search.page,
-            perPage: state => state.search.perPage
+            status: state => state.search.status
         })
     },
-    components: { Search, MessageBox, Table, Pagination },
+    components: { Search, MessageBox, Table, Pagination, TimeRange },
     methods: {
         dateformat,
         ...mapMutations([
@@ -123,10 +126,9 @@ export default {
                 act: 'getRejectDescOfAppointment',
                 appointmentId: obj.appointmentId,
                 onSuccess: res => {
-                    console.log('success', res);
-                    this.$alert(res.data.data.rejectDesc, '拒绝原因').catch(
-                        () => {}
-                    );
+                    this.$alert(res.data.data.rejectDesc, '拒绝原因', {
+                        confirmButtonText: '关闭'
+                    }).catch(() => {});
                 }
             });
         }

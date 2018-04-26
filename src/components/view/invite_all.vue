@@ -10,17 +10,6 @@
         <div class="tm-card">
             <Table :loading="tableLoading" :data="data" >
                 <el-table-column
-                    type="index"
-                    align="center"
-                    width="40"
-                >
-                </el-table-column>
-                <!-- <el-table-column label="展开" type="expand">
-                    <template slot-scope="scope">
-                        <h2>{{attrs["status"][scope.row.status+''+scope.row.fromSide]}}</h2>
-                    </template>
-                </el-table-column> -->
-                <el-table-column
                     prop="status"
                     align="center"
                     label="状态">
@@ -82,21 +71,43 @@
                 <el-table-column
                     prop="schoolStatus"
                     align="center"
-                    :formatter="formatAttr"
+                    width="220px"
                     label="学校进展">
+                    <template slot-scope="scope">
+                        <el-popover class="offer-step" ref="popover" trigger="click">
+                            <el-steps direction="vertical" class="admin-step" :active="+scope.row.schoolStatus">
+                                <el-step title="待开课通知"></el-step>
+                                <el-step title="待上课"></el-step>
+                                <el-step title="待课后反馈提交"></el-step>
+                                <el-step title="待课后反馈确认"></el-step>
+                                <el-step title="完成"></el-step>
+                            </el-steps>
+                        </el-popover>
+                        <el-button type="text" v-popover:popover >{{attrs["schoolStatus"][scope.row.schoolStatus]}}</el-button>
+                    </template>
                 </el-table-column>
                 <el-table-column
                     prop="speakerStatus"
                     align="center"
-                    :formatter="formatAttr"
-                    label="演讲者进展">
+                    min-width="120px"
+                    label="梦享者进展">
+                    <template slot-scope="scope">
+                        <el-popover class="offer-step" ref="popovers" trigger="click">
+                            <el-steps direction="vertical" class="admin-step" :active="+scope.row.speakerStatus">
+                                <el-step title="待开课通知"></el-step>
+                                <el-step title="待上课"></el-step>
+                                <el-step title="完成"></el-step>
+                            </el-steps>
+                        </el-popover>
+                        <el-button type="text" v-popover:popovers >{{attrs["speakerStatus"][scope.row.speakerStatus]}}</el-button>
+                    </template>
                 </el-table-column>
                 <el-table-column
                     prop="reason"
                     align="center"
                     label="拒绝原因">
                     <template slot-scope="scope">
-                        <el-button  v-show="scope.row.status == 4" type="text" @click="showReason(scope.row)" >查看原因</el-button>
+                        <el-button  v-show="scope.row.status == 4" type="text" @click="showReason(scope.row)" >查看</el-button>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -118,6 +129,7 @@
             <Pagination :cfg="searchCfg" :count="count" ></Pagination>
             <!-- edit -->
             <EditInvite></EditInvite>
+
         </div>
     </div>
 </template>
@@ -142,13 +154,15 @@ export default {
     data() {
         return {
             attrs,
-            form: {},
+            currentId: '',
             searchCfg: {
                 act: 'getAppointmentList',
                 orderType: this.orderType,
                 speakTimestampStart: undefined,
                 speakTimestampEnd: undefined
-            }
+            },
+            form: {},
+            modal: false
         };
     },
     computed: {
@@ -158,7 +172,6 @@ export default {
             data: state => state.search.data,
             count: state => state.search.count,
             tableLoading: state => state.search.tableLoading,
-            page: state => state.search.page,
             perPage: state => state.search.perPage,
             status: state => state.search.status
         })
@@ -201,20 +214,27 @@ export default {
                 act: 'getRejectDescOfAppointment',
                 appointmentId: obj.appointmentId,
                 onSuccess: res => {
-                    this.$alert(res.data.data.rejectDesc, '拒绝原因').catch(
-                        () => {}
-                    );
+                    this.$alert(res.data.data.rejectDesc, '拒绝原因', {
+                        confirmButtonText: '关闭'
+                    }).catch(() => {});
                 }
             });
+        },
+        // 学校预览照片，并可以上传
+        handleShowImage(row) {
+            this.modal = true;
+            this.currentId = row.appointmentId;
+            this.getFeedList({
+                act: 'getFeedbackList',
+                appointmentId: row.appointmentId
+            });
+        },
+
+        handleClose() {
+            this.modal = false;
         }
     }
 };
 </script>
-<style lang="scss" scoped>
-.pagination {
-    display: flex;
-    justify-content: flex-end;
-}
-</style>
 
 

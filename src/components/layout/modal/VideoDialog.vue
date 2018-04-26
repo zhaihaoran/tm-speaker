@@ -54,7 +54,7 @@
                     </el-option>
                 </el-select>
             </el-form-item>
-            <el-form-item label="演讲者">
+            <el-form-item label="梦享家">
                 <el-radio-group v-model="form.speakerRadio" size="small" >
                     <el-radio-button label="选择"></el-radio-button>
                     <el-radio-button label="填写"></el-radio-button>
@@ -62,7 +62,7 @@
                 <el-tooltip class="item" effect="dark" content="没有数据？请手动填写，手动填写的学校无法查看主页，无法对其发起邀约" placement="right">
                     <i class="el-icon-question md-qs"></i>
                 </el-tooltip>
-                <el-input placeholder="请输入演讲者名称" class="mt-10" v-show="form.speakerRadio === '填写' " v-model="form.speakerName" ></el-input>
+                <el-input placeholder="请输入梦享家名称" class="mt-10" v-show="form.speakerRadio === '填写' " v-model="form.speakerName" ></el-input>
                 <el-select
                     class="modal_select mt-10"
                     v-model="form.speakerId"

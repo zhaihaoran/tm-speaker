@@ -1,7 +1,14 @@
 <template>
     <div>
+        <Search :cfg="searchCfg" >
+            <template slot-scope="props" >
+                <div class="search-input">
+                    <TimeRange></TimeRange>
+                </div>
+            </template>
+        </Search>
         <div class="tm-card">
-            <Table :loading="loading" :data="data" >
+            <Table :loading="tableLoading" :data="data" >
                 <el-table-column
                     align="center"
                     prop="schoolName"
@@ -67,6 +74,7 @@
                     </template>
                 </el-table-column>
             </Table>
+            <Pagination :cfg="searchCfg" :count="count" ></Pagination>
             <!-- edit -->
             <EditInvite></EditInvite>
         </div>
@@ -77,6 +85,9 @@ import Operation from '@layout/operation.vue';
 import MessageBox from '@layout/modal/message.vue';
 import Table from '@layout/table.vue';
 import EditInvite from '@layout/modal/editInvite.vue';
+import Pagination from '@layout/pagination.vue';
+import Search from '@layout/search.vue';
+import TimeRange from '@layout/timerange.vue';
 import {
     attrs,
     formatAttr,
@@ -91,7 +102,15 @@ export default {
         return {
             attrs,
             form: {},
-            modal_edit: false
+            modal_edit: false,
+            searchCfg: {
+                act: 'getAppointmentList',
+                status: 1,
+                fromSide: 2,
+                orderType: this.orderType,
+                speakTimestampStart: undefined,
+                speakTimestampEnd: undefined
+            }
         };
     },
     mounted() {
@@ -108,7 +127,11 @@ export default {
     computed: {
         ...mapState({
             data: state => state.search.data,
-            loading: state => state.search.tableLoading
+            tableLoading: state => state.search.tableLoading,
+            orderType: state => state.search.orderType,
+            timerange: state => state.search.timerange,
+            count: state => state.search.count,
+            status: state => state.search.status
         })
     },
     methods: {
@@ -127,7 +150,10 @@ export default {
         Operation,
         MessageBox,
         Table,
-        EditInvite
+        EditInvite,
+        Pagination,
+        Search,
+        TimeRange
     }
 };
 </script>

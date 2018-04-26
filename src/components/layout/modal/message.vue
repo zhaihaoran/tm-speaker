@@ -1,6 +1,6 @@
 <template>
     <div>
-        <el-button type="text" @click="handleChatList(scope.row)" class="tm-a" >对话<span v-if="scope.row.chatUnreadQuantity>0" > ({{scope.row.chatUnreadQuantity}})</span></el-button>
+        <el-button type="text" @click="handleChatList(scope.row)" class="tm-a" >留言<span v-if="scope.row.chatUnreadQuantity>0" > ({{scope.row.chatUnreadQuantity}})</span></el-button>
         <el-dialog
             :visible.sync="modal"
             class="message-modal"
@@ -15,7 +15,7 @@
                     <p class="no-margin"
                         :class="{school:item.senderType ==1,speaker:item.senderType ==2,tumeng:item.senderType ==3 }"
                     >
-                        <span class="name">{{item.senderName}}</span><span class="time"> {{dateformat(item.addTimestamp)}}</span>
+                        <span class="name">{{item.senderType == 2 ? "" : item.senderName}}</span><span class="time"> {{dateformat(item.addTimestamp)}}</span>
                     </p>
                     <p class="message">
                         {{item.message}}
@@ -43,7 +43,7 @@ export default {
         return {
             senderType: {
                 1: '学校',
-                2: '演讲者',
+                2: '梦享家',
                 3: '途梦管理员'
             },
             loading: false,
@@ -67,10 +67,12 @@ export default {
     },
     methods: {
         dateformat,
-        ...mapMutations(['getChatList', 'sendChatMsg']),
+        ...mapMutations(['getChatList', 'sendChatMsg', 'updatelist']),
         handleChatList(row) {
             this.loading = true;
             this.modal = true;
+            row['chatUnreadQuantity'] = 0;
+            this.updatelist(row);
 
             this.getChatList({
                 act: 'getChatMessageList',

@@ -11,7 +11,7 @@
         </div>
         <div class="tm-card info-box">
             <el-form ref="form" :model="form" :rules="rules" label-width="150px">
-                <h3>演讲者基本信息</h3>
+                <h3>梦享家基本信息</h3>
                 <el-form-item label="姓名" prop="name" >
                     <el-input :disabled="isDisabled" v-model="form.name"></el-input>
                 </el-form-item>
@@ -73,7 +73,7 @@
                 <el-form-item label="介绍人">
                     <el-input :disabled="isDisabled" v-model="form.inviter"></el-input>
                 </el-form-item>
-                <el-form-item class="why-label" label="为什么申请途梦演讲者">
+                <el-form-item class="why-label" label="为什么申请途梦梦享家">
                     <el-input :disabled="isDisabled" type="textarea" :rows="rows" class="info-textarea" v-model="form.whyChooseUs"></el-input>
                 </el-form-item>
                 <el-form-item label-width="0"  >
@@ -87,8 +87,8 @@
             <!-- modal -->
             <el-dialog v-if="!isDisabled" width="30%" class="certi-submit-modal" :visible.sync="modal.submit" >
                 <span class="submit-modal"><i class="icon iconfont icon-submit"></i></span>
-                <h3>演讲者申请提交成功</h3>
-                <p>感谢您申请加入途梦演讲者</p>
+                <h3>梦享家申请提交成功</h3>
+                <p>感谢您申请加入途梦梦享家</p>
                 <p>我们将会尽快审核您的资料</p>
                 <p>通过审核后您将可以进行演讲分享</p>
                 <p>您可以随时登陆个人中心查看审核进展</p>
@@ -102,8 +102,7 @@
                     hahaha
                 </div>
                 <span slot="footer">
-                    <el-button class="tm-btn-border" @click="modal.rules=false">取 消</el-button>
-                    <el-button class="tm-btn" type="primary" @click="modal.rules=false" >确 定</el-button>
+                    <el-button class="tm-btn-border" @click="modal.rules=false">关闭</el-button>
                 </span>
             </el-dialog>
         </div>
@@ -133,7 +132,7 @@ export default {
                 name: [
                     {
                         required: true,
-                        message: '请输入演讲者名称',
+                        message: '请输入梦享家名称',
                         trigger: 'blur'
                     }
                 ],

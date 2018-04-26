@@ -30,7 +30,7 @@ Vue.use(Router)
 const router = new Router({
     routes: [{
         path: '/',
-        redirect: '/certification/check'
+        redirect: '/invite/received'
     }, {
         path: '/help',
         redirect: '/help/flow/school'

@@ -129,7 +129,7 @@ const mutations = {
             ActionSuccess: res => {
                 state.chatList.push({
                     senderType: 2,
-                    senderName: "我", // 发送者名称
+                    senderName: "", // 发送者名称
                     message: cfg.message, // 消息
                     addTimestamp: Math.floor(new Date().getTime() / 1000)
                 })

@@ -4,7 +4,7 @@
             <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="setting-form" >
                 <el-form-item label="头像">
                     <Cropper
-                        classes="avatar-uploader"
+                        classes="avatar"
                         v-on:update="handleUpdateCropperUrl"
                         filepathname="pathfilename"
                         previewname="photoUrl"
@@ -13,7 +13,7 @@
                         aspectRatio.number=0.5
                     ></Cropper>
                 </el-form-item>
-                <el-form-item label="演讲者名称" prop="name" >
+                <el-form-item label="梦享家名称" prop="name" >
                     {{form.name}}
                 </el-form-item>
                 <el-form-item label="学校地址" prop="address" >
@@ -47,7 +47,7 @@
                     :file-list="photoList"
                     >
                     <el-button size="small" type="primary">点击上传</el-button>
-                    <div slot="tip" class="el-upload__tip upload-tip">只能上传jpg/png文件，且不超过500kb</div>
+                    <div slot="tip" class="el-upload__tip upload-tip">只能上传jpg/png文件，且不超过2MB</div>
                 </el-upload>
             </div>
             <div class="individar"></div>
@@ -75,22 +75,21 @@
             <el-row :gutter="10">
                 <el-col class="tm-col-5" :sm="12" :md="8" :lg="6" v-for="video in videos" :key="video.videoId" >
                     <div :class="[videoClass,{active:videoIdOfRecommended == video.videoId}]" >
-                        <div class="card-image">
-                            <img class="img-fluid min-images" :src="video.previewUrl">
-                            <span class="vd-times badge">{{video.duration}}</span>
-                        </div>
-                        <div :href="video.linkUrl" class="card-content">
-                            <span class="card-title grey-333">{{video.videoTitle}}</span>
+                        <a target="_blank" :href="video.linkUrl" class="card-image">
+                            <img class="min-images" :src="video.previewUrl">
+                            <span class="vd-times badge">
+                                {{videoFormat(video.duration)}}
+                            </span>
+                        </a>
+                        <div class="card-content">
+                            <span class="card-title grey-333">
+                                <a target="_blank" class="tm-inherit" :href="video.linkUrl">{{video.videoTitle}}</a></span>
                             <div class="vd-extra">
-                                <span>演讲者：{{video.speakerName}}</span>
-                                <span>学校：{{video.schoolName}}</span>
+                                <span>梦享家：{{video.speakerName}}</span>
                                 <span>{{dateformat(video.addTimestamp)}} <span class="text-right" >{{video.playTimes}} 次播放</span> </span>
                             </div>
                         </div>
-                        <span @click="recommend(video,videoIdOfRecommended == video.videoId)" class="bages"><i class="el-icon-upload2"></i>推荐</span>
-                        <div class="recommend-box">
-                            <span>点亮按钮可设置为推荐视频</span>
-                        </div>
+                        <span @click="recommend(video,videoIdOfRecommended == video.videoId)" class="bages"><i class="el-icon-upload2"></i>个人主页置顶</span>
                     </div>
                 </el-col>
             </el-row>
@@ -107,7 +106,7 @@
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex';
-import { Api, dateformat } from '@comp/lib/api_maps';
+import { Api, dateformat, videoFormat } from '@comp/lib/api_maps';
 import Cropper from '@layout/modal/Cropper.vue';
 
 export default {
@@ -150,6 +149,7 @@ export default {
     },
     methods: {
         dateformat,
+        videoFormat,
         ...mapMutations([
             'update',
             'getFormData',
@@ -305,13 +305,6 @@ export default {
 };
 </script>
 <style lang="scss" >
-.avatar {
-    .el-upload--picture-card {
-        width: 200px;
-        height: 200px;
-        line-height: 200px;
-    }
-}
 .setting-form {
     max-width: 500px;
     padding: 30px;
@@ -332,7 +325,7 @@ export default {
     margin-right: 10px;
 }
 .pic-cube {
-    margin: 5px 0;
+    margin: 5px;
 }
 
 .video {
@@ -369,15 +362,11 @@ export default {
     z-index: 50;
     height: 26px;
     line-height: 26px;
-    width: 60px;
     background: rgba(0, 0, 0, 0.6);
     font-size: 14px;
-    margin-right: 10px;
     cursor: pointer;
     z-index: 50;
-    i {
-        margin: 0 5px;
-    }
+    padding: 0 5px;
 }
 
 .admin-cropper {
@@ -398,6 +387,7 @@ export default {
 .pic-cube {
     position: relative;
     height: 200px;
+    overflow: hidden;
     background: #dedcdc;
     margin: 5px;
     display: flex;
