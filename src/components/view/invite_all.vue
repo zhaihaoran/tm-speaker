@@ -1,8 +1,8 @@
 <template>
     <div>
-        <Search :cfg="searchCfg" >
+        <Search :cfg="searchCfg" ref="sr_component" >
             <template slot-scope="props" >
-                <div class="search-input">
+                <div @keyup.native.enter="handleSearch" class="search-input">
                     <TimeRange></TimeRange>
                 </div>
             </template>
@@ -232,6 +232,9 @@ export default {
 
         handleClose() {
             this.modal = false;
+        },
+        handleSearch() {
+            this.$refs.sr_component.handleSearch();
         }
     }
 };

@@ -42,93 +42,54 @@ const router = new Router({
         path: '/help/flow/school',
         name: 'flow_school',
         component: Flow_school,
-        meta: {
-            requireAuth: true,
-        },
     }, {
         path: '/help/flow/speaker',
         name: 'flow_speaker',
         component: Flow_speaker,
-        meta: {
-            requireAuth: true,
-        },
     }, {
         path: '/help/download/resources',
         name: 'download',
         component: Download,
-        meta: {
-            requireAuth: true,
-        },
     }, {
         path: '/invite/over',
         name: 'invite_over',
         component: Invite_over,
-        meta: {
-            requireAuth: true,
-        },
     }, {
         path: '/invite/received',
         name: 'invite_received',
         component: Invite_received,
-        meta: {
-            requireAuth: true,
-        },
     }, {
         path: '/certification/check',
         name: 'Certification_check',
         component: Certification_check,
-        meta: {
-            requireAuth: true,
-        },
     }, {
         path: '/refused',
         name: 'Refused',
         component: Refused,
-        meta: {
-            requireAuth: true,
-        },
     }, {
         path: '/refuse',
         name: 'Refuse',
         component: Refuse,
-        meta: {
-            requireAuth: true,
-        },
     }, {
         path: '/done',
         name: 'Done',
         component: Done,
-        meta: {
-            requireAuth: true,
-        },
     }, {
         path: '/underway',
         name: 'Underway',
         component: Underway,
-        meta: {
-            requireAuth: true,
-        },
     }, {
         path: '/invite/send',
         name: 'invite_send',
         component: Invite_send,
-        meta: {
-            requireAuth: true,
-        },
     }, {
         path: '/invite/all',
         name: 'invite_all',
         component: Invite_all,
-        meta: {
-            requireAuth: true,
-        },
     }, {
         path: '/setting',
         name: 'Setting',
         component: Setting,
-        meta: {
-            requireAuth: true,
-        },
     }]
 })
 

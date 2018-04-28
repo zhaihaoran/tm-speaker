@@ -31,9 +31,9 @@
             </el-submenu>
             <el-submenu index="/help/download">
                 <template slot="title"><i class="el-icon-download"></i><span slot="title">下载</span></template>
-                <router-link to=" /help/download/resources" >
+                <router-link to="/help/download/resources" >
                     <el-menu-item class="sider-menu-item" index="/help/download/resources">
-                        梦享家上课流程
+                        资源下载
                     </el-menu-item>
                 </router-link>
             </el-submenu>

@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Search :cfg="searchCfg" >
+        <Search :cfg="searchCfg" ref="sr_component" >
             <template slot-scope="props" >
                 <div class="search-input">
                     <TimeRange></TimeRange>
@@ -144,6 +144,9 @@ export default {
         ]),
         handleEdit(index, row) {
             this.showModal(row);
+        },
+        handleSearch() {
+            this.$refs.sr_component.handleSearch();
         }
     },
     components: {
