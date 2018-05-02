@@ -6,14 +6,16 @@ const state = {
         addTimestamp: new Date().getTime() / 1000,
     },
     modal: false,
-    speakTimestamp: ""
+    speakTimestamp: "",
+    duration: "",
 }
 
 const mutations = {
     showModal(state, data) {
         state.modal = true
         state.form = Object.assign(state.form, data)
-        state.speakTimestamp = data.speakTimestamp
+        state.speakTimestamp = data.speakTimestamp;
+        state.duration = state.form.speakDuration;
     },
     /* modal edit */
     submit(state, {

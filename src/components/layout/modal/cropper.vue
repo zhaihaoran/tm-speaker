@@ -191,8 +191,6 @@ export default {
         postImg() {
             let formCfg = new FormData();
             // this.blob = Object.assign(this.picValue, this.blob);
-            // console.log(this.picValue);
-            // console.log(this.blob);
             formCfg.append('file', this.blob, this.picValue.name);
 
             this.commonUpload({

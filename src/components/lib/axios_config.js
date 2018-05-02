@@ -30,7 +30,6 @@ axios.interceptors.response.use(res => {
             message: '登陆过期,请重新登陆',
             type: 'error',
             onClose: () => {
-                console.log("登陆");
                 window.location.href = baseURL
             }
         })
@@ -38,7 +37,6 @@ axios.interceptors.response.use(res => {
     } else if (res.data.code == 1) {
         return res;
     } else {
-        console.log("error", res.data);
         return res;
     }
 }, err => {

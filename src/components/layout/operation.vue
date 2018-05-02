@@ -65,7 +65,6 @@ export default {
             });
         },
         handleRefuse(index, obj) {
-            console.log(this.rejectDesc);
             this.modal.refuse = false;
             this.refuse({
                 act: 'rejectAppointment',

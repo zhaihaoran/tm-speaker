@@ -82,9 +82,7 @@ export default {
                         appointmentId: this.currentId
                     });
                 },
-                onError: res => {
-                    console.log('error', res);
-                }
+                onError: res => {}
             });
         },
 

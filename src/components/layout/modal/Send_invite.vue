@@ -22,7 +22,7 @@
                     </el-date-picker>
                 </el-form-item>
                 <el-form-item label="演讲时长" >
-                    <el-input placeholder="60分钟以上" v-model="form.speakDuration" >
+                    <el-input type="number" v-model="d_duration" >
                         <template slot="append">分钟</template>
                     </el-input>
                 </el-form-item>
@@ -39,11 +39,14 @@
             center
         >
             <div class="title">
-                <h3>邀约已发出，等待梦享家同意</h3>
+                <h3>邀约已发出，等待学校同意</h3>
                 <p>您可以关闭窗口继续邀约或查看发出的邀约信息</p>
             </div>
             <span slot="footer" class="dialog-footer">
                 <el-button @click="isSuccess=false">关闭</el-button>
+                <el-button type="primary" @click="$router.push({
+                    path: '/invite/over'
+                })">查看邀约</el-button>
             </span>
         </el-dialog>
     </div>
@@ -61,12 +64,16 @@ export default {
     data() {
         return {
             isSuccess: false,
-            timestamp: ''
+            timestamp: '',
+            d_duration: ''
         };
     },
     watch: {
         speakTimestamp(val) {
             this.timestamp = !!val ? new Date(+val * 1000) : '';
+        },
+        duration(val = 0) {
+            this.d_duration = val / 60;
         }
     },
     props: {
@@ -78,7 +85,8 @@ export default {
     computed: {
         ...mapState({
             form: state => state.modal.form,
-            modal: state => state.modal.modal
+            modal: state => state.modal.modal,
+            duration: state => state.modal.duration
         })
     },
     methods: {
@@ -92,7 +100,7 @@ export default {
                 speakTimestamp: Math.floor(
                     new Date(this.timestamp).getTime() / 1000
                 ),
-                speakDuration: this.form.speakDuration,
+                speakDuration: this.d_duration * 60,
                 isMessage: false,
                 onSuccess: res => {
                     this.isSuccess = true;

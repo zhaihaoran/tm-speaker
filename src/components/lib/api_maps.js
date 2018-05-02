@@ -282,9 +282,21 @@ module.exports = {
         context.updateValue(obj);
         context.getPageData(cfg);
     },
-    videoFormat(sec) {
-        let min = ~~(sec / 60);
-        let second = sec % 60;
-        return `${min}:${second}`
-    }
+    /* 时间格式化   sec 转 min */
+    formatDuration(sec = 0) {
+        return Math.floor(sec / 60) + ':' + Math.floor(sec % 60)
+    },
+    /* sec to min  */
+    secToMin(sec) {
+        return Math.floor(sec / 60)
+    },
+    MinToSec(min) {
+        return min * 60
+    },
+    toSpeakerHome(id) {
+        return `/speaker/speakerId/${id}`
+    },
+    toSchoolHome(id) {
+        return `/school/schoolId/${id}`
+    },
 }

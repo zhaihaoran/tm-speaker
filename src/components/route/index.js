@@ -97,7 +97,6 @@ const router = new Router({
 router.beforeEach((to, from, next) => {
     // 如果跳转到其他网站，则404
     if (to.matched.length < 1) {
-        console.log("无效地址");
         next({
             path: '/404',
         })

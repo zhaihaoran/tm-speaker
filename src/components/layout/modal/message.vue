@@ -4,8 +4,9 @@
         <el-dialog
             :visible.sync="modal"
             class="message-modal"
+            :before-close="handleClearPolling"
             width="500px"
-            title="聊天信息"
+            title="留言板"
         >
             <div ref="mesbox" v-loading="loading" class="message-box">
                 <div v-for="item in chatList"
@@ -48,7 +49,8 @@ export default {
             },
             loading: false,
             modal: false,
-            message: ''
+            message: '',
+            polling: undefined
         };
     },
     computed: {
@@ -68,12 +70,26 @@ export default {
     methods: {
         dateformat,
         ...mapMutations(['getChatList', 'sendChatMsg', 'updatelist']),
+        pollingAjax(row) {
+            /* 15s 轮询一次 */
+            this.polling = setInterval(args => {
+                this.getChatList({
+                    act: 'getChatMessageList',
+                    appointmentId: row.appointmentId
+                });
+            }, 15000);
+        },
+        handleClearPolling() {
+            this.modal = false;
+            clearInterval(this.polling);
+        },
         handleChatList(row) {
-            this.loading = true;
             this.modal = true;
+            this.loading = true;
             row['chatUnreadQuantity'] = 0;
             this.updatelist(row);
 
+            /* 第一次拿取数据 */
             this.getChatList({
                 act: 'getChatMessageList',
                 appointmentId: row.appointmentId,
@@ -84,6 +100,8 @@ export default {
                     });
                 }
             });
+            /* 开始轮询 */
+            this.pollingAjax(row);
         },
 
         sendMessage(row) {
@@ -95,7 +113,6 @@ export default {
                     appointmentId: row.appointmentId,
                     message: this.message,
                     onSuccess: res => {
-                        console.log(res);
                         // 将滚动条控制在最底部
                         this.$refs.mesbox.scrollTop = this.$refs.mesbox.scrollHeight;
                         // 清空内容

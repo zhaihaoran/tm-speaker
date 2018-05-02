@@ -9,6 +9,14 @@
                 <p>完成认证信息，即可提交申请途梦学校，您的学校有机会获得各行各业志愿者的演讲分享服务，让孩子们提前了解他们梦想的世界</p>
             </div>
         </div>
+        <el-alert
+            v-show="checkState === 4"
+            title="您提交的资料被驳回"
+            show-icon
+            :description="rejectDesc"
+            class="mb-20"
+            type="error">
+        </el-alert>
         <div class="tm-card info-box">
             <el-form ref="form" :model="form" :rules="rules" label-width="150px">
                 <h3>梦享家基本信息</h3>
@@ -120,6 +128,7 @@ export default {
     data() {
         return {
             Api,
+            rejectDesc: '',
             modal: {
                 submit: false,
                 rules: false
@@ -217,8 +226,9 @@ export default {
             onSuccess: res => {
                 /* sex 传回来应该为1 */
                 this.form = res.data.data;
-
-                console.log(this.form);
+                this.rejectDesc = `您提交的资料被驳回，原因：${
+                    this.form.rejectDesc
+                }`;
 
                 const { photoShortPathFilename, photoUrl } = this.form;
 
@@ -226,9 +236,6 @@ export default {
                     photoShortPathFilename,
                     photoUrl
                 });
-
-                console.log('checkState', this.checkState);
-                console.log(this.form);
             },
             onError: res => {
                 if (res.data.code === 212) {
@@ -280,19 +287,7 @@ export default {
             );
         },
         onSave(form) {
-            this.handleForm(
-                form,
-                'modifyApplication',
-                res => {
-                    console.log(res);
-                },
-                res => {
-                    console.log(res);
-                }
-            );
-        },
-        handleRemove(file, fileList) {
-            console.log(file, fileList);
+            this.handleForm(form, 'modifyApplication');
         }
     },
     components: {

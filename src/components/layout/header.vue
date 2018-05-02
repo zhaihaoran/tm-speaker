@@ -16,7 +16,7 @@
             <li class="nav-header-item user-logo">
                 <el-dropdown type="primary">
                     <span class="el-dropdown-link">
-                        <img :src="users.profilePhotoUrl"  alt="user">
+                        <img :src="handleAvatar(users.profilePhotoUrl)"  alt="user">
                     </span>
                     <el-dropdown-menu slot="dropdown" center >
                         <el-dropdown-item disabled>账号：{{users.account}}</el-dropdown-item>
@@ -32,6 +32,7 @@
 
 <script>
 import logo from '@image/logo/logo_white.png';
+import avatar from '@image/avatar.png';
 import { baseURL, attrs } from '@comp/lib/api_maps';
 import { mapState, mapMutations } from 'vuex';
 
@@ -57,6 +58,9 @@ export default {
         ...mapMutations(['getUserLogin', 'switchSidebarView', 'signout']),
         handleSignout() {
             this.signout(baseURL);
+        },
+        handleAvatar(url) {
+            return url || avatar;
         }
     }
 };

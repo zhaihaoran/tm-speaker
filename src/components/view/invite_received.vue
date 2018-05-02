@@ -35,6 +35,9 @@
                     align="center"
                     prop="speakDuration"
                     label="演讲时长（分钟）" width="80">
+                    <template slot-scope="scope">
+                        {{secToMin(scope.row.speakDuration)}}
+                    </template>
                 </el-table-column>
                 <el-table-column
                     align="center"
@@ -91,6 +94,7 @@ import TimeRange from '@layout/timerange.vue';
 import {
     attrs,
     formatAttr,
+    secToMin,
     dateformat,
     commonPageInit
 } from '@comp/lib/api_maps.js';
@@ -106,7 +110,7 @@ export default {
             searchCfg: {
                 act: 'getAppointmentList',
                 status: 1,
-                fromSide: 2,
+                fromSide: 1,
                 orderType: this.orderType,
                 speakTimestampStart: undefined,
                 speakTimestampEnd: undefined
@@ -135,6 +139,7 @@ export default {
         })
     },
     methods: {
+        secToMin,
         dateformat,
         ...mapMutations([
             'updateValue',

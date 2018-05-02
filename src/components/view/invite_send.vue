@@ -12,7 +12,7 @@
         </div>
         <div v-for="school in data" :key="school.$index" class="tm-card in-card">
             <a :href="handleHomePage(school.schoolId)" class="card-image">
-                <img :src="school.photoUrl" class="min-images img-fluid" :alt="school.schoolName">
+                <img :src="handleAvatar(school.photoUrl)" class="min-images img-fluid" :alt="school.schoolName">
             </a>
             <div class="card-wrapper">
                 <p class="no-margin">
@@ -35,8 +35,9 @@
 <script>
 import { mapState, mapMutations } from 'vuex';
 import Pagination from '@layout/pagination.vue';
-import EditInvite from '@layout/modal/Send_invite.vue';
+import EditInvite from '@layout/modal/send_invite.vue';
 import Search from '@layout/search.vue';
+import school from '@image/school.png';
 
 import emptyImage from '@image/empty.png';
 
@@ -68,11 +69,7 @@ export default {
     },
     mounted() {
         this.getPageData({
-            act: 'getSchoolList',
-            onError: res => {},
-            onSuccess: res => {
-                console.log(res);
-            }
+            act: 'getSchoolList'
         });
     },
     methods: {
@@ -92,6 +89,9 @@ export default {
         },
         handleSearch() {
             this.$refs.sr_component.handleSearch();
+        },
+        handleAvatar(url) {
+            return url || school;
         }
     }
 };
@@ -108,6 +108,8 @@ export default {
     flex-direction: row;
     .card-image {
         width: 160px;
+        height: 160px;
+        background: #d6d4d4;
         overflow: hidden;
     }
     .card-wrapper {

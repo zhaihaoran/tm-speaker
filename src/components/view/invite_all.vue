@@ -58,6 +58,9 @@
                     align="center"
                     label="演讲时长（分钟）" width="80"
                     >
+                    <template slot-scope="scope">
+                        {{secToMin(scope.row.speakDuration)}}
+                    </template>
                 </el-table-column>
                 <el-table-column
                     prop="addTimestamp"
@@ -138,6 +141,7 @@ import { mapState, mapMutations } from 'vuex';
 import {
     attrs,
     formatAttr,
+    secToMin,
     dateformat,
     commonPageInit
 } from '@comp/lib/api_maps.js';
@@ -197,6 +201,7 @@ export default {
     },
     methods: {
         formatAttr,
+        secToMin,
         dateformat,
         ...mapMutations([
             'updateValue',
