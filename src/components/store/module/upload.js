@@ -21,6 +21,7 @@ const mutations = {
         formCfg
     }) {
         formCfg.append('act', 'upload');
+        formCfg.append('generateThumb', 1);
         Util.uploadPost({
             url: "api/common/",
             cfg: formCfg,

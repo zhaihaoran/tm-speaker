@@ -547,3 +547,9 @@ img {
     color: #409eff;
     cursor: pointer;
 }
+
+/* el radio disabled 掉之后去掉红色边框 */
+
+.el-radio-button__orig-radio:disabled:checked + .el-radio-button__inner {
+    border-color: #ededed;
+}

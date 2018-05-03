@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Search left-text="无排序" center-text="邀约数" right-text="受益人次" :cfg="searchCfg" ref="sr_component" >
+        <Search left-text="无排序" center-text="邀约数" right-text="开课数" :cfg="searchCfg" ref="sr_component" >
             <template slot-scope="props" >
                 <div class="search-input">
                     <el-input type="search" @keyup.native.enter="handleSearch" placeholder="搜索关键字" v-model="searchCfg.searchText" ></el-input>
@@ -16,14 +16,14 @@
             </a>
             <div class="card-wrapper">
                 <p class="no-margin">
-                    <span class="teacher-name" >{{school.name}}</span>
+                    <span class="teacher-name" >{{school.name || "未填写名称"}}</span>
                     <span v-show="+school.isPoor > 0" class="tm-bage">穷</span>
                 </p>
                 <p class="mm" >{{school.schoolShortDesc}}</p>
                 <p class="m-10" ><span class="num tm-text-color" >{{school.finishedClass}}</span> 开课数</p>
-                <p class="no-margin text-overflow" >简介：{{school.schoolDesc}}</p>
+                <p class="no-margin text-overflow" >简介：{{school.schoolDesc || "未填写信息"}}</p>
             </div>
-            <el-button @click="handleEdit(school)" class="tm-btn invite-btn">邀约</el-button>
+            <el-button icon="el-icon-phone-outline" @click="handleEdit(school)" class="tm-btn invite-btn"> 邀约</el-button>
         </div>
         <!-- edit -->
         <EditInvite title="发起邀约" ></EditInvite>
@@ -119,7 +119,7 @@ export default {
         max-width: 740px;
         p {
             max-height: 66px;
-            line-height: 26px;
+            line-height: 22px;
             .num {
                 font-size: 20px;
                 font-weight: bold;
@@ -130,7 +130,6 @@ export default {
                 font-size: 22px;
                 font-weight: bold;
                 color: #000;
-                margin-right: 20px;
             }
         }
     }
@@ -149,19 +148,21 @@ export default {
 .tm-bage {
     background: #bb2133;
     color: #fff;
-    padding: 3px;
+    padding: 2px;
     width: 20px;
     margin-left: 5px;
+    position: relative;
+    top: -2px;
     display: inline-block;
     text-align: center;
     line-height: 20px;
 }
 .mm {
     margin: 0;
-    margin-top: 5px;
+    margin-top: 8px;
 }
 .m-10 {
-    margin: 5px 0;
+    margin: 6px 0;
 }
 .el-card__body {
     padding: 0;

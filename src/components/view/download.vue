@@ -12,7 +12,7 @@
         </div>
         <div class="individar"></div>
         <div class="download-box">
-            <a href="##" class="cube color-2">
+            <a href="http://www.eeo.cn/download.html" class="cube color-2">
                 <img :src="classin" class="img-fluid db-img" alt="">
                 <span class="tm-a" >ClassIn 在线教学工具下载</span>
             </a>

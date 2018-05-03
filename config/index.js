@@ -49,7 +49,7 @@ module.exports = {
 
         // Paths
         assetsRoot: path.resolve(__dirname, '../dist'),
-        assetsSubDirectory: 'static/speakerConsole/static',
+        assetsSubDirectory: 'static',
         // js css
         assetsPublicPath: '/static/speakerConsole/',
 

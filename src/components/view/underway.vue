@@ -37,7 +37,6 @@
                     prop="speakTimestamp"
                     width="140px"
                     align="center"
-                    sortable
                     label="演讲时间">
                     <template slot-scope="scope">
                         {{dateformat(scope.row.speakTimestamp)}}

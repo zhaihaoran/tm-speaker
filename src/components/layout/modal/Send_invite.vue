@@ -93,20 +93,29 @@ export default {
         ...mapMutations(['formSubmit', 'setDateValue', 'closeModal']),
         dateformat,
         handleSubmitForm() {
-            this.formSubmit({
-                act: 'createAppointment',
-                schoolId: this.form.schoolId,
-                speakTitle: this.form.speakTitle,
-                speakTimestamp: Math.floor(
-                    new Date(this.timestamp).getTime() / 1000
-                ),
-                speakDuration: this.d_duration * 60,
-                isMessage: false,
-                onSuccess: res => {
-                    this.isSuccess = true;
-                    this.handleClose();
-                }
-            });
+            /* 必须全部填满值才可以提交 */
+            if (this.form.speakTitle && this.timestamp && this.d_duration) {
+                this.formSubmit({
+                    act: 'createAppointment',
+                    schoolId: this.form.schoolId,
+                    speakTitle: this.form.speakTitle,
+                    speakTimestamp: Math.floor(
+                        new Date(this.timestamp).getTime() / 1000
+                    ),
+                    speakDuration: this.d_duration * 60,
+                    isMessage: false,
+                    onSuccess: res => {
+                        this.isSuccess = true;
+                        this.handleClose();
+                    }
+                });
+            } else {
+                this.$message({
+                    showClose: true,
+                    message: '请填写相关信息，不可空缺',
+                    type: 'warning'
+                });
+            }
         },
         handleClose() {
             this.closeModal();

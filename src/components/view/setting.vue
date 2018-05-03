@@ -245,10 +245,7 @@ export default {
             });
         },
         handleExceed(files, fileList) {
-            this.$message.warning(
-                `当前限制选择 10 个文件，共选择了 ${files.length +
-                    fileList.length} 个文件`
-            );
+            this.$message.warning(`当前限制选择 10 个文件`);
         },
         /* 添加图片 */
         handlePicChange(file) {
