@@ -15,10 +15,10 @@
                 <img :src="handleAvatar(school.photoUrl)" class="min-images img-fluid" :alt="school.schoolName">
             </a>
             <div class="card-wrapper">
-                <p class="no-margin">
+                <a :href="handleHomePage(school.schoolId)" class="no-margin title">
                     <span class="teacher-name" >{{school.name || "未填写名称"}}</span>
                     <span v-show="+school.isPoor > 0" class="tm-bage">穷</span>
-                </p>
+                </a>
                 <p class="mm" >{{school.schoolShortDesc}}</p>
                 <p class="m-10" ><span class="num tm-text-color" >{{school.finishedClass}}</span> 开课数</p>
                 <p class="no-margin text-overflow" >简介：{{school.schoolDesc || "未填写信息"}}</p>
@@ -125,12 +125,11 @@ export default {
                 font-weight: bold;
                 margin-right: 10px;
             }
-
-            .teacher-name {
-                font-size: 22px;
-                font-weight: bold;
-                color: #000;
-            }
+        }
+        .teacher-name {
+            font-size: 22px;
+            font-weight: bold;
+            color: #000;
         }
     }
     .invite-btn {

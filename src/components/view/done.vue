@@ -26,6 +26,9 @@
                     prop="schoolName"
                     align="center"
                     label="学校">
+                    <template slot-scope="scope">
+                        <a target="_black" class="tm-link" :href="toSchoolHome(scope.row.schoolId)">{{scope.row.schoolName}}</a>
+                    </template>
                 </el-table-column>
                 <el-table-column
                     prop="speakTitle"
@@ -81,6 +84,7 @@ import TimeRange from '@layout/timerange.vue';
 import {
     attrs,
     formatAttr,
+    toSchoolHome,
     secToMin,
     dateformat,
     commonPageInit
@@ -128,6 +132,7 @@ export default {
         })
     },
     methods: {
+        toSchoolHome,
         secToMin,
         dateformat,
         formatAttr,

@@ -7,6 +7,9 @@
                     prop="schoolName"
                     label="学校姓名"
                     >
+                    <template slot-scope="scope">
+                        <a target="_black" class="tm-link" :href="toSchoolHome(scope.row.schoolId)">{{scope.row.schoolName}}</a>
+                    </template>
                 </el-table-column>
                 <el-table-column
                     align="center"
@@ -64,6 +67,7 @@ import Table from '@layout/table.vue';
 import EditInvite from '@layout/modal/editInvite.vue';
 import {
     attrs,
+    toSchoolHome,
     formatAttr,
     secToMin,
     dateformat,
@@ -98,6 +102,7 @@ export default {
         })
     },
     methods: {
+        toSchoolHome,
         secToMin,
         dateformat,
         ...mapMutations([
