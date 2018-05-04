@@ -48,13 +48,13 @@ import { mapState, mapMutations } from 'vuex';
 export default {
     data() {
         return {
-            path: this.$route.path,
-            iconfont: 'icon iconfont sd-icon'
+            iconfont: 'icon iconfont sd-icon',
+            helpPath: ["/help/flow/school","/help/flow/speaker","/help/download/resources"]
         };
     },
     mounted() {
         this.getMenuList();
-        this.changeSidebarView();
+        this.changeSidebarView(this.$route.path);
     },
     // 可以将模块的空间名称字符串作为第一个参数传递给函数
     computed: mapState({
@@ -64,11 +64,17 @@ export default {
         menuList: state => state.common.menuList,
         users: state => state.common.users
     }),
+    watch: {
+        /* 监听$oute 的方式写法 */
+        '$route.path'(val) {
+            this.changeSidebarView(val);
+        }
+    },
     methods: {
         sidebarRender,
-        ...mapMutations(['setValue', 'getMenuList', 'switchSidebarView']),
-        changeSidebarView() {
-            if (this.path.indexOf('help') > -1) {
+        ...mapMutations(['getMenuList', 'switchSidebarView']),
+        changeSidebarView(path) {
+            if (this.helpPath.some(el=>el === path)) {
                 this.switchSidebarView('help');
             } else {
                 this.switchSidebarView('main');

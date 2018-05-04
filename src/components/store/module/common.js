@@ -12,13 +12,7 @@ const state = {
 }
 // 模块的mutations 、 actions、getter 默认注册在全局命名空间的
 const mutations = {
-    setValue(state, payload) {
-        state = Object.assign(state, payload)
-    },
-    toggleState(state) {
-        //在这里改变state中的数据
-        state.check_state = state.check_state ? 0 : 1
-    },
+   
     /**
      * 拿到用户登陆状态
      *

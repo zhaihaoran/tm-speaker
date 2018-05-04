@@ -64,7 +64,7 @@
                 </el-form-item>
                 <el-form-item label="您的图片" props="pic1" >
                     <Upload filepathname="photoShortPathFilename" previewname="photoUrl" :action="Api.upload" :preview="photoUrl" :disabled="isDisabled" ></Upload>
-                    <div class="pic-info">
+                    <div v-show="!isDisabled" class="pic-info">
                         <h3>请拍摄能够清晰的看到正脸的照片</h3>
                         <p class="info-p">图片类型：JPG、PNG</p>
                         <p class="info-p">图片大小：不超过5M</p>
@@ -85,7 +85,7 @@
                     <el-input :disabled="isDisabled" type="textarea" :rows="rows" class="info-textarea" v-model="form.whyChooseUs"></el-input>
                 </el-form-item>
                 <el-form-item label-width="0"  >
-                    <el-checkbox :disabled="isDisabled" v-model="isCheck" >我已阅读并同意途梦 <a class="tm-a" @click="modal.rules=true" >用户规约</a></el-checkbox>
+                    <el-checkbox :disabled="isDisabled" v-model="isCheck" >我已阅读并同意途梦 </el-checkbox><a class="tm-a" @click="modal.rules=true" > 用户规约</a>
                 </el-form-item>
                 <div v-if="!isDisabled">
                     <el-button class="tm-border" @click="onSave('form')">保存文件</el-button>

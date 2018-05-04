@@ -10,7 +10,8 @@
                         previewname="photoUrl"
                         :previewUrl="form.profilePhotoUrl"
                         :action='Api.upload'
-                        aspectRatio.number=0.5
+                        width="170"
+                        height="170"
                     ></Cropper>
                 </el-form-item>
                 <el-form-item label="梦享家名称" prop="name" >
@@ -55,8 +56,8 @@
                 <div class="empty-box" v-show="photoList.length == 0" >
                     暂无图片
                 </div>
-                <el-col class="tm-col-5 pic-cube" :sm="12" :md="8" :lg="6" v-for="photo in photoList" :key="photo.speakerPhotoId" v-dragging="{ item: photo, list: photoList, group: 'photo' }" >
-                    <img ref="photo" :src="photo.photoUrl" class="img-fluid" :time="photo.addTimestamp">
+                <el-col class="tm-col-5 pic-cube" :sm="12" :md="8" :lg="6" v-for="photo in photoList" :key="photo.speakerPhotoId" >
+                    <img :src="photo.photoUrl" class="img-fluid" :time="photo.addTimestamp">
                     <div class="op_context">
                         <span class="photo-cube" @click="handleDeletePic(photo)">
                             <i class="el-icon-delete"></i>
@@ -136,7 +137,6 @@ export default {
         };
     },
     mounted() {
-        this.$dragging.$on('dragged', ({ value }) => {});
         this.handleForm();
     },
     computed: {
@@ -191,7 +191,9 @@ export default {
             this.getArrayData({
                 act: 'getPersonalPagePhotoList',
                 onSuccess: res => {
-                    this.photoList = res.data.data.photoList;
+                    this.photoList = res.data.data.photoList.sort((a,b)=>{
+                        return a.addTimestamp - b.addTimestamp;
+                    });
                     this.loading.pictures = false;
                 }
             });
@@ -245,7 +247,7 @@ export default {
             });
         },
         handleExceed(files, fileList) {
-            this.$message.warning(`当前限制选择 10 个文件`);
+            this.$message.warning(`图片已满，请删除不需要的图片`);
         },
         /* 添加图片 */
         handlePicChange(file) {

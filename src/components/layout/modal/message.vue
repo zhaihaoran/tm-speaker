@@ -113,10 +113,11 @@ export default {
                     appointmentId: row.appointmentId,
                     message: this.message,
                     onSuccess: res => {
-                        // 将滚动条控制在最底部
-                        this.$refs.mesbox.scrollTop = this.$refs.mesbox.scrollHeight;
                         // 清空内容
                         this.message = '';
+                        this.$nextTick(function() {
+                            this.$refs.mesbox.scrollTop = this.$refs.mesbox.scrollHeight;
+                        });
                     }
                 });
             }

@@ -1,5 +1,5 @@
 <template>
-    <div id="cropper">
+    <div :class="boxClass" id="cropper">
         <el-upload
             :class="classes"
             :action="action"
@@ -34,21 +34,25 @@ export default {
         previewname: {
             type: String
         },
-        classes: {
+        boxClass: {
             type: String,
-            default: 'avatar-uploader'
+            default: 'box'
         },
         croppable: {
             type: Boolean,
             default: true
+        },
+        classes: {
+            type: String,
+            default: "avatar-uploader"
         },
         accept: {
             type: String,
             default: 'image/gif, image/jpeg, image/png, image/jpg'
         },
         aspectRatio: {
-            type: Number,
-            default: 1
+            type: String,
+            default: '1'
         },
         background: {
             type: Boolean,
@@ -59,6 +63,14 @@ export default {
             default: true
         },
         action: {
+            type: String,
+            default: ''
+        },
+        width: {
+            type: String,
+            default: ''
+        },
+        height: {
             type: String,
             default: ''
         }
@@ -167,8 +179,8 @@ export default {
         getRoundedCanvas(sourceCanvas) {
             var canvas = document.createElement('canvas');
             var context = canvas.getContext('2d');
-            var width = sourceCanvas.width;
-            var height = sourceCanvas.height;
+            var width = this.width || sourceCanvas.width;
+            var height = this.height || sourceCanvas.height;
             canvas.width = width;
             canvas.height = height;
             context.imageSmoothingEnabled = true;
@@ -191,6 +203,7 @@ export default {
         postImg() {
             let formCfg = new FormData();
             // this.blob = Object.assign(this.picValue, this.blob);
+
             formCfg.append('file', this.blob, this.picValue.name);
 
             this.commonUpload({

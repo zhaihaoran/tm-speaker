@@ -1,6 +1,6 @@
 <template>
     <div>
-        <Search left-text="无排序" center-text="邀约数" right-text="开课数" :cfg="searchCfg" ref="sr_component" >
+        <Search :cfg="searchCfg" ref="sr_component" >
             <template slot-scope="props" >
                 <div class="search-input">
                     <el-input type="search" @keyup.native.enter="handleSearch" placeholder="搜索关键字" v-model="searchCfg.searchText" ></el-input>
@@ -12,7 +12,7 @@
         </div>
         <div v-for="school in data" :key="school.$index" class="tm-card in-card">
             <a :href="handleHomePage(school.schoolId)" class="card-image">
-                <img :src="handleAvatar(school.photoUrl)" class="min-images img-fluid" :alt="school.schoolName">
+                <img :src="handleAvatar(school.profilePhotoUrl)" class="min-images img-fluid" :alt="school.schoolName">
             </a>
             <div class="card-wrapper">
                 <a :href="handleHomePage(school.schoolId)" class="no-margin title">
@@ -36,7 +36,7 @@
 import { mapState, mapMutations } from 'vuex';
 import Pagination from '@layout/pagination.vue';
 import EditInvite from '@layout/modal/send_invite.vue';
-import Search from '@layout/search.vue';
+import Search from '@layout/invite_search.vue';
 import school from '@image/school.png';
 
 import emptyImage from '@image/empty.png';
