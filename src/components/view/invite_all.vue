@@ -15,9 +15,9 @@
                     label="状态">
                     <template slot-scope="scope">
                         <el-tag
-                        :type="attrs['status'][scope.row.status+''+scope.row.fromSide].tags"
+                        :type="handleRendorState(scope.row,'tags')"
                         close-transition>
-                        {{attrs["status"][scope.row.status+''+scope.row.fromSide].text}}</el-tag>
+                        {{handleRendorState(scope.row,'text')}}</el-tag>
                     </template>
                 </el-table-column>
                 <el-table-column
@@ -215,6 +215,13 @@ export default {
             'showModal',
             'getRejectDesc'
         ]),
+
+        /* 渲染状态 */
+        handleRendorState(obj, type) {
+            let state = obj.status + obj.fromSide || '11';
+            return this.attrs['status'][state][type];
+        },
+
         handleEdit(index, row) {
             this.showModal(row);
         },

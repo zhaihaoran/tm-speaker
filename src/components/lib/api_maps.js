@@ -224,16 +224,11 @@ const attrs = {
     }
 }
 
-const baseURL = 'http://10.0.0.148';
-
-const Api = {
-    upload: baseURL + '/api/common/?act=upload'
-}
+const baseURL = process.env.BASE_URL;
 
 module.exports = {
     // 日期格式化
     baseURL,
-    Api,
     attrs,
     dateformat(timestamp, state = 0) {
         if (timestamp < 1000) {

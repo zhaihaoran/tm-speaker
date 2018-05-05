@@ -32,7 +32,7 @@
                 <el-form-item label="公司/机构名称" prop="company" >
                     <el-input :disabled="isDisabled" v-model="form.company"></el-input>
                 </el-form-item>
-                <el-form-item label="工作岗位" prop="title" >
+                <el-form-item label="职业" prop="title" >
                     <el-input :disabled="isDisabled" v-model="form.title"></el-input>
                 </el-form-item>
                 <el-form-item label="微信号" prop="wechat" >
@@ -63,7 +63,7 @@
                     <span class="left-info" >是否愿意将演讲视频在途梦平台上公开展示</span>
                 </el-form-item>
                 <el-form-item label="您的图片" props="pic1" >
-                    <Upload filepathname="photoShortPathFilename" previewname="photoUrl" :action="Api.upload" :preview="photoUrl" :disabled="isDisabled" ></Upload>
+                    <Upload filepathname="photoShortPathFilename" previewname="photoUrl" :preview="photoUrl" :disabled="isDisabled" ></Upload>
                     <div v-show="!isDisabled" class="pic-info">
                         <h3>请拍摄能够清晰的看到正脸的照片</h3>
                         <p class="info-p">图片类型：JPG、PNG</p>
@@ -118,7 +118,6 @@
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex';
-import { Api } from '@comp/lib/api_maps';
 
 import cerrifi_check from '@image/admin/cerrifi_check.png';
 import schoolDemo from '@image/admin/class.png';
@@ -127,7 +126,6 @@ import Upload from '@layout/upload.vue';
 export default {
     data() {
         return {
-            Api,
             rejectDesc: '',
             modal: {
                 submit: false,

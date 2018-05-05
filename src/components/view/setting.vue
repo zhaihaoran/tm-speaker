@@ -9,7 +9,6 @@
                         filepathname="pathfilename"
                         previewname="photoUrl"
                         :previewUrl="form.profilePhotoUrl"
-                        :action='Api.upload'
                         width="170"
                         height="170"
                     ></Cropper>
@@ -17,8 +16,8 @@
                 <el-form-item label="梦享家名称" prop="name" >
                     {{form.name}}
                 </el-form-item>
-                <el-form-item label="学校地址" prop="address" >
-                   {{form.address}}
+                <el-form-item label="职业" prop="title" >
+                   {{form.title}}
                 </el-form-item>
                 <el-form-item label="家乡" prop="hometown" >
                     <el-input v-model="form.hometown"></el-input>
@@ -39,7 +38,7 @@
         <el-tab-pane name="photo" label="相册">
             <div class="upload-pic">
                 <el-upload
-                    :action="Api.upload"
+                    action=""
                     :show-file-list="false"
                     :limit="10"
                     :on-change="handlePicChange"
@@ -96,8 +95,9 @@
             </el-row>
             <el-pagination
                 :current-page.sync="current"
-                :page-size="8"
+                :page-size="10"
                 layout="total, prev, pager, next"
+                @current-change="pageCurrentChange"
                 :total="count"
                 class="photo-pagination"
             >
@@ -107,7 +107,7 @@
 </template>
 <script>
 import { mapState, mapMutations } from 'vuex';
-import { Api, dateformat, formatDuration } from '@comp/lib/api_maps';
+import { dateformat, formatDuration } from '@comp/lib/api_maps';
 import Cropper from '@layout/modal/Cropper.vue';
 
 export default {
@@ -128,12 +128,42 @@ export default {
                 'card-hover': true,
                 hoverable: true
             },
-            current: 1,
+            /* 视频列表 */
+            current: 1, //当前页
+            perPage: 10, //每个视频数
+            count: 1, //总数
             videoIdOfRecommended: '',
-            count: 0,
-            rules: {},
-            videos: [],
-            Api
+            rules: {
+                hometown: [
+                    {
+                        required: true,
+                        message: '请填写相关信息',
+                        trigger: 'change'
+                    }
+                ],
+                live: [
+                    {
+                        required: true,
+                        message: '请填写相关信息',
+                        trigger: 'change'
+                    }
+                ],
+                speakerShortDesc: [
+                    {
+                        required: true,
+                        message: '请填写相关信息',
+                        trigger: 'change'
+                    }
+                ],
+                speakerDesc: [
+                    {
+                        required: true,
+                        message: '请填写相关信息',
+                        trigger: 'change'
+                    }
+                ]
+            },
+            videos: []
         };
     },
     mounted() {
@@ -191,12 +221,16 @@ export default {
             this.getArrayData({
                 act: 'getPersonalPagePhotoList',
                 onSuccess: res => {
-                    this.photoList = res.data.data.photoList.sort((a,b)=>{
+                    this.photoList = res.data.data.photoList.sort((a, b) => {
                         return a.addTimestamp - b.addTimestamp;
                     });
                     this.loading.pictures = false;
                 }
             });
+        },
+        /* 视频列表 -- 翻页 */
+        pageCurrentChange(page) {
+            this.handleVideos();
         },
         /* 加载视频数据 */
         handleVideos() {
@@ -204,6 +238,8 @@ export default {
             /* 视频信息 */
             this.getArrayData({
                 act: 'getPersonalPageVideoList',
+                page: this.current,
+                perPage: this.perPage,
                 onSuccess: res => {
                     this.videos = res.data.data.data;
                     this.count = +res.data.data.count;
