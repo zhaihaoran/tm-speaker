@@ -106,6 +106,7 @@ export default {
         secToMin,
         dateformat,
         ...mapMutations([
+            'clearSearchOps',
             'updateValue',
             'getPageData',
             'formSubmit',

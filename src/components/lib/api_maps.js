@@ -274,7 +274,11 @@ module.exports = {
     },
     /* getPageDate */
     commonPageInit(context, obj, cfg) {
+        /* 页面每次挂载，都要清空掉查询条件 */
+        context.clearSearchOps();
+        /* 更新status */
         context.updateValue(obj);
+        /* 获取页面数据 */
         context.getPageData(cfg);
     },
     /* 时间格式化   sec 转 min */

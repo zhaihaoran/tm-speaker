@@ -136,7 +136,12 @@ export default {
         secToMin,
         dateformat,
         formatAttr,
-        ...mapMutations(['updateValue', 'getPageData', 'formSubmit'])
+        ...mapMutations([
+            'updateValue',
+            'getPageData',
+            'formSubmit',
+            'clearSearchOps'
+        ])
     }
 };
 </script>

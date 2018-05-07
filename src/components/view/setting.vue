@@ -1,6 +1,6 @@
 <template>
-   <el-tabs @tab-click="handleLoading" v-model="activeName" type="border-card">
-        <el-tab-pane name="common" label="通用">
+    <el-tabs @tab-click="handleLoading" v-model="activeName" type="border-card">
+        <el-tab-pane name="common" v-loading="loading.form" label="通用">
             <el-form :model="form" :rules="rules" ref="form" label-width="100px" class="setting-form" >
                 <el-form-item label="头像">
                     <Cropper
@@ -35,7 +35,7 @@
                 <el-button type="primary" @click="onSubmit('form')">保存</el-button>
             </el-form>
         </el-tab-pane>
-        <el-tab-pane name="photo" label="相册">
+        <el-tab-pane name="photo" v-loading="loading.pictures" label="相册">
             <div class="upload-pic">
                 <el-upload
                     action=""
@@ -71,7 +71,7 @@
                 <img width="100%" :src="dialogImageUrl" alt="">
             </el-dialog>
         </el-tab-pane>
-        <el-tab-pane name="video" label="视频">
+        <el-tab-pane name="video" v-loading="loading.videos" label="视频">
             <el-row :gutter="10">
                 <el-col class="tm-col-5" :sm="12" :md="8" :lg="6" v-for="video in videos" :key="video.videoId" >
                     <div :class="[videoClass,{active:videoIdOfRecommended == video.videoId}]" >
@@ -265,6 +265,7 @@ export default {
                 });
             }
         },
+
         onSubmit(form) {
             const cfg = Object.assign(this.form, {
                 profilePhotoShortPathFilename: this.pathfilename,
@@ -287,15 +288,18 @@ export default {
         },
         /* 添加图片 */
         handlePicChange(file) {
-            let formCfg = new FormData();
-            formCfg.append('file', file.raw);
-            formCfg.append('act', 'addPersonalPagePhoto');
-            this.photoUpload({
-                formCfg,
-                onSuccess: res => {
-                    this.photoList.push(res.data.data);
-                }
-            });
+            /* 是否符合标准 */
+            if (this.beforeUpload(file.raw)) {
+                let formCfg = new FormData();
+                formCfg.append('file', file.raw);
+                formCfg.append('act', 'addPersonalPagePhoto');
+                this.photoUpload({
+                    formCfg,
+                    onSuccess: res => {
+                        this.photoList.push(res.data.data);
+                    }
+                });
+            }
         },
         /* 删除照片 */
         handleDeletePic(row) {
@@ -319,6 +323,28 @@ export default {
                     });
                 })
                 .catch(() => {});
+        },
+
+        // 限制上传类型
+        beforeUpload(file) {
+            debugger;
+            const isJPG = file.type === 'image/jpeg';
+            const isPNG = file.type === 'image/png';
+            const isLt2M = file.size / 1024 / 1024 < 2;
+
+            if (!isJPG && !isPNG) {
+                this.$message({
+                    message: '上传图片必须是JPG/PNG 格式!',
+                    type: 'error'
+                });
+            }
+            if (!isLt2M) {
+                this.$message({
+                    message: '上传图片大小不能超过 2MB!',
+                    type: 'error'
+                });
+            }
+            return (isJPG || isPNG) && isLt2M;
         }
     },
     components: {
@@ -441,6 +467,11 @@ export default {
             cursor: pointer;
         }
     }
+}
+.empty-box {
+    text-align: center;
+    padding: 20px;
+    font-size: 18px;
 }
 </style>
 
