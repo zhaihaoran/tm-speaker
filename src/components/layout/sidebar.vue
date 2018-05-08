@@ -49,11 +49,23 @@ export default {
     data() {
         return {
             iconfont: 'icon iconfont sd-icon',
-            helpPath: ["/help/flow/school","/help/flow/speaker","/help/download/resources"]
+            helpPath: [
+                '/help/flow/school',
+                '/help/flow/speaker',
+                '/help/download/resources'
+            ]
         };
     },
     mounted() {
-        this.getMenuList();
+        this.getMenuList({
+            onSuccess: res => {
+                if (this.checkState < 3) {
+                    this.$router.push({
+                        path: '/certification/check'
+                    });
+                }
+            }
+        });
         this.changeSidebarView(this.$route.path);
     },
     // 可以将模块的空间名称字符串作为第一个参数传递给函数
@@ -74,7 +86,7 @@ export default {
         sidebarRender,
         ...mapMutations(['getMenuList', 'switchSidebarView']),
         changeSidebarView(path) {
-            if (this.helpPath.some(el=>el === path)) {
+            if (this.helpPath.some(el => el === path)) {
                 this.switchSidebarView('help');
             } else {
                 this.switchSidebarView('main');

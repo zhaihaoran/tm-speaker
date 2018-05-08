@@ -12,7 +12,7 @@ const state = {
 }
 // 模块的mutations 、 actions、getter 默认注册在全局命名空间的
 const mutations = {
-   
+
     /**
      * 拿到用户登陆状态
      *
@@ -53,16 +53,19 @@ const mutations = {
      * @param {any} state
      * @param {any}
      */
-    getMenuList(state) {
+    getMenuList(state, {
+        onSuccess
+    }) {
         const cfg = {
             act: 'getMenuList',
         }
         Util.fetchPost({
             cfg,
+            onSuccess,
             ActionSuccess: res => {
                 state.menuList = res.data.data.menuList;
-                state.checkState = +state.menuList.find(el => el.menuId == 20401).status;
-            }
+                state.checkState = +state.menuList.find(el => el.menuId == 10401).status;
+            },
         })
     },
     /* 数组数据 - 照片 */
