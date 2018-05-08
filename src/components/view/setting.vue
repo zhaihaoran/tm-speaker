@@ -267,13 +267,15 @@ export default {
         },
 
         onSubmit(form) {
-            const cfg = Object.assign(this.form, {
-                profilePhotoShortPathFilename: this.pathfilename,
-                profilePhotoUrl: this.photoUrl
-            });
-
             this.$refs[form].validate(valid => {
                 if (valid) {
+                    const cfg = Object.assign(this.form, {
+                        profilePhotoShortPathFilename:
+                            this.pathfilename ||
+                            this.form.profilePhotoShortPathFilename,
+                        profilePhotoUrl:
+                            this.photoUrl || this.form.profilePhotoUrl
+                    });
                     this.formSubmit({
                         act: 'modifyPersonalPageGeneral',
                         ...cfg
@@ -327,7 +329,6 @@ export default {
 
         // 限制上传类型
         beforeUpload(file) {
-            debugger;
             const isJPG = file.type === 'image/jpeg';
             const isPNG = file.type === 'image/png';
             const isLt2M = file.size / 1024 / 1024 < 2;

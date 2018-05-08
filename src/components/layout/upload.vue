@@ -70,18 +70,19 @@ export default {
         },
 
         handlePicChange(file, fileList) {
-            let formCfg = new FormData();
-            // 创建formData
-            // 这里记住一定要是file的源文件，本身传过来的file是被element ui包了一层
-            formCfg.append('file', file.raw);
-            // append的值在控制台里是看不到的（formData原型），但是可以通过formCfg.get('file')来取
+            if (this.beforeUpload(file.raw)) {
+                let formCfg = new FormData();
+                // 创建formData
+                // 这里记住一定要是file的源文件，本身传过来的file是被element ui包了一层
+                formCfg.append('file', file.raw);
+                // append的值在控制台里是看不到的（formData原型），但是可以通过formCfg.get('file')来取
 
-            // 上传
-            this.commonUpload({
-                formCfg,
-                filepathname: this.filepathname,
-                previewname: this.previewname
-            });
+                this.commonUpload({
+                    formCfg,
+                    filepathname: this.filepathname,
+                    previewname: this.previewname
+                });
+            }
         }
     }
 };
