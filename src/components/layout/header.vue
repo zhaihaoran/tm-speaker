@@ -52,7 +52,10 @@ export default {
         main: state => state.common.common_sidebar
     }),
     mounted() {
-        this.getUserLogin(baseURL);
+        this.getUserLogin({
+            baseURL,
+            context: this.$router
+        });
     },
     methods: {
         ...mapMutations(['getUserLogin', 'switchSidebarView', 'signout']),

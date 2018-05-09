@@ -16,6 +16,10 @@ const router = new Router({
         name: '404',
         component: resolve => require(['@comp/view/errorPage.vue'], resolve),
     }, {
+        path: '/suspend',
+        name: 'suspend',
+        component: resolve => require(['@comp/view/suspend.vue'], resolve),
+    }, {
         path: '/help/flow/school',
         name: 'flow_school',
         component: resolve => require(['@comp/view/flow_school.vue'], resolve),

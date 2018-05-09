@@ -9,6 +9,8 @@ const state = {
     checkState: 0, // 审核状态
     menuList: {}, // 菜单列表
     users: {}, //用户信息
+    isSuspend: false, // 是否被冻结
+    suspendDesc: "" // 冻结原因
 }
 // 模块的mutations 、 actions、getter 默认注册在全局命名空间的
 const mutations = {
@@ -19,7 +21,10 @@ const mutations = {
      * @param {any} state
      * @param {any}
      */
-    getUserLogin(state, baseUrl) {
+    getUserLogin(state, {
+        baseUrl,
+        context
+    }) {
         const cfg = {
             act: 'getUserLogin',
         }
@@ -28,6 +33,11 @@ const mutations = {
             cfg,
             ActionSuccess: res => {
                 let cfg = res.data.data;
+                if (+cfg.suspend > 0) {
+                    state.isSuspend = true;
+                    state.suspendDesc = cfg.suspendDesc;
+                    context.push({ path: '/suspend' });
+                }
                 if (cfg && +cfg.isLogin > 0) {
                     state.users = cfg
                 } else {

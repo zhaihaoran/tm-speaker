@@ -2,7 +2,7 @@
     <el-container class="admin-layout">
         <Header />
         <el-container class="admin-context" >
-            <Sidebar />
+            <Sidebar v-show="!isSuspend" />
             <el-main class="admin-wrapper" >
                 <router-view/>
             </el-main>
@@ -17,7 +17,10 @@ import { mapState, mapMutations } from 'vuex';
 
 export default {
     name: 'App',
-    components: { Sidebar, Header }
+    components: { Sidebar, Header },
+    computed: mapState({
+        isSuspend: state => state.common.isSuspend
+    })
 };
 </script>
 
