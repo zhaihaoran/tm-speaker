@@ -41,6 +41,10 @@ axios.interceptors.response.use(res => {
                 showClose: true,
                 message: '您已被冻结，请联系管理员',
                 type: 'error',
+                onClose: () => {
+                    // 刷新
+                    window.location.reload();
+                }
             })
             return res;
         case 1:

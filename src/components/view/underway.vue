@@ -1,5 +1,14 @@
 <template>
     <div>
+        <el-alert
+            v-show="!alertState[$route.path]"
+            :type="pageInfo($route.path,'type')"
+            :title="pageInfo($route.path,'title')"
+            :description="pageInfo($route.path,'description')"
+            @close="changeAlertState($route.path)"
+            class="mb-20"
+        >
+        </el-alert>
         <Search :cfg="searchCfg" ref="sr_component" >
             <template slot-scope="props" >
                 <div class="search-input">
@@ -109,15 +118,9 @@
     </div>
 </template>
 <script>
-import { mapState, mapMutations } from 'vuex';
-import {
-    attrs,
-    formatAttr,
-    toSchoolHome,
-    secToMin,
-    dateformat,
-    commonPageInit
-} from '@comp/lib/api_maps.js';
+import { commonPageInit } from '@comp/lib/api_maps.js';
+import common_mixin from '@comp/mixin/common';
+
 import MessageBox from '@layout/modal/message.vue';
 import Table from '@layout/table.vue';
 import Pagination from '@layout/pagination.vue';
@@ -125,10 +128,10 @@ import Search from '@layout/search.vue';
 import TimeRange from '@layout/timerange.vue';
 
 export default {
+    mixins: [common_mixin],
     data() {
         return {
             currentId: '',
-            attrs,
             modal: {
                 upload: false,
                 imageUrl: '',
@@ -153,36 +156,13 @@ export default {
             }
         );
     },
-    computed: {
-        ...mapState({
-            data: state => state.search.data,
-            tableLoading: state => state.search.tableLoading,
-            orderType: state => state.search.orderType,
-            timerange: state => state.search.timerange,
-            count: state => state.search.count,
-            status: state => state.search.status
-        })
-    },
+
     components: {
         MessageBox,
         Table,
         Pagination,
         Search,
         TimeRange
-    },
-    methods: {
-        toSchoolHome,
-        secToMin,
-        dateformat,
-        formatAttr,
-        ...mapMutations([
-            'clearSearchOps',
-            'updateValue',
-            'getPageData',
-            'formSubmit',
-            'getFeedList',
-            'photoUpload'
-        ])
     }
 };
 </script>

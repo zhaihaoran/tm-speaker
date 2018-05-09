@@ -1,7 +1,16 @@
 <template>
     <div>
+        <el-alert
+            v-show="!alertState[$route.path]"
+            :type="pageInfo($route.path,'type')"
+            :title="pageInfo($route.path,'title')"
+            :description="pageInfo($route.path,'description')"
+            @close="changeAlertState($route.path)"
+            class="mb-20"
+        >
+        </el-alert>
         <div class="tm-card">
-            <Table :loading="loading"  :data="data" >
+            <Table :loading="tableLoading"  :data="data" >
                 <el-table-column
                     align="center"
                     prop="schoolName"
@@ -61,25 +70,18 @@
     </div>
 </template>
 <script>
+import { commonPageInit } from '@comp/lib/api_maps.js';
+import common_mixin from '@comp/mixin/common';
+
 import Operation from '@layout/operation.vue';
 import MessageBox from '@layout/modal/message.vue';
 import Table from '@layout/table.vue';
 import EditInvite from '@layout/modal/editInvite.vue';
-import {
-    attrs,
-    toSchoolHome,
-    formatAttr,
-    secToMin,
-    dateformat,
-    commonPageInit
-} from '@comp/lib/api_maps.js';
-
-import { mapState, mapMutations } from 'vuex';
 
 export default {
+    mixins: [common_mixin],
     data() {
         return {
-            attrs,
             form: {},
             modal_edit: false
         };
@@ -94,27 +96,6 @@ export default {
                 fromSide: 2
             }
         );
-    },
-    computed: {
-        ...mapState({
-            data: state => state.search.data,
-            loading: state => state.search.tableLoading
-        })
-    },
-    methods: {
-        toSchoolHome,
-        secToMin,
-        dateformat,
-        ...mapMutations([
-            'clearSearchOps',
-            'updateValue',
-            'getPageData',
-            'formSubmit',
-            'showModal'
-        ]),
-        handleEdit(index, row) {
-            this.showModal(row);
-        }
     },
     components: {
         Operation,

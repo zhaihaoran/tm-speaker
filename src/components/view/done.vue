@@ -1,5 +1,14 @@
 <template>
     <div>
+        <el-alert
+            v-show="!alertState[$route.path]"
+            :type="pageInfo($route.path,'type')"
+            :title="pageInfo($route.path,'title')"
+            :description="pageInfo($route.path,'description')"
+            @close="changeAlertState($route.path)"
+            class="mb-20"
+        >
+        </el-alert>
         <Search :cfg="searchCfg" ref="sr_component" >
             <template slot-scope="props" >
                 <div class="search-input">
@@ -81,20 +90,13 @@ import Pagination from '@layout/pagination.vue';
 import Search from '@layout/search.vue';
 import TimeRange from '@layout/timerange.vue';
 
-import {
-    attrs,
-    formatAttr,
-    toSchoolHome,
-    secToMin,
-    dateformat,
-    commonPageInit
-} from '@comp/lib/api_maps.js';
-import { mapState, mapMutations } from 'vuex';
+import { commonPageInit } from '@comp/lib/api_maps.js';
+import common_mixin from '@comp/mixin/common';
 
 export default {
+    mixins: [common_mixin],
     data() {
         return {
-            attrs,
             searchCfg: {
                 act: 'getAppointmentList',
                 status: 3,
@@ -120,28 +122,6 @@ export default {
         Pagination,
         Search,
         TimeRange
-    },
-    computed: {
-        ...mapState({
-            data: state => state.search.data,
-            tableLoading: state => state.search.tableLoading,
-            orderType: state => state.search.orderType,
-            timerange: state => state.search.timerange,
-            count: state => state.search.count,
-            status: state => state.search.status
-        })
-    },
-    methods: {
-        toSchoolHome,
-        secToMin,
-        dateformat,
-        formatAttr,
-        ...mapMutations([
-            'updateValue',
-            'getPageData',
-            'formSubmit',
-            'clearSearchOps'
-        ])
     }
 };
 </script>

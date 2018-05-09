@@ -1,5 +1,14 @@
 <template>
     <div>
+        <el-alert
+            v-show="!alertState[$route.path]"
+            :type="pageInfo($route.path,'type')"
+            :title="pageInfo($route.path,'title')"
+            :description="pageInfo($route.path,'description')"
+            @close="changeAlertState($route.path)"
+            class="mb-20"
+        >
+        </el-alert>
         <Search :cfg="searchCfg" ref="sr_component" >
             <template slot-scope="props" >
                 <div class="search-input">
@@ -33,15 +42,18 @@
     </div>
 </template>
 <script>
-import { mapState, mapMutations } from 'vuex';
+import { commonPageInit } from '@comp/lib/api_maps.js';
+import common_mixin from '@comp/mixin/common';
+
 import Pagination from '@layout/pagination.vue';
 import EditInvite from '@layout/modal/send_invite.vue';
 import Search from '@layout/invite_search.vue';
-import school from '@image/school.png';
 
+import school from '@image/school.png';
 import emptyImage from '@image/empty.png';
 
 export default {
+    mixins: [common_mixin],
     data() {
         return {
             emptyImage,
@@ -51,16 +63,6 @@ export default {
                 searchText: ''
             }
         };
-    },
-    computed: {
-        ...mapState({
-            orderType: state => state.search.orderType,
-            data: state => state.search.data,
-            count: state => state.search.count,
-            loading: state => state.search.tableLoading,
-            page: state => state.search.page,
-            perPage: state => state.search.perPage
-        })
     },
     components: {
         Search,
@@ -74,12 +76,6 @@ export default {
         });
     },
     methods: {
-        ...mapMutations([
-            'getPageData',
-            'showModal',
-            'formSubmit',
-            'clearSearchOps'
-        ]),
         handleEdit(row) {
             this.showModal({
                 schoolId: row.schoolId,
