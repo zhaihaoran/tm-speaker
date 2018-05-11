@@ -139,6 +139,11 @@ export default {
                         required: true,
                         message: '请填写相关信息',
                         trigger: 'change'
+                    },
+                    {
+                        max: 16,
+                        message: '长度在16字以内',
+                        trigger: 'blur'
                     }
                 ],
                 live: [
@@ -146,6 +151,11 @@ export default {
                         required: true,
                         message: '请填写相关信息',
                         trigger: 'change'
+                    },
+                    {
+                        max: 16,
+                        message: '长度在16字以内',
+                        trigger: 'blur'
                     }
                 ],
                 speakerShortDesc: [
@@ -153,6 +163,11 @@ export default {
                         required: true,
                         message: '请填写相关信息',
                         trigger: 'change'
+                    },
+                    {
+                        max: 64,
+                        message: '长度在64字以内',
+                        trigger: 'blur'
                     }
                 ],
                 speakerDesc: [
@@ -160,6 +175,11 @@ export default {
                         required: true,
                         message: '请填写相关信息',
                         trigger: 'change'
+                    },
+                    {
+                        max: 1000,
+                        message: '长度在1000字以内',
+                        trigger: 'blur'
                     }
                 ]
             },
