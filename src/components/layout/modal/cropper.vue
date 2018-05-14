@@ -44,7 +44,7 @@ export default {
         },
         classes: {
             type: String,
-            default: "avatar-uploader"
+            default: 'avatar-uploader'
         },
         accept: {
             type: String,
@@ -169,11 +169,15 @@ export default {
             this.url = roundedCanvas.toDataURL();
             // 经过剪裁之后，如何将canvas的数据传递给接口？
             // canvas转Blob后，file文件类型本身也是blob二进制类型，通过blob来作为接口数据传递
-            roundedCanvas.toBlob(blob => {
-                this.blob = blob;
-                //上传图片
-                this.postImg();
-            });
+            roundedCanvas.toBlob(
+                blob => {
+                    this.blob = blob;
+                    //上传图片
+                    this.postImg();
+                },
+                'image/jpeg',
+                0.5
+            );
         },
         //canvas画图
         getRoundedCanvas(sourceCanvas) {
