@@ -26,7 +26,7 @@
                     <el-input v-model="form.live"></el-input>
                 </el-form-item>
                 <el-form-item label="简要介绍" prop="speakerShortDesc" >
-                    <el-input v-model="form.speakerShortDesc"></el-input>
+                    <el-input type="textarea" class="tm-textarea" v-model="form.speakerShortDesc"></el-input>
                 </el-form-item>
                 <el-form-item label="简介" prop="speakerDesc" >
                     <el-input type="textarea" class="tm-textarea" v-model="form.speakerDesc"></el-input>

@@ -73,6 +73,7 @@ export default {
         help: state => state.common.help_sidebar,
         main: state => state.common.common_sidebar,
         sidebarState: state => state.common.sidebar_toggle,
+        checkState: state => state.common.checkState,
         menuList: state => state.common.menuList,
         users: state => state.common.users
     }),
