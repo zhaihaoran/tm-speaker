@@ -19,7 +19,7 @@
         </el-alert>
         <div class="tm-card info-box">
             <el-form ref="form" :model="form" :rules="rules" label-width="150px">
-                <h3>梦享家基本信息</h3>
+                <h3>基本信息（必填）</h3>
                 <el-form-item label="姓名" prop="name" >
                     <el-input :disabled="isDisabled" v-model="form.name"></el-input>
                 </el-form-item>
@@ -62,7 +62,7 @@
                     </el-switch>
                     <span class="left-info" >是否愿意将演讲视频在途梦平台上公开展示</span>
                 </el-form-item>
-                <el-form-item label="您的图片" props="pic1" >
+                <el-form-item prop="photoShortPathFilename" label="您的图片" >
                     <Upload filepathname="photoShortPathFilename" previewname="photoUrl" :preview="photoUrl" :disabled="isDisabled" ></Upload>
                     <div v-show="!isDisabled" class="pic-info">
                         <h3>请拍摄能够清晰的看到正脸的照片</h3>
@@ -74,7 +74,7 @@
                 </el-form-item>
 
                 <div class="individar"></div>
-                <h3>附加信息</h3>
+                <h3>附加信息（选填）</h3>
                 <el-form-item label="教育背景"  >
                     <el-input :disabled="isDisabled" type="textarea" :rows="rows" class="info-textarea"  v-model="form.educationBackground"></el-input>
                 </el-form-item>
@@ -84,8 +84,8 @@
                 <el-form-item class="why-label" label="为什么申请途梦梦享家">
                     <el-input :disabled="isDisabled" type="textarea" :rows="rows" class="info-textarea" v-model="form.whyChooseUs"></el-input>
                 </el-form-item>
-                <el-form-item label-width="0"  >
-                    <el-checkbox :disabled="isDisabled" v-model="isCheck" >我已阅读并同意途梦 </el-checkbox><a class="tm-a" @click="modal.rules=true" > 用户规约</a>
+                <el-form-item prop="isCheck" label-width="0"  >
+                    <el-checkbox :disabled="isDisabled" v-model="form.isCheck" >我已阅读并同意途梦 </el-checkbox><a class="tm-a" @click="modal.rules=true" > 用户规约</a>
                 </el-form-item>
                 <div v-if="!isDisabled">
                     <el-button class="tm-border" @click="onSave('form')">保存文件</el-button>
@@ -191,6 +191,41 @@ export default {
                         message: '必须勾选',
                         trigger: 'change'
                     }
+                ],
+                email: [
+                    {
+                        required: true,
+                        message: '请输入您的邮箱',
+                        trigger: 'blur'
+                    },
+                    {
+                        validator: (rule, value, callback) => {
+                            if (
+                                /^[a-zA-Z0-9_.-]+@[a-zA-Z0-9-]+(\.[a-zA-Z0-9-]+)*\.[a-zA-Z0-9]{2,6}$/.test(
+                                    value
+                                )
+                            ) {
+                                callback();
+                            } else {
+                                callback(new Error('邮箱格式不对'));
+                            }
+                        },
+                        trigger: 'blur'
+                    }
+                ],
+                isCheck: [
+                    {
+                        required: true,
+                        message: '未同意用户规约',
+                        trigger: 'change'
+                    }
+                ],
+                photoShortPathFilename: [
+                    {
+                        required: true,
+                        message: '请上传图片',
+                        trigger: 'change'
+                    }
                 ]
             },
             cerrifi_check,
@@ -209,7 +244,7 @@ export default {
                 return this.checkState === 3;
             }
         }),
-        isCheck: {
+        'form.isCheck': {
             set(value) {
                 this.isOk = !this.isOk;
             },
@@ -253,7 +288,7 @@ export default {
             delete cfg.rejectDesc;
 
             this.$refs[form].validate(valid => {
-                if (valid && this.isCheck) {
+                if (valid) {
                     const data = {
                         act: action,
                         ...cfg,
@@ -285,7 +320,12 @@ export default {
             );
         },
         onSave(form) {
-            this.handleForm(form, 'modifyApplication');
+            this.handleForm(form, 'modifyApplication', res => {
+                this.$message({
+                    type: 'success',
+                    message: '保存成功！'
+                });
+            });
         }
     },
     components: {

@@ -443,10 +443,6 @@ export default {
     height: 500px;
 }
 
-.card-wrapper {
-    max-width: 240px;
-}
-
 .min-images {
     min-height: 150px;
     min-width: 100%;

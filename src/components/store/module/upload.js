@@ -6,6 +6,7 @@ const state = {
     schoolPhotoShortPathFilename: '',
     schoolPhotoUrl: '',
     pathfilename: '',
+    photoShortPathFilename: '',
     photoUrl: ''
 }
 

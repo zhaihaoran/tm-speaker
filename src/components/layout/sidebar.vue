@@ -59,7 +59,7 @@ export default {
     mounted() {
         this.getMenuList({
             onSuccess: res => {
-                if (this.checkState < 3) {
+                if (this.checkState !== 3) {
                     this.$router.push({
                         path: '/certification/check'
                     });
