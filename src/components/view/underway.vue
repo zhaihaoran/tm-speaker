@@ -22,6 +22,7 @@
                     prop="fromSide"
                     align="center"
                     :formatter="formatAttr"
+                    fixed
                     label="邀约发起者"
                     width="120px"
                 >
@@ -34,6 +35,7 @@
                 <el-table-column
                     prop="schoolName"
                     align="center"
+                    fixed
                     label="学校">
                     <template slot-scope="scope">
                         <a target="_black" class="tm-link" :href="toSchoolHome(scope.row.schoolId)">{{scope.row.schoolName}}</a>
@@ -41,6 +43,7 @@
                 </el-table-column>
                 <el-table-column
                     prop="speakTitle"
+                    fixed
                     :show-overflow-tooltip="true"
                     align="center"
                     label="演讲主题">
@@ -166,13 +169,5 @@ export default {
     }
 };
 </script>
-<style>
-.normal-a {
-    color: #409eff;
-}
-.pic-cube {
-    margin: 5px 0;
-}
-</style>
 
 

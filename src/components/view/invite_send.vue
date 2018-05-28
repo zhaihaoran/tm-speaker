@@ -26,7 +26,9 @@
             <div class="card-wrapper">
                 <a :href="handleHomePage(school.schoolId)" class="no-margin title">
                     <span class="teacher-name" >{{school.name || "未填写名称"}}</span>
-                    <span v-show="+school.isPoor > 0" class="tm-bage">穷</span>
+                    <el-tooltip effect="dark" content="重点关爱学校" placement="top-start">
+                        <i v-show="+school.isPoor > 0" class="icon iconfont icon-gongyi tm-bage" ></i>
+                    </el-tooltip>
                 </a>
                 <p class="mm" >{{school.schoolShortDesc}}</p>
                 <p class="m-10" ><span class="num tm-text-color" >{{school.finishedClass}}</span> 开课数</p>
@@ -147,16 +149,12 @@ export default {
     background: #ececec;
 }
 .tm-bage {
-    background: #bb2133;
-    color: #fff;
-    padding: 2px;
-    width: 20px;
-    margin-left: 5px;
-    position: relative;
-    top: -2px;
+    color: #bb2133;
+    position: absolute;
+    font-size: 26px;
+    margin-left: 10px;
     display: inline-block;
     text-align: center;
-    line-height: 20px;
 }
 .mm {
     margin: 0;

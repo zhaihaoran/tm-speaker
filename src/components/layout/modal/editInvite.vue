@@ -18,13 +18,17 @@
                     v-model="timestamp"
                     type="datetime"
                     format="yyyy-MM-dd HH:mm"
+                    :picker-options="pickerOptions"
                     placeholder="选择日期时间">
                 </el-date-picker>
             </el-form-item>
-            <el-form-item label="演讲时长" >
+            <!-- <el-form-item label="演讲时长" >
                 <el-input type="number" v-model="d_duration" >
                     <template slot="append">分钟</template>
                 </el-input>
+            </el-form-item> -->
+            <el-form-item prop="remarks" label="备注" >
+                <el-input v-model="form.remarks" ></el-input>
             </el-form-item>
             <el-form-item label="邀约时间" >
                 <span>{{dateformat(form.addTimestamp)}}</span>
@@ -48,6 +52,15 @@ import {
 export default {
     data() {
         return {
+            // 可选择范围 一周后
+            pickerOptions: {
+                disabledDate(time) {
+                    return (
+                        time.getTime() <
+                        Date.now() + 3600 * 1000 * 24 * 7 - 8.64e6
+                    );
+                }
+            },
             timestamp: '',
             d_duration: ''
         };
@@ -88,6 +101,14 @@ export default {
                     });
                     return false;
                 }
+                if (this.form.remarks.length > 25) {
+                    this.$message({
+                        showClose: true,
+                        message: '备注长度不能超过25个字',
+                        type: 'warning'
+                    });
+                    return false;
+                }
                 let cfg = {
                     appointmentId: this.form.appointmentId,
                     speakTitle: this.form.speakTitle,
@@ -95,7 +116,8 @@ export default {
                         new Date(this.timestamp).getTime() / 1000
                     ),
                     speakDuration: this.d_duration * 60,
-                    addTimestamp: this.form.addTimestamp
+                    addTimestamp: this.form.addTimestamp,
+                    remarks: this.form.remarks
                 };
 
                 this.formSubmit({

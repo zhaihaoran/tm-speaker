@@ -38,6 +38,11 @@
                 </router-link>
             </el-submenu>
         </el-menu>
+        <div class="sider-bottom">
+            <span>服务热线：18722124990</span>
+            <span>邮箱：Info@tomoroe.org</span>
+            <span>微信公众号：tomoroe</span>
+        </div>
     </el-aside>
 </template>
 
@@ -104,6 +109,20 @@ export default {
 .sd-icon {
     margin-right: 8px;
     font-size: 18px;
+}
+.sider-bottom {
+    color: #ddd;
+    font-size: 12px;
+    position: absolute;
+    bottom: 0;
+    z-index: 5;
+    margin: 50px 20px 20px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    span {
+        line-height: 20px;
+    }
 }
 </style>
 

@@ -21,6 +21,7 @@
                 <el-table-column
                     prop="status"
                     align="center"
+                    fixed
                     label="状态">
                     <template slot-scope="scope">
                         <el-tag
@@ -32,6 +33,7 @@
                 <el-table-column
                     prop="fromSide"
                     align="center"
+                    fixed
                     :formatter="formatAttr"
                     label="发起者"
                 >
@@ -44,6 +46,7 @@
                 <el-table-column
                     prop="schoolName"
                     align="center"
+                    fixed
                     label="学校">
                     <template slot-scope="scope">
                         <a target="_black" class="tm-link" :href="toSchoolHome(scope.row.schoolId)">{{scope.row.schoolName}}</a>
@@ -52,6 +55,7 @@
                 <el-table-column
                     prop="speakTitle"
                     align="center"
+                    fixed
                     :show-overflow-tooltip="true"
                     label="演讲主题">
                 </el-table-column>
@@ -129,7 +133,7 @@
                     align="center"
                     label="消息">
                     <template slot-scope="scope">
-                        <MessageBox :canSend="+scope.row.status === 1" :scope="scope" ></MessageBox>
+                        <MessageBox :canSend="+scope.row.status === 1 || +scope.row.status === 2" :scope="scope" ></MessageBox>
                     </template>
                 </el-table-column>
                 <el-table-column

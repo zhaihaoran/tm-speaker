@@ -10,11 +10,12 @@
         >
         </el-alert>
         <div class="tm-card">
-            <Table :loading="tableLoading"  :data="data" >
+            <Table :loading="tableLoading" :data="data" >
                 <el-table-column
                     align="center"
                     prop="schoolName"
                     label="学校姓名"
+                    fixed
                     >
                     <template slot-scope="scope">
                         <a target="_black" class="tm-link" :href="toSchoolHome(scope.row.schoolId)">{{scope.row.schoolName}}</a>
@@ -23,6 +24,7 @@
                 <el-table-column
                     align="center"
                     prop="speakTitle"
+                    fixed
                     :show-overflow-tooltip="true"
                     label="演讲主题"
                     >

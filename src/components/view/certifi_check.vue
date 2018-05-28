@@ -131,7 +131,7 @@ export default {
                 submit: false,
                 rules: false
             },
-            rows: 8,
+            rows: 4,
             form: {
                 sex: 1
             },
@@ -140,49 +140,49 @@ export default {
                     {
                         required: true,
                         message: '请输入梦享家名称',
-                        trigger: 'blur'
+                        trigger: 'change'
                     }
                 ],
                 address: [
                     {
                         required: true,
                         message: '请选择活动区域',
-                        trigger: 'blur'
+                        trigger: 'change'
                     }
                 ],
                 company: [
                     {
                         required: true,
                         message: '请输入机构名称',
-                        trigger: 'blur'
+                        trigger: 'change'
                     }
                 ],
                 title: [
                     {
                         required: true,
                         message: '请填写您的岗位',
-                        trigger: 'blur'
+                        trigger: 'change'
                     }
                 ],
                 wechat: [
                     {
                         required: true,
                         message: '请填写您的微信号',
-                        trigger: 'blur'
+                        trigger: 'change'
                     }
                 ],
                 phone: [
                     {
                         required: true,
                         message: '请输入联系方式',
-                        trigger: 'blur'
+                        trigger: 'change'
                     }
                 ],
                 idleTimeDesc: [
                     {
                         required: true,
                         message: '必填',
-                        trigger: 'blur'
+                        trigger: 'change'
                     }
                 ],
                 sex: [
@@ -196,7 +196,7 @@ export default {
                     {
                         required: true,
                         message: '请输入您的邮箱',
-                        trigger: 'blur'
+                        trigger: 'change'
                     },
                     {
                         validator: (rule, value, callback) => {
@@ -210,7 +210,7 @@ export default {
                                 callback(new Error('邮箱格式不对'));
                             }
                         },
-                        trigger: 'blur'
+                        trigger: 'change'
                     }
                 ],
                 isCheck: [
@@ -241,7 +241,7 @@ export default {
                 state.upload.photoShortPathFilename,
             // 动态绑定disabled
             isDisabled() {
-                return this.checkState === 3;
+                return this.checkState === 3 || this.checkState === 2;
             }
         }),
         'form.isCheck': {

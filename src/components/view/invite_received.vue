@@ -21,6 +21,7 @@
                 <el-table-column
                     align="center"
                     prop="schoolName"
+                    fixed
                     label="学校"
                     >
                     <template slot-scope="scope">
@@ -30,6 +31,7 @@
                 <el-table-column
                     align="center"
                     prop="speakTitle"
+                    fixed
                     :show-overflow-tooltip="true"
                     label="演讲主题"
                     >

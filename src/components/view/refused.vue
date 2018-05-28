@@ -21,6 +21,7 @@
                 <el-table-column
                     prop="schoolName"
                     align="center"
+                    fixed
                     label="学校">
                     <template slot-scope="scope">
                         <a target="_black" class="tm-link" :href="toSchoolHome(scope.row.schoolId)">{{scope.row.schoolName}}</a>
@@ -29,6 +30,7 @@
                 <el-table-column
                     prop="speakTitle"
                     :show-overflow-tooltip="true"
+                    fixed
                     align="center"
                     label="演讲主题">
                 </el-table-column>

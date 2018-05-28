@@ -6,7 +6,9 @@
         <ul class="header-right">
             <li class="nav-header-item flex-right left" >
                 <a target="_blank" :href="baseURL">网站首页</a>
+                <a target="_blank" class="l-30" :href="users.personalPageLinkUrl">个人主页</a>
             </li>
+
             <li :class="[navClass,{active:main}]">
                 <router-link to="/" > <span @click="switchSidebarView('main')" >管理中心</span> </router-link>
             </li>
@@ -20,8 +22,9 @@
                     </span>
                     <el-dropdown-menu slot="dropdown" center >
                         <el-dropdown-item disabled>账号：{{users.account}}</el-dropdown-item>
-                        <el-dropdown-item @click="handleSignout" divided>
-                            <a @click="handleSignout" class="tm-color" href="#">登出</a>
+                        <el-dropdown-item divided><a class="tm-text-color" :href="users.personalPageLinkUrl" >个人主页</a></el-dropdown-item>
+                        <el-dropdown-item @click.native="handleSignout" divided>
+                            <a @click="handleSignout" class="tm-text-color" href="#">登出</a>
                         </el-dropdown-item>
                     </el-dropdown-menu>
                 </el-dropdown>
@@ -74,5 +77,8 @@ export default {
 }
 .flex-right {
     margin-right: auto;
+}
+.l-30 {
+    margin-left: 30px;
 }
 </style>

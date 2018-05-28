@@ -57,13 +57,8 @@
                 </div>
                 <el-col class="tm-col-5 pic-cube" :sm="12" :md="8" :lg="6" v-for="photo in photoList" :key="photo.speakerPhotoId" >
                     <img :src="photo.photoUrl" class="img-fluid" :time="photo.addTimestamp">
-                    <div class="op_context">
-                        <span class="photo-cube" @click="handleDeletePic(photo)">
-                            <i class="el-icon-delete"></i>
-                        </span>
-                        <span class="photo-cube" @click="handleShowPic(photo)">
-                            <i class="el-icon-view"></i>
-                        </span>
+                    <div class="op_context" @click="handleShowPic(photo)" >
+                        <i @click.stop="handleDeletePic(photo)" class="el-icon-delete photo-cube"></i>
                     </div>
                 </el-col>
             </el-row>
@@ -242,7 +237,7 @@ export default {
                 act: 'getPersonalPagePhotoList',
                 onSuccess: res => {
                     this.photoList = res.data.data.photoList.sort((a, b) => {
-                        return a.addTimestamp - b.addTimestamp;
+                        return b.addTimestamp - a.addTimestamp;
                     });
                     this.loading.pictures = false;
                 }
@@ -393,9 +388,6 @@ export default {
     max-width: 300px;
     margin-right: 10px;
 }
-.pic-cube {
-    margin: 5px;
-}
 
 .video {
     position: relative;
@@ -454,7 +446,7 @@ export default {
     height: 200px;
     overflow: hidden;
     background: #dedcdc;
-    margin: 5px;
+    margin: 2px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -462,17 +454,13 @@ export default {
     &:hover {
         .op_context {
             visibility: visible;
-            .photo-cube {
-            }
         }
     }
     .op_context {
         font-size: 24px;
         color: #fff;
-        background: rgba(0, 0, 0, 0.8);
         display: flex;
-        justify-content: center;
-        align-items: center;
+        justify-content: flex-end;
         position: absolute;
         width: 100%;
         height: 100%;
@@ -480,7 +468,8 @@ export default {
         top: 0;
         left: 0;
         .photo-cube {
-            margin: 5px 10px;
+            display: inline-block;
+            margin: 10px;
             cursor: pointer;
         }
     }
