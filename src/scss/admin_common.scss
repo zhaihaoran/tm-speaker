@@ -14,6 +14,16 @@ $sider_submenu_bg: inherit;
 $sider_submenu_active: rgb(47, 46, 48);
 $sider_item_active: rgb(29, 27, 27);
 $context_bg: rgb(236, 236, 236);
+.el-tabs__item:focus.is-active.is-focus:not(:active) {
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
+
+.el-radio-button {
+    -webkit-box-shadow: none !important;
+    box-shadow: none !important;
+}
+
 // shadow
 .flow-step {
     height: 800px;
