@@ -52,7 +52,7 @@ export default {
         beforeUpload(file) {
             const isJPG = file.type === 'image/jpeg';
             const isPNG = file.type === 'image/png';
-            const isLt2M = file.size / 1024 / 1024 < 2;
+            const isLt2M = file.size / 1024 / 1024 < 5;
 
             if (!isJPG && !isPNG) {
                 this.$message({

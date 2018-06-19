@@ -162,6 +162,11 @@ export default {
                         required: true,
                         message: '请填写您的岗位',
                         trigger: 'change'
+                    },
+                    {
+                        max: 10,
+                        message: '不能超过10个字',
+                        trigger: 'change'
                     }
                 ],
                 wechat: [
